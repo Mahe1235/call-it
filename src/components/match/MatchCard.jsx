@@ -505,33 +505,42 @@ function GroupPicksSection({ match, teamA, teamB }) {
         <div style={{
           display: 'flex',
           justifyContent: 'space-between',
-          marginBottom: '6px',
+          alignItems: 'center',
+          marginBottom: '8px',
         }}>
-          <span className="font-display font-bold text-xs" style={{ color: 'var(--text-primary)' }}>
-            {teamA?.shortName ?? match.team_a.toUpperCase()} — {countA}
-          </span>
-          <span className="font-display font-bold text-xs" style={{ color: 'var(--text-primary)' }}>
-            {countB} — {teamB?.shortName ?? match.team_b.toUpperCase()}
-          </span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: teamA?.colors?.primary ?? 'var(--border-default)', flexShrink: 0 }} />
+            <span className="font-display font-bold text-xs" style={{ color: 'var(--text-primary)' }}>
+              {teamA?.shortName ?? match.team_a.toUpperCase()}
+            </span>
+            <span className="font-mono text-xs" style={{ color: 'var(--text-muted)' }}>{countA}</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <span className="font-mono text-xs" style={{ color: 'var(--text-muted)' }}>{countB}</span>
+            <span className="font-display font-bold text-xs" style={{ color: 'var(--text-primary)' }}>
+              {teamB?.shortName ?? match.team_b.toUpperCase()}
+            </span>
+            <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: teamB?.colors?.primary ?? 'var(--border-default)', flexShrink: 0 }} />
+          </div>
         </div>
         <div style={{
           height: '6px',
           borderRadius: '99px',
-          background: 'var(--border-subtle)',
+          background: teamB?.colors?.primary ? `${teamB.colors.primary}44` : 'var(--border-subtle)',
           overflow: 'hidden',
         }}>
           <div style={{
             height: '100%',
             width: `${pctA}%`,
-            background: 'var(--team-primary)',
+            background: teamA?.colors?.primary ?? 'var(--team-primary)',
             borderRadius: '99px',
-            transition: 'width 0.4s ease',
+            transition: 'width 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
           }} />
         </div>
         <p className="font-body text-xs text-center mt-2" style={{ color: 'var(--text-muted)' }}>
           {countA === countB
             ? `Split — ${countA} each`
-            : `${countA > countB ? countA : countB} of ${total} picked ${countA > countB
+            : `${Math.max(countA, countB)} of ${total} picked ${countA > countB
                 ? (teamA?.shortName ?? match.team_a.toUpperCase())
                 : (teamB?.shortName ?? match.team_b.toUpperCase())}`
           }
@@ -559,64 +568,84 @@ function GroupMemberRow({ prediction, match, teamA, teamB }) {
   const initial = name.charAt(0).toUpperCase()
   const pickedTeam = prediction.match_winner_pick === match.team_a ? teamA : teamB
   const villain = prediction.villain_pick_player
+  const callPick = prediction.the_call_pick
+  const chaosPick = prediction.chaos_ball_pick
 
   return (
     <div style={{
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      padding: '10px 12px',
+      padding: '12px 14px',
       background: 'var(--card)',
-      borderRadius: '12px',
+      borderRadius: '14px',
       border: '1.5px solid var(--border-subtle)',
-      gap: '10px',
     }}>
-      {/* Avatar + name */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0 }}>
-        <div style={{
-          width: '30px',
-          height: '30px',
-          borderRadius: '50%',
-          background: 'var(--team-primary)',
-          color: 'var(--team-text-on-primary)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontFamily: 'Bricolage Grotesque, sans-serif',
-          fontWeight: 700,
-          fontSize: '13px',
-          flexShrink: 0,
-        }}>
-          {initial}
-        </div>
-        <div style={{ minWidth: 0 }}>
+      {/* Top row: avatar + name + winner pill */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0 }}>
+          <div style={{
+            width: '30px',
+            height: '30px',
+            borderRadius: '50%',
+            background: pickedTeam?.colors?.primary ?? 'var(--team-primary)',
+            color: pickedTeam?.colors?.textOnPrimary ?? 'var(--team-text-on-primary)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontFamily: 'Bricolage Grotesque, sans-serif',
+            fontWeight: 700,
+            fontSize: '13px',
+            flexShrink: 0,
+          }}>
+            {initial}
+          </div>
           <p className="font-display font-bold text-sm" style={{ color: 'var(--text-primary)', margin: 0 }}>
             {name}
           </p>
-          {villain && (
-            <p className="font-body text-xs" style={{ color: 'var(--text-muted)', margin: 0 }}>
-              😈 {villain}
-            </p>
-          )}
+        </div>
+
+        {/* Winner pill — actual team colour */}
+        <div style={{
+          padding: '4px 10px',
+          borderRadius: '99px',
+          background: pickedTeam?.colors?.primary ?? 'var(--team-primary)',
+          flexShrink: 0,
+        }}>
+          <p className="font-display font-bold" style={{
+            fontSize: '12px',
+            color: pickedTeam?.colors?.textOnPrimary ?? 'var(--team-text-on-primary)',
+            margin: 0,
+          }}>
+            {pickedTeam?.shortName ?? prediction.match_winner_pick?.toUpperCase()}
+          </p>
         </div>
       </div>
 
-      {/* Winner pick pill */}
-      <div style={{
-        padding: '4px 10px',
-        borderRadius: '99px',
-        background: 'var(--team-tinted-bg)',
-        border: '1px solid var(--border-subtle)',
-        flexShrink: 0,
-      }}>
-        <p className="font-display font-bold" style={{
-          fontSize: '12px',
-          color: 'var(--text-primary)',
-          margin: 0,
+      {/* Sub-picks row */}
+      {(villain || callPick || chaosPick) && (
+        <div style={{
+          display: 'flex',
+          gap: '12px',
+          marginTop: '8px',
+          paddingTop: '8px',
+          borderTop: '1px solid var(--border-subtle)',
+          flexWrap: 'wrap',
         }}>
-          {pickedTeam?.shortName ?? prediction.match_winner_pick?.toUpperCase()}
-        </p>
-      </div>
+          {villain && (
+            <span className="font-body text-xs" style={{ color: 'var(--text-muted)' }}>
+              😈 {villain}
+            </span>
+          )}
+          {callPick && (
+            <span className="font-body text-xs" style={{ color: 'var(--text-muted)' }}>
+              🎯 {callPick}
+            </span>
+          )}
+          {chaosPick && (
+            <span className="font-body text-xs" style={{ color: 'var(--text-muted)' }}>
+              💥 {chaosPick}
+            </span>
+          )}
+        </div>
+      )}
     </div>
   )
 }
