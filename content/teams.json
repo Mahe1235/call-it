@@ -1,0 +1,1152 @@
+{
+  "teams": [
+    {
+      "id": "csk",
+      "name": "Chennai Super Kings",
+      "shortName": "CSK",
+      "city": "Chennai",
+      "colors": {
+        "primary": "#F9CD1B",
+        "secondary": "#1D3461",
+        "textOnPrimary": "#111111",
+        "tintedBg": "#FFFBE6"
+      },
+      "homeVenue": "ma_chidambaram",
+      "apiTeamId": "",
+      "squad": [
+        {
+          "name": "Jamie Overton",
+          "role": "allrounder"
+        },
+        {
+          "name": "Shreyas Gopal",
+          "role": "bowler"
+        },
+        {
+          "name": "Zakary Foulkes",
+          "role": "allrounder"
+        },
+        {
+          "name": "Gurjapneet Singh",
+          "role": "bowler"
+        },
+        {
+          "name": "Akeal Hosein",
+          "role": "bowler"
+        },
+        {
+          "name": "Matthew Short",
+          "role": "batter"
+        },
+        {
+          "name": "MS Dhoni",
+          "role": "batter"
+        },
+        {
+          "name": "Prashant Veer",
+          "role": "bowler"
+        },
+        {
+          "name": "Anshul Kamboj",
+          "role": "allrounder"
+        },
+        {
+          "name": "Ayush Mhatre",
+          "role": "batter"
+        },
+        {
+          "name": "Mukesh Choudhary",
+          "role": "bowler"
+        },
+        {
+          "name": "Matt Henry",
+          "role": "bowler"
+        },
+        {
+          "name": "Rahul Chahar",
+          "role": "bowler"
+        },
+        {
+          "name": "Sarfaraz Khan",
+          "role": "batter"
+        },
+        {
+          "name": "Dewald Brevis",
+          "role": "batter"
+        },
+        {
+          "name": "Ruturaj Gaikwad",
+          "role": "batter"
+        },
+        {
+          "name": "Shivam Dube",
+          "role": "allrounder"
+        },
+        {
+          "name": "Noor Ahmad",
+          "role": "bowler"
+        },
+        {
+          "name": "Urvil Patel",
+          "role": "batter"
+        },
+        {
+          "name": "Ramakrishna Ghosh",
+          "role": "allrounder"
+        },
+        {
+          "name": "Sanju Samson",
+          "role": "batter"
+        },
+        {
+          "name": "Khaleel Ahmed",
+          "role": "bowler"
+        },
+        {
+          "name": "Kartik Sharma",
+          "role": "batter"
+        },
+        {
+          "name": "Nathan Ellis",
+          "role": "bowler"
+        }
+      ]
+    },
+    {
+      "id": "mi",
+      "name": "Mumbai Indians",
+      "shortName": "MI",
+      "city": "Mumbai",
+      "colors": {
+        "primary": "#004BA0",
+        "secondary": "#D4AF37",
+        "textOnPrimary": "#FFFFFF",
+        "tintedBg": "#E8EFF9"
+      },
+      "homeVenue": "wankhede",
+      "apiTeamId": "",
+      "squad": [
+        {
+          "name": "Rohit Sharma",
+          "role": "batter"
+        },
+        {
+          "name": "Shardul Thakur",
+          "role": "allrounder"
+        },
+        {
+          "name": "Raghu Sharma",
+          "role": "bowler"
+        },
+        {
+          "name": "Will Jacks",
+          "role": "allrounder"
+        },
+        {
+          "name": "AM Ghazanfar",
+          "role": "bowler"
+        },
+        {
+          "name": "Mayank Markande",
+          "role": "bowler"
+        },
+        {
+          "name": "Trent Boult",
+          "role": "bowler"
+        },
+        {
+          "name": "Tilak Varma",
+          "role": "batter"
+        },
+        {
+          "name": "Mohammed Salahuddin Izhar",
+          "role": "batter"
+        },
+        {
+          "name": "Ryan Rickelton",
+          "role": "batter"
+        },
+        {
+          "name": "Sherfane Rutherford",
+          "role": "allrounder"
+        },
+        {
+          "name": "Hardik Pandya",
+          "role": "allrounder"
+        },
+        {
+          "name": "Raj Bawa",
+          "role": "allrounder"
+        },
+        {
+          "name": "Quinton de Kock",
+          "role": "batter"
+        },
+        {
+          "name": "Danish Malewar",
+          "role": "allrounder"
+        },
+        {
+          "name": "Corbin Bosch",
+          "role": "allrounder"
+        },
+        {
+          "name": "Atharva Ankolekar",
+          "role": "allrounder"
+        },
+        {
+          "name": "Mitchell Santner",
+          "role": "allrounder"
+        },
+        {
+          "name": "Deepak Chahar",
+          "role": "bowler"
+        },
+        {
+          "name": "Robin Minz",
+          "role": "batter"
+        },
+        {
+          "name": "Naman Dhir",
+          "role": "batter"
+        },
+        {
+          "name": "Suryakumar Yadav",
+          "role": "batter"
+        },
+        {
+          "name": "Jasprit Bumrah",
+          "role": "bowler"
+        },
+        {
+          "name": "Mayank Rawat",
+          "role": "allrounder"
+        },
+        {
+          "name": "Ashwani Kumar",
+          "role": "bowler"
+        }
+      ]
+    },
+    {
+      "id": "rcb",
+      "name": "Royal Challengers Bengaluru",
+      "shortName": "RCB",
+      "city": "Bengaluru",
+      "colors": {
+        "primary": "#CC0000",
+        "secondary": "#1A1A1A",
+        "textOnPrimary": "#FFFFFF",
+        "tintedBg": "#FCEAEA"
+      },
+      "homeVenue": "m_chinnaswamy",
+      "apiTeamId": "",
+      "squad": [
+        {
+          "name": "Bhuvneshwar Kumar",
+          "role": "bowler"
+        },
+        {
+          "name": "Virat Kohli",
+          "role": "batter"
+        },
+        {
+          "name": "Vicky Ostwal",
+          "role": "bowler"
+        },
+        {
+          "name": "Vihaan Malhotra",
+          "role": "batter"
+        },
+        {
+          "name": "Yash Dayal",
+          "role": "bowler"
+        },
+        {
+          "name": "Romario Shepherd",
+          "role": "allrounder"
+        },
+        {
+          "name": "Jacob Bethell",
+          "role": "allrounder"
+        },
+        {
+          "name": "Rajat Patidar",
+          "role": "batter"
+        },
+        {
+          "name": "Tim David",
+          "role": "batter"
+        },
+        {
+          "name": "Jordan Cox",
+          "role": "batter"
+        },
+        {
+          "name": "Mangesh Yadav",
+          "role": "allrounder"
+        },
+        {
+          "name": "Satvik Deswal",
+          "role": "allrounder"
+        },
+        {
+          "name": "Josh Hazlewood",
+          "role": "bowler"
+        },
+        {
+          "name": "Venkatesh Iyer",
+          "role": "allrounder"
+        },
+        {
+          "name": "Abhinandan Singh",
+          "role": "bowler"
+        },
+        {
+          "name": "Swapnil Singh",
+          "role": "allrounder"
+        },
+        {
+          "name": "Jacob Duffy",
+          "role": "bowler"
+        },
+        {
+          "name": "Rasikh Salam Dar",
+          "role": "bowler"
+        },
+        {
+          "name": "Devdutt Padikkal",
+          "role": "batter"
+        },
+        {
+          "name": "Jitesh Sharma",
+          "role": "batter"
+        },
+        {
+          "name": "Krunal Pandya",
+          "role": "allrounder"
+        },
+        {
+          "name": "Philip Salt",
+          "role": "batter"
+        },
+        {
+          "name": "Kanishk Chouhan",
+          "role": "batter"
+        },
+        {
+          "name": "Nuwan Thushara",
+          "role": "bowler"
+        },
+        {
+          "name": "Suyash Sharma",
+          "role": "bowler"
+        }
+      ]
+    },
+    {
+      "id": "kkr",
+      "name": "Kolkata Knight Riders",
+      "shortName": "KKR",
+      "city": "Kolkata",
+      "colors": {
+        "primary": "#3B225F",
+        "secondary": "#F4C430",
+        "textOnPrimary": "#FFFFFF",
+        "tintedBg": "#EDE8F4"
+      },
+      "homeVenue": "eden_gardens",
+      "apiTeamId": "",
+      "squad": [
+        {
+          "name": "Finn Allen",
+          "role": "batter"
+        },
+        {
+          "name": "Manish Pandey",
+          "role": "batter"
+        },
+        {
+          "name": "Varun Chakaravarthy",
+          "role": "bowler"
+        },
+        {
+          "name": "Harshit Rana",
+          "role": "bowler"
+        },
+        {
+          "name": "Umran Malik",
+          "role": "bowler"
+        },
+        {
+          "name": "Tejasvi Dahiya",
+          "role": "batter"
+        },
+        {
+          "name": "Ajinkya Rahane",
+          "role": "batter"
+        },
+        {
+          "name": "Angkrish Raghuvanshi",
+          "role": "batter"
+        },
+        {
+          "name": "Vaibhav Arora",
+          "role": "bowler"
+        },
+        {
+          "name": "Sunil Narine",
+          "role": "allrounder"
+        },
+        {
+          "name": "Rinku Singh",
+          "role": "batter"
+        },
+        {
+          "name": "Akash Deep",
+          "role": "bowler"
+        },
+        {
+          "name": "Cameron Green",
+          "role": "allrounder"
+        },
+        {
+          "name": "Ramandeep Singh",
+          "role": "allrounder"
+        },
+        {
+          "name": "Rahul Tripathi",
+          "role": "batter"
+        },
+        {
+          "name": "Rovman Powell",
+          "role": "batter"
+        },
+        {
+          "name": "Sarthak Ranjan",
+          "role": "batter"
+        },
+        {
+          "name": "Kartik Tyagi",
+          "role": "bowler"
+        },
+        {
+          "name": "Daksh Kamra",
+          "role": "batter"
+        },
+        {
+          "name": "Matheesha Pathirana",
+          "role": "bowler"
+        },
+        {
+          "name": "Rachin Ravindra",
+          "role": "allrounder"
+        },
+        {
+          "name": "Prashant Solanki",
+          "role": "bowler"
+        },
+        {
+          "name": "Tim Seifert",
+          "role": "batter"
+        },
+        {
+          "name": "Anukul Roy",
+          "role": "allrounder"
+        }
+      ]
+    },
+    {
+      "id": "srh",
+      "name": "Sunrisers Hyderabad",
+      "shortName": "SRH",
+      "city": "Hyderabad",
+      "colors": {
+        "primary": "#FF822A",
+        "secondary": "#1A1A1A",
+        "textOnPrimary": "#FFFFFF",
+        "tintedBg": "#FFF1E8"
+      },
+      "homeVenue": "rajiv_gandhi",
+      "apiTeamId": "",
+      "squad": [
+        {
+          "name": "Heinrich Klaasen",
+          "role": "batter"
+        },
+        {
+          "name": "Eshan Malinga",
+          "role": "bowler"
+        },
+        {
+          "name": "Praful Hinge",
+          "role": "bowler"
+        },
+        {
+          "name": "Nitish Kumar Reddy",
+          "role": "allrounder"
+        },
+        {
+          "name": "Harshal Patel",
+          "role": "bowler"
+        },
+        {
+          "name": "Sakib Hussain",
+          "role": "bowler"
+        },
+        {
+          "name": "Smaran Ravichandran",
+          "role": "batter"
+        },
+        {
+          "name": "Aniket Verma",
+          "role": "batter"
+        },
+        {
+          "name": "Jack Edwards",
+          "role": "batter"
+        },
+        {
+          "name": "Kamindu Mendis",
+          "role": "allrounder"
+        },
+        {
+          "name": "Krains Fuletra",
+          "role": "bowler"
+        },
+        {
+          "name": "Shivang Kumar",
+          "role": "allrounder"
+        },
+        {
+          "name": "Onkar Tukaram Tarmale",
+          "role": "bowler"
+        },
+        {
+          "name": "Abhishek Sharma",
+          "role": "allrounder"
+        },
+        {
+          "name": "Shivam Mavi",
+          "role": "bowler"
+        },
+        {
+          "name": "Amit Kumar",
+          "role": "batter"
+        },
+        {
+          "name": "Pat Cummins",
+          "role": "bowler"
+        },
+        {
+          "name": "Travis Head",
+          "role": "batter"
+        },
+        {
+          "name": "Harsh Dubey",
+          "role": "allrounder"
+        },
+        {
+          "name": "Salil Arora",
+          "role": "batter"
+        },
+        {
+          "name": "Brydon Carse",
+          "role": "bowler"
+        },
+        {
+          "name": "Jaydev Unadkat",
+          "role": "bowler"
+        },
+        {
+          "name": "Ishan Kishan",
+          "role": "batter"
+        },
+        {
+          "name": "Liam Livingstone",
+          "role": "allrounder"
+        },
+        {
+          "name": "Zeeshan Ansari",
+          "role": "bowler"
+        }
+      ]
+    },
+    {
+      "id": "dc",
+      "name": "Delhi Capitals",
+      "shortName": "DC",
+      "city": "Delhi",
+      "colors": {
+        "primary": "#0057A8",
+        "secondary": "#EF1C25",
+        "textOnPrimary": "#FFFFFF",
+        "tintedBg": "#E8F0FA"
+      },
+      "homeVenue": "arun_jaitley",
+      "apiTeamId": "",
+      "squad": [
+        {
+          "name": "Karun Nair",
+          "role": "batter"
+        },
+        {
+          "name": "Pathum Nissanka",
+          "role": "batter"
+        },
+        {
+          "name": "Madhav Tiwari",
+          "role": "allrounder"
+        },
+        {
+          "name": "Sameer Rizvi",
+          "role": "batter"
+        },
+        {
+          "name": "Ben Duckett",
+          "role": "batter"
+        },
+        {
+          "name": "Auqib Nabi Dar",
+          "role": "allrounder"
+        },
+        {
+          "name": "Axar Patel",
+          "role": "allrounder"
+        },
+        {
+          "name": "Kyle Jamieson",
+          "role": "bowler"
+        },
+        {
+          "name": "Mitchell Starc",
+          "role": "bowler"
+        },
+        {
+          "name": "Abishek Porel",
+          "role": "batter"
+        },
+        {
+          "name": "Ashutosh Sharma",
+          "role": "allrounder"
+        },
+        {
+          "name": "Nitish Rana",
+          "role": "batter"
+        },
+        {
+          "name": "Ajay Jadav Mandal",
+          "role": "allrounder"
+        },
+        {
+          "name": "Dushmantha Chameera",
+          "role": "bowler"
+        },
+        {
+          "name": "Lungi Ngidi",
+          "role": "bowler"
+        },
+        {
+          "name": "Tristan Stubbs",
+          "role": "batter"
+        },
+        {
+          "name": "Kuldeep Yadav",
+          "role": "bowler"
+        },
+        {
+          "name": "KL Rahul",
+          "role": "batter"
+        },
+        {
+          "name": "Mukesh Kumar",
+          "role": "bowler"
+        },
+        {
+          "name": "Tripurana Vijay",
+          "role": "allrounder"
+        },
+        {
+          "name": "Vipraj Nigam",
+          "role": "bowler"
+        },
+        {
+          "name": "T Natarajan",
+          "role": "bowler"
+        },
+        {
+          "name": "Sahil Parakh",
+          "role": "batter"
+        },
+        {
+          "name": "David Miller",
+          "role": "batter"
+        }
+      ]
+    },
+    {
+      "id": "pbks",
+      "name": "Punjab Kings",
+      "shortName": "PBKS",
+      "city": "Mohali",
+      "colors": {
+        "primary": "#ED1B24",
+        "secondary": "#A7A9AC",
+        "textOnPrimary": "#FFFFFF",
+        "tintedBg": "#FCEAEA"
+      },
+      "homeVenue": "pca_mohali",
+      "apiTeamId": "",
+      "squad": [
+        {
+          "name": "Cooper Connolly",
+          "role": "allrounder"
+        },
+        {
+          "name": "Arshdeep Singh",
+          "role": "bowler"
+        },
+        {
+          "name": "Vishnu Vinod",
+          "role": "batter"
+        },
+        {
+          "name": "Yuzvendra Chahal",
+          "role": "bowler"
+        },
+        {
+          "name": "Marco Jansen",
+          "role": "allrounder"
+        },
+        {
+          "name": "Nehal Wadhera",
+          "role": "batter"
+        },
+        {
+          "name": "Xavier Bartlett",
+          "role": "bowler"
+        },
+        {
+          "name": "Lockie Ferguson",
+          "role": "bowler"
+        },
+        {
+          "name": "Mitchell Owen",
+          "role": "allrounder"
+        },
+        {
+          "name": "Vijaykumar Vyshak",
+          "role": "bowler"
+        },
+        {
+          "name": "Ben Dwarshuis",
+          "role": "bowler"
+        },
+        {
+          "name": "Priyansh Arya",
+          "role": "batter"
+        },
+        {
+          "name": "Harnoor Singh",
+          "role": "batter"
+        },
+        {
+          "name": "Musheer Khan",
+          "role": "allrounder"
+        },
+        {
+          "name": "Suryansh Shedge",
+          "role": "allrounder"
+        },
+        {
+          "name": "Prabhsimran Singh",
+          "role": "batter"
+        },
+        {
+          "name": "Pyla Avinash",
+          "role": "batter"
+        },
+        {
+          "name": "Praveen Dubey",
+          "role": "allrounder"
+        },
+        {
+          "name": "Harpreet Brar",
+          "role": "bowler"
+        },
+        {
+          "name": "Yash Thakur",
+          "role": "bowler"
+        },
+        {
+          "name": "Marcus Stoinis",
+          "role": "allrounder"
+        },
+        {
+          "name": "Shashank Singh",
+          "role": "allrounder"
+        },
+        {
+          "name": "Azmatullah Omarzai",
+          "role": "allrounder"
+        },
+        {
+          "name": "Vishal Nishad",
+          "role": "allrounder"
+        },
+        {
+          "name": "Shreyas Iyer",
+          "role": "batter"
+        }
+      ]
+    },
+    {
+      "id": "rr",
+      "name": "Rajasthan Royals",
+      "shortName": "RR",
+      "city": "Jaipur",
+      "colors": {
+        "primary": "#E5137D",
+        "secondary": "#1D3461",
+        "textOnPrimary": "#FFFFFF",
+        "tintedBg": "#FDE9F3"
+      },
+      "homeVenue": "sawai_mansingh",
+      "apiTeamId": "",
+      "squad": [
+        {
+          "name": "Ravindra Jadeja",
+          "role": "allrounder"
+        },
+        {
+          "name": "Yash Raj Punja",
+          "role": "batter"
+        },
+        {
+          "name": "Nandre Burger",
+          "role": "bowler"
+        },
+        {
+          "name": "Vaibhav Sooryavanshi",
+          "role": "batter"
+        },
+        {
+          "name": "Shimron Hetmyer",
+          "role": "batter"
+        },
+        {
+          "name": "Ravi Bishnoi",
+          "role": "bowler"
+        },
+        {
+          "name": "Tushar Deshpande",
+          "role": "bowler"
+        },
+        {
+          "name": "Sushant Mishra",
+          "role": "bowler"
+        },
+        {
+          "name": "Shubham Dubey",
+          "role": "batter"
+        },
+        {
+          "name": "Jofra Archer",
+          "role": "bowler"
+        },
+        {
+          "name": "Aman Rao Perala",
+          "role": "batter"
+        },
+        {
+          "name": "Riyan Parag",
+          "role": "allrounder"
+        },
+        {
+          "name": "Yashasvi Jaiswal",
+          "role": "batter"
+        },
+        {
+          "name": "Brijesh Sharma",
+          "role": "batter"
+        },
+        {
+          "name": "Dhruv Jurel",
+          "role": "batter"
+        },
+        {
+          "name": "Lhuan-dre Pretorius",
+          "role": "batter"
+        },
+        {
+          "name": "Kuldeep Sen",
+          "role": "bowler"
+        },
+        {
+          "name": "Sandeep Sharma",
+          "role": "bowler"
+        },
+        {
+          "name": "Ravi Singh",
+          "role": "batter"
+        },
+        {
+          "name": "Donovan Ferreira",
+          "role": "batter"
+        },
+        {
+          "name": "Sam Curran",
+          "role": "allrounder"
+        },
+        {
+          "name": "Adam Milne",
+          "role": "bowler"
+        },
+        {
+          "name": "Kwena Maphaka",
+          "role": "bowler"
+        },
+        {
+          "name": "Yudhvir Singh Charak",
+          "role": "bowler"
+        },
+        {
+          "name": "Vignesh Puthur",
+          "role": "bowler"
+        }
+      ]
+    },
+    {
+      "id": "gt",
+      "name": "Gujarat Titans",
+      "shortName": "GT",
+      "city": "Ahmedabad",
+      "colors": {
+        "primary": "#1C3A6B",
+        "secondary": "#D4AF37",
+        "textOnPrimary": "#FFFFFF",
+        "tintedBg": "#E8EDF5"
+      },
+      "homeVenue": "narendra_modi",
+      "apiTeamId": "",
+      "squad": [
+        {
+          "name": "Kagiso Rabada",
+          "role": "bowler"
+        },
+        {
+          "name": "Mohammed Siraj",
+          "role": "bowler"
+        },
+        {
+          "name": "Prithvi Raj Yarra",
+          "role": "bowler"
+        },
+        {
+          "name": "Rahul Tewatia",
+          "role": "allrounder"
+        },
+        {
+          "name": "Ashok Sharma",
+          "role": "bowler"
+        },
+        {
+          "name": "Gurnoor Brar",
+          "role": "bowler"
+        },
+        {
+          "name": "Jayant Yadav",
+          "role": "allrounder"
+        },
+        {
+          "name": "Arshad Khan",
+          "role": "allrounder"
+        },
+        {
+          "name": "Rashid Khan",
+          "role": "allrounder"
+        },
+        {
+          "name": "Glenn Phillips",
+          "role": "allrounder"
+        },
+        {
+          "name": "Ishant Sharma",
+          "role": "bowler"
+        },
+        {
+          "name": "Shubman Gill",
+          "role": "batter"
+        },
+        {
+          "name": "Anuj Rawat",
+          "role": "batter"
+        },
+        {
+          "name": "Ravisrinivasan Sai Kishore",
+          "role": "allrounder"
+        },
+        {
+          "name": "Tom Banton",
+          "role": "batter"
+        },
+        {
+          "name": "Sai Sudharsan",
+          "role": "batter"
+        },
+        {
+          "name": "Washington Sundar",
+          "role": "allrounder"
+        },
+        {
+          "name": "Kumar Kushagra",
+          "role": "batter"
+        },
+        {
+          "name": "Luke Wood",
+          "role": "bowler"
+        },
+        {
+          "name": "Jason Holder",
+          "role": "allrounder"
+        },
+        {
+          "name": "Prasidh Krishna",
+          "role": "bowler"
+        },
+        {
+          "name": "Jos Buttler",
+          "role": "batter"
+        },
+        {
+          "name": "Nishant Sindhu",
+          "role": "allrounder"
+        },
+        {
+          "name": "Manav Suthar",
+          "role": "bowler"
+        },
+        {
+          "name": "Shahrukh Khan",
+          "role": "allrounder"
+        }
+      ]
+    },
+    {
+      "id": "lsg",
+      "name": "Lucknow Super Giants",
+      "shortName": "LSG",
+      "city": "Lucknow",
+      "colors": {
+        "primary": "#A72B6D",
+        "secondary": "#00B2CA",
+        "textOnPrimary": "#FFFFFF",
+        "tintedBg": "#F6E8F1"
+      },
+      "homeVenue": "atal_bihari",
+      "apiTeamId": "",
+      "squad": [
+        {
+          "name": "Ayush Badoni",
+          "role": "allrounder"
+        },
+        {
+          "name": "Josh Inglis",
+          "role": "batter"
+        },
+        {
+          "name": "Mitchell Marsh",
+          "role": "allrounder"
+        },
+        {
+          "name": "Aiden Markram",
+          "role": "batter"
+        },
+        {
+          "name": "Digvesh Singh Rathi",
+          "role": "bowler"
+        },
+        {
+          "name": "Manimaran Siddharth",
+          "role": "bowler"
+        },
+        {
+          "name": "Akash Maharaj Singh",
+          "role": "bowler"
+        },
+        {
+          "name": "Mohammed Shami",
+          "role": "bowler"
+        },
+        {
+          "name": "Mohsin Khan",
+          "role": "bowler"
+        },
+        {
+          "name": "Mukul Choudhary",
+          "role": "batter"
+        },
+        {
+          "name": "Akshat Raghuwanshi",
+          "role": "batter"
+        },
+        {
+          "name": "Abdul Samad",
+          "role": "allrounder"
+        },
+        {
+          "name": "Anrich Nortje",
+          "role": "bowler"
+        },
+        {
+          "name": "Arshin Kulkarni",
+          "role": "allrounder"
+        },
+        {
+          "name": "Wanindu Hasaranga",
+          "role": "allrounder"
+        },
+        {
+          "name": "Naman Tiwari",
+          "role": "bowler"
+        },
+        {
+          "name": "Avesh Khan",
+          "role": "bowler"
+        },
+        {
+          "name": "Mayank Yadav",
+          "role": "bowler"
+        },
+        {
+          "name": "Prince Yadav",
+          "role": "bowler"
+        },
+        {
+          "name": "Arjun Tendulkar",
+          "role": "allrounder"
+        },
+        {
+          "name": "Himmat Singh",
+          "role": "batter"
+        },
+        {
+          "name": "Nicholas Pooran",
+          "role": "batter"
+        },
+        {
+          "name": "Matthew Breetzke",
+          "role": "batter"
+        },
+        {
+          "name": "Shahbaz Ahmed",
+          "role": "allrounder"
+        },
+        {
+          "name": "Rishabh Pant",
+          "role": "batter"
+        }
+      ]
+    }
+  ]
+}

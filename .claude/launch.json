@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "call-it-dev",
+      "runtimeExecutable": "C:/Program Files/nodejs/node.exe",
+      "runtimeArgs": ["C:/Users/91897/OneDrive/Documents/GitHub/call-it/start-dev.js"],
+      "port": 5175
+    }
+  ]
+}

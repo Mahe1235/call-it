@@ -1,0 +1,264 @@
+{
+  "theCall": [
+    {
+      "id": "C1",
+      "tier": 1,
+      "displayText": "Total sixes in this match",
+      "type": "over_under",
+      "answerOptions": ["Over {line}", "Under {line}"],
+      "requiresVenueConfig": true,
+      "defaultLine": 13,
+      "notes": "Line set per venue in venues.json"
+    },
+    {
+      "id": "C2",
+      "tier": 1,
+      "displayText": "Which team will score more runs in the powerplay?",
+      "type": "binary_team",
+      "answerOptions": ["{team_a}", "{team_b}"],
+      "requiresMatchContext": true
+    },
+    {
+      "id": "C3",
+      "tier": 1,
+      "displayText": "Will the match go to the last over?",
+      "type": "yes_no",
+      "answerOptions": ["Yes", "No"],
+      "notes": "Chasing team needs 4+ balls remaining when match ends counts as No"
+    },
+    {
+      "id": "C4",
+      "tier": 1,
+      "displayText": "Top scorer of the match plays for which team?",
+      "type": "binary_team",
+      "answerOptions": ["{team_a}", "{team_b}"],
+      "requiresMatchContext": true
+    },
+    {
+      "id": "C5",
+      "tier": 1,
+      "displayText": "Total wickets in the match",
+      "type": "over_under",
+      "answerOptions": ["Over {line}", "Under {line}"],
+      "defaultLine": 12
+    },
+    {
+      "id": "C6",
+      "tier": 1,
+      "displayText": "Will there be a maiden over?",
+      "type": "yes_no",
+      "answerOptions": ["Yes", "No"]
+    },
+    {
+      "id": "C7",
+      "tier": 2,
+      "displayText": "Will there be a run out?",
+      "type": "yes_no",
+      "answerOptions": ["Yes", "No"]
+    },
+    {
+      "id": "C8",
+      "tier": 2,
+      "displayText": "Total fours in the match",
+      "type": "over_under",
+      "answerOptions": ["Over {line}", "Under {line}"],
+      "defaultLine": 28
+    },
+    {
+      "id": "C9",
+      "tier": 2,
+      "displayText": "Will the first wicket fall in the powerplay?",
+      "type": "yes_no",
+      "answerOptions": ["Yes", "No"]
+    },
+    {
+      "id": "C10",
+      "tier": 2,
+      "displayText": "Combined total runs scored in the match",
+      "type": "over_under",
+      "answerOptions": ["Over {line}", "Under {line}"],
+      "requiresVenueConfig": true,
+      "defaultLine": 340
+    },
+    {
+      "id": "C11",
+      "tier": 2,
+      "displayText": "Will any bowler take 3 or more wickets?",
+      "type": "yes_no",
+      "answerOptions": ["Yes", "No"]
+    },
+    {
+      "id": "C12",
+      "tier": 2,
+      "displayText": "Which team bats first?",
+      "type": "binary_team",
+      "answerOptions": ["{team_a}", "{team_b}"],
+      "requiresMatchContext": true
+    },
+    {
+      "id": "C13",
+      "tier": 2,
+      "displayText": "Will the winning team win by more than 30 runs (or 5+ wickets with 10+ balls remaining)?",
+      "type": "yes_no",
+      "answerOptions": ["Yes — dominant win", "No — close match"]
+    },
+    {
+      "id": "C14",
+      "tier": 3,
+      "displayText": "Total extras (wides + no-balls) in the match",
+      "type": "over_under",
+      "answerOptions": ["Over {line}", "Under {line}"],
+      "defaultLine": 18
+    },
+    {
+      "id": "C15",
+      "tier": 3,
+      "displayText": "Will any player score a fifty (50+ runs)?",
+      "type": "yes_no",
+      "answerOptions": ["Yes", "No"]
+    }
+  ],
+  "chaosBall": [
+    {
+      "id": "CB1",
+      "tier": 1,
+      "displayText": "Will there be a golden duck (out for 0 off first ball)?",
+      "type": "yes_no",
+      "answerOptions": ["Yes", "No"]
+    },
+    {
+      "id": "CB2",
+      "tier": 1,
+      "displayText": "Will the top scorer be an opener?",
+      "type": "yes_no",
+      "answerOptions": ["Yes", "No"]
+    },
+    {
+      "id": "CB3",
+      "tier": 1,
+      "displayText": "Will the winning captain score 25+ runs?",
+      "type": "yes_no",
+      "answerOptions": ["Yes", "No"]
+    },
+    {
+      "id": "CB4",
+      "tier": 1,
+      "displayText": "Will there be a hat-trick?",
+      "type": "yes_no",
+      "answerOptions": ["Yes", "No"]
+    },
+    {
+      "id": "CB5",
+      "tier": 1,
+      "displayText": "Will the first ball of the match be a wide or no-ball?",
+      "type": "yes_no",
+      "answerOptions": ["Yes", "No"]
+    },
+    {
+      "id": "CB6",
+      "tier": 1,
+      "displayText": "Will any player score consecutive sixes?",
+      "type": "yes_no",
+      "answerOptions": ["Yes", "No"]
+    },
+    {
+      "id": "CB7",
+      "tier": 1,
+      "displayText": "Will a bowler bowl a full over without conceding a boundary?",
+      "type": "yes_no",
+      "answerOptions": ["Yes", "No"]
+    },
+    {
+      "id": "CB8",
+      "tier": 2,
+      "displayText": "Will the match result be decided in the final over?",
+      "type": "yes_no",
+      "answerOptions": ["Yes", "No"],
+      "notes": "Win in over 20 for batting team, or wicket falls in over 20 deciding the match"
+    },
+    {
+      "id": "CB9",
+      "tier": 2,
+      "displayText": "Will there be exactly 1 run out in the match?",
+      "type": "yes_no",
+      "answerOptions": ["Yes — exactly 1", "No"]
+    },
+    {
+      "id": "CB10",
+      "tier": 2,
+      "displayText": "Will the first innings total be a palindrome (e.g. 151, 232)?",
+      "type": "yes_no",
+      "answerOptions": ["Yes", "No"]
+    },
+    {
+      "id": "CB11",
+      "tier": 2,
+      "displayText": "Will a number 7 or lower batter score the most runs for their team?",
+      "type": "yes_no",
+      "answerOptions": ["Yes", "No"]
+    },
+    {
+      "id": "CB12",
+      "tier": 2,
+      "displayText": "Will both openers of the first batting team score 20+?",
+      "type": "yes_no",
+      "answerOptions": ["Yes", "No"]
+    },
+    {
+      "id": "CB13",
+      "tier": 2,
+      "displayText": "Will there be a stumping?",
+      "type": "yes_no",
+      "answerOptions": ["Yes", "No"]
+    },
+    {
+      "id": "CB14",
+      "tier": 2,
+      "displayText": "Will a bowler concede 20+ runs in a single over?",
+      "type": "yes_no",
+      "answerOptions": ["Yes", "No"]
+    },
+    {
+      "id": "CB15",
+      "tier": 3,
+      "displayText": "Will the match produce a Super Over?",
+      "type": "yes_no",
+      "answerOptions": ["Yes", "No"]
+    },
+    {
+      "id": "CB16",
+      "tier": 3,
+      "displayText": "Will any fielder take 3 or more catches?",
+      "type": "yes_no",
+      "answerOptions": ["Yes", "No"]
+    },
+    {
+      "id": "CB17",
+      "tier": 3,
+      "displayText": "Will the team batting second be all out?",
+      "type": "yes_no",
+      "answerOptions": ["Yes", "No"]
+    },
+    {
+      "id": "CB18",
+      "tier": 3,
+      "displayText": "Will both teams score the same number in any single over?",
+      "type": "yes_no",
+      "answerOptions": ["Yes", "No"]
+    },
+    {
+      "id": "CB19",
+      "tier": 3,
+      "displayText": "Will the last wicket partnership be more than 20 runs?",
+      "type": "yes_no",
+      "answerOptions": ["Yes", "No"]
+    },
+    {
+      "id": "CB20",
+      "tier": 3,
+      "displayText": "Will there be a lbw dismissal?",
+      "type": "yes_no",
+      "answerOptions": ["Yes", "No"]
+    }
+  ]
+}

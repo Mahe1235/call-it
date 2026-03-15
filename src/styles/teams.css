@@ -1,0 +1,78 @@
+/*
+  IPL Team Color Sets
+  Each class sets the 4 CSS vars used by TeamThemeProvider.
+  Applied to <html> or a wrapper element.
+
+  Usage: document.documentElement.dataset.team = 'csk'
+  or via TeamThemeProvider inline styles.
+*/
+
+[data-team="csk"] {
+  --team-primary: #F9CD1B;
+  --team-secondary: #1D3461;
+  --team-text-on-primary: #111111;
+  --team-tinted-bg: #FFFBE6;
+}
+
+[data-team="mi"] {
+  --team-primary: #004BA0;
+  --team-secondary: #D4AF37;
+  --team-text-on-primary: #FFFFFF;
+  --team-tinted-bg: #E8EFF9;
+}
+
+[data-team="rcb"] {
+  --team-primary: #CC0000;
+  --team-secondary: #1A1A1A;
+  --team-text-on-primary: #FFFFFF;
+  --team-tinted-bg: #FCEAEA;
+}
+
+[data-team="kkr"] {
+  --team-primary: #3B225F;
+  --team-secondary: #F4C430;
+  --team-text-on-primary: #FFFFFF;
+  --team-tinted-bg: #EDE8F4;
+}
+
+[data-team="srh"] {
+  --team-primary: #FF822A;
+  --team-secondary: #1A1A1A;
+  --team-text-on-primary: #FFFFFF;
+  --team-tinted-bg: #FFF1E8;
+}
+
+[data-team="dc"] {
+  --team-primary: #0057A8;
+  --team-secondary: #EF1C25;
+  --team-text-on-primary: #FFFFFF;
+  --team-tinted-bg: #E8F0FA;
+}
+
+[data-team="pbks"] {
+  --team-primary: #ED1B24;
+  --team-secondary: #A7A9AC;
+  --team-text-on-primary: #FFFFFF;
+  --team-tinted-bg: #FCEAEA;
+}
+
+[data-team="rr"] {
+  --team-primary: #E5137D;
+  --team-secondary: #1D3461;
+  --team-text-on-primary: #FFFFFF;
+  --team-tinted-bg: #FDE9F3;
+}
+
+[data-team="gt"] {
+  --team-primary: #1C3A6B;
+  --team-secondary: #D4AF37;
+  --team-text-on-primary: #FFFFFF;
+  --team-tinted-bg: #E8EDF5;
+}
+
+[data-team="lsg"] {
+  --team-primary: #A72B6D;
+  --team-secondary: #00B2CA;
+  --team-text-on-primary: #FFFFFF;
+  --team-tinted-bg: #F6E8F1;
+}

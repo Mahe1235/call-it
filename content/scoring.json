@@ -1,0 +1,77 @@
+{
+  "matchCard": {
+    "winner": {
+      "correct": 10,
+      "wrong": 0
+    },
+    "theCall": {
+      "correct": 10,
+      "wrong": 0
+    },
+    "villainPick": {
+      "under10": 15,
+      "between10and30": 0,
+      "over30": -5,
+      "didNotPlay": 0,
+      "notPicked": 0
+    },
+    "chaosBall": {
+      "correct": 12,
+      "wrong": 0
+    }
+  },
+  "h2h": {
+    "perMatchWin": 10,
+    "monthlyBonus": 75
+  },
+  "season": {
+    "top4": {
+      "perTeam": 30,
+      "maxTotal": 120
+    },
+    "champion": {
+      "base": 200
+    },
+    "runnerUp": {
+      "base": 100
+    },
+    "woodenSpoon": {
+      "base": 50
+    },
+    "orangeCap": {
+      "rank1": 80,
+      "rank2": 40,
+      "rank3": 40,
+      "rank4": 20,
+      "rank5": 20,
+      "outsideTop5": 0
+    },
+    "purpleCap": {
+      "rank1": 80,
+      "rank2": 40,
+      "rank3": 40,
+      "rank4": 20,
+      "rank5": 20,
+      "outsideTop5": 0
+    },
+    "mostSixes": {
+      "rank1": 60,
+      "rank2": 30,
+      "rank3": 30,
+      "rank4": 15,
+      "rank5": 15,
+      "outsideTop5": 0
+    }
+  },
+  "contrarianMultipliers": {
+    "solo": 2.0,
+    "twoOfGroup": 1.5,
+    "threeOrMore": 1.0
+  },
+  "notes": {
+    "maxMatchCard": 47,
+    "expectedAverageMatch": "15-25",
+    "maxSeason": 1180,
+    "realisticStrongSeason": "500-700"
+  }
+}

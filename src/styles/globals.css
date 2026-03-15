@@ -1,0 +1,174 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Base palette ─────────────────────────────────────── */
+:root {
+  --canvas: #F0ECE4;
+  --card: #FFFFFF;
+  --text-primary: #0E0E0E;
+  --text-secondary: #505050;
+  --text-muted: #9A9A9A;
+  --text-placeholder: #BBBBBB;
+  --border: #E5E5E5;
+  --border-subtle: rgba(0,0,0,0.07);
+  --border-default: rgba(0,0,0,0.12);
+  --surface-subtle: rgba(0,0,0,0.025);
+  --shadow-card: 0 2px 16px rgba(0, 0, 0, 0.07), 0 1px 3px rgba(0, 0, 0, 0.04);
+  --shimmer-from: #f0f0f0;
+  --shimmer-mid: #e8e8e8;
+
+  /* Default team vars (overridden by TeamThemeProvider) */
+  --team-primary: #111111;
+  --team-secondary: #444444;
+  --team-text-on-primary: #FFFFFF;
+  --team-tinted-bg: #F5F5F5;
+}
+
+/* ── Dark mode palette ────────────────────────────────── */
+[data-theme="dark"] {
+  --canvas: #141210;
+  --card: #1E1B18;
+  --text-primary: #F0ECE4;
+  --text-secondary: #A09890;
+  --text-muted: #6B6560;
+  --text-placeholder: #3E3C38;
+  --border: #2E2A26;
+  --border-subtle: rgba(255,255,255,0.08);
+  --border-default: rgba(255,255,255,0.13);
+  --surface-subtle: rgba(255,255,255,0.04);
+  --shadow-card: 0 2px 20px rgba(0,0,0,0.5), 0 1px 4px rgba(0,0,0,0.35);
+  --shimmer-from: #2A2724;
+  --shimmer-mid: #352F2B;
+}
+
+/* ── Base styles ──────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Smooth colour transition when toggling dark mode */
+  transition: color 0.25s ease, background-color 0.25s ease;
+}
+
+body {
+  margin: 0;
+  background: transparent;
+  color: var(--text-primary);
+  font-family: 'Familjen Grotesk', sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  min-height: 100dvh;
+  overflow-x: hidden;
+}
+
+#root {
+  max-width: 430px;
+  margin: 0 auto;
+  min-height: 100dvh;
+  position: relative;
+}
+
+/* Desktop: lift the app off the background like a phone on a desk */
+@media (min-width: 480px) {
+  #root {
+    /* Subtle phone-frame shadow */
+    box-shadow:
+      0 0 0 1px rgba(0, 0, 0, 0.06),
+      0 8px 32px rgba(0, 0, 0, 0.12),
+      0 32px 80px rgba(0, 0, 0, 0.10);
+    /* Barely-there inner glow on the frame edge */
+    outline: 1px solid rgba(255, 255, 255, 0.35);
+    outline-offset: -1px;
+  }
+}
+
+/* ── Typography helpers ───────────────────────────────── */
+.font-display { font-family: 'Bricolage Grotesque', sans-serif; }
+.font-body    { font-family: 'Familjen Grotesk', sans-serif; }
+.font-mono    { font-family: 'Space Mono', monospace; }
+
+/* ── Animations ───────────────────────────────────────── */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeSlide {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes popIn {
+  0%   { transform: scale(0.88); opacity: 0; }
+  60%  { transform: scale(1.04); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+@keyframes floatBadge {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-6px); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.5; transform: scale(0.85); }
+}
+
+@keyframes shimBg {
+  0%, 100% { transform: scale(1) translate(0, 0); }
+  50%       { transform: scale(1.08) translate(-4px, 6px); }
+}
+
+.animate-slide-up   { animation: slideUp 0.3s ease both; }
+.animate-fade-slide { animation: fadeSlide 0.22s ease both; }
+.animate-pop-in     { animation: popIn 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+.animate-float      { animation: floatBadge 3.5s ease-in-out infinite; }
+
+/* ── Tap feedback ─────────────────────────────────────── */
+.tap-feedback:active { transform: scale(0.94); }
+
+/* ── Card base ────────────────────────────────────────── */
+.card {
+  background: var(--card);
+  border-radius: 20px;
+  padding: 18px;
+  box-shadow: var(--shadow-card);
+}
+
+/* ── Shimmer skeleton ─────────────────────────────────── */
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--shimmer-from) 25%,
+    var(--shimmer-mid)  50%,
+    var(--shimmer-from) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+  border-radius: 8px;
+}
+
+/* ── Bottom nav dark mode ─────────────────────────────── */
+[data-theme="dark"] nav.bottom-nav {
+  background: var(--card);
+  border-top-color: var(--border);
+}
+
+/* ── Select dark mode ─────────────────────────────────── */
+[data-theme="dark"] select {
+  color-scheme: dark;
+}

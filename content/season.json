@@ -1,0 +1,86 @@
+{
+  "season": {
+    "year": 2025,
+    "name": "IPL 2025",
+    "totalMatches": 74,
+    "teams": ["csk", "mi", "rcb", "kkr", "srh", "dc", "pbks", "rr", "gt", "lsg"],
+    "playoff": {
+      "top4Teams": 4,
+      "format": "playoff4"
+    }
+  },
+  "predictions": {
+    "top4": {
+      "label": "Top 4 Teams",
+      "description": "Pick 4 teams you think will qualify for the playoffs.",
+      "pickCount": 4,
+      "basePointsPerCorrect": 30,
+      "maxPoints": 120,
+      "contrarianApplies": false
+    },
+    "champion": {
+      "label": "Tournament Champion",
+      "description": "Who lifts the trophy?",
+      "pickCount": 1,
+      "basePoints": 200,
+      "contrarianApplies": true
+    },
+    "runnerUp": {
+      "label": "Runner-Up",
+      "description": "Who makes the final but doesn't win?",
+      "pickCount": 1,
+      "basePoints": 100,
+      "contrarianApplies": true
+    },
+    "woodenSpoon": {
+      "label": "Wooden Spoon",
+      "description": "Who finishes last in the table?",
+      "pickCount": 1,
+      "basePoints": 50,
+      "contrarianApplies": true
+    },
+    "orangeCap": {
+      "label": "Orange Cap",
+      "description": "Pick 3 batters who'll score the most runs. Partial credit for top-5 finishes.",
+      "pickCount": 3,
+      "partialCredit": {
+        "rank1": 1.0,
+        "rank2to3": 0.5,
+        "rank4to5": 0.25,
+        "outsideTop5": 0
+      },
+      "basePoints": 80,
+      "contrarianApplies": true
+    },
+    "purpleCap": {
+      "label": "Purple Cap",
+      "description": "Pick 3 bowlers who'll take the most wickets. Partial credit for top-5 finishes.",
+      "pickCount": 3,
+      "partialCredit": {
+        "rank1": 1.0,
+        "rank2to3": 0.5,
+        "rank4to5": 0.25,
+        "outsideTop5": 0
+      },
+      "basePoints": 80,
+      "contrarianApplies": true
+    },
+    "mostSixes": {
+      "label": "Most Sixes",
+      "description": "Pick 3 players who'll hit the most sixes. Partial credit for top-5 finishes.",
+      "pickCount": 3,
+      "partialCredit": {
+        "rank1": 1.0,
+        "rank2to3": 0.5,
+        "rank4to5": 0.25,
+        "outsideTop5": 0
+      },
+      "basePoints": 60,
+      "contrarianApplies": true
+    }
+  },
+  "locking": {
+    "locksAt": "first_ball_of_season",
+    "note": "Season picks lock when the first match of IPL 2025 begins. No edits after lock."
+  }
+}

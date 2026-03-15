@@ -1,0 +1,173 @@
+{
+  "_note": "All banter copy. Use {PLAYER}, {TEAM}, {TEAM_A}, {TEAM_B}, {FRIEND}, {PTS}, {RANK} as template vars.",
+
+  "cardStates": {
+    "open": [
+      "Today's card is open. {TEAM_A} vs {TEAM_B}. Lock it in before the first ball.",
+      "Match is live. {TEAM_A} take on {TEAM_B}. What's your call?",
+      "{TEAM_A} vs {TEAM_B}. The card's waiting. Clock's ticking."
+    ],
+    "locked": [
+      "Card locked. {FRIEND}'s on record.",
+      "Locked in. Now we wait.",
+      "Done. Can't change your mind now. Good."
+    ],
+    "missed": [
+      "No card this match. You had time.",
+      "Card closed. {FRIEND} didn't submit. Happens.",
+      "Missed the window. {TEAM_A} vs {TEAM_B} kicked off without your picks."
+    ],
+    "countdown": [
+      "Card closes in {TIME}.",
+      "{TIME} left to submit.",
+      "Lock in before {TIME} is gone."
+    ]
+  },
+
+  "pickConfirmations": {
+    "matchWinner": [
+      "You've got {TEAM}. Bold.",
+      "{TEAM} it is. Let's see.",
+      "On record: {TEAM} to win."
+    ],
+    "theCall": [
+      "The Call locked: {ANSWER}.",
+      "You said {ANSWER}. Committing.",
+      "Noted. {ANSWER}."
+    ],
+    "villainPick": [
+      "You villain-picked {PLAYER}. {FRIEND} villain-picked someone different. One of you will regret this.",
+      "{PLAYER} is your villain. If they score 30, that's on you.",
+      "Villain: {PLAYER}. Under 10 and you're laughing. Over 30 and it costs you."
+    ],
+    "chaosBall": [
+      "Chaos Ball locked. {ANSWER}.",
+      "You said {ANSWER}. The chaos will reveal itself.",
+      "{ANSWER}. The match will decide."
+    ]
+  },
+
+  "scoringResults": {
+    "matchWinnerCorrect": [
+      "{TEAM} won. {FRIEND} called it. +{PTS} pts.",
+      "Correct. {TEAM} wins. {FRIEND} takes {PTS}.",
+      "{FRIEND} predicted {TEAM}. {TEAM} delivered. {PTS} points."
+    ],
+    "matchWinnerWrong": [
+      "{TEAM} lost. {FRIEND} predicted {TEAM}. {FRIEND} is available for questions.",
+      "{TEAM} didn't win. {FRIEND} thought they would. Zero pts on the winner.",
+      "Wrong team. {FRIEND} had {TEAM}. The match disagreed."
+    ],
+    "theCallCorrect": [
+      "The Call landed. {ANSWER}. +{PTS}.",
+      "{FRIEND} said {ANSWER}. Correct. {PTS} points.",
+      "Right call. {ANSWER}. That's {PTS}."
+    ],
+    "theCallWrong": [
+      "Didn't land. {FRIEND} said {ANSWER}.",
+      "The Call missed. {ANSWER} was wrong.",
+      "{ANSWER}. Nope. Zero."
+    ],
+    "villainUnder10": [
+      "{PLAYER} made {RUNS}. Your villain pick delivered. +15.",
+      "Under 10. {PLAYER} flopped exactly as predicted. {FRIEND} gets 15.",
+      "{PLAYER}: {RUNS} runs. Villain confirmed. +15 pts."
+    ],
+    "villainOver30": [
+      "{PLAYER} scored {RUNS}. Your villain pick cost you 5.",
+      "Villain backfired. {PLAYER} got {RUNS}. -5 pts.",
+      "{PLAYER} had {RUNS}. That's a villain penalty. -5."
+    ],
+    "villainNeutral": [
+      "{PLAYER} scored {RUNS}. Between 10 and 30. Neutral.",
+      "{RUNS} runs for {PLAYER}. Neither here nor there.",
+      "{PLAYER}: {RUNS}. No points, no damage."
+    ],
+    "chaosBallCorrect": [
+      "Chaos Ball hit. {FRIEND} gets +12.",
+      "Your chaos ball landed. {FRIEND} had no idea it was happening.",
+      "Chaos Ball: correct. {PTS} points."
+    ],
+    "chaosBallWrong": [
+      "Chaos Ball missed. That's what chaos means.",
+      "Didn't happen. Zero from the Chaos Ball.",
+      "Chaos Ball: wrong. The match had other ideas."
+    ]
+  },
+
+  "emptyStates": {
+    "noCardYet": [
+      "Nobody's filled their card yet. Typical. The match starts in {TIME}.",
+      "Zero cards submitted. You have {TIME}.",
+      "Empty. The group hasn't moved. {TIME} left."
+    ],
+    "noMatchesToday": [
+      "No matches today. Rest day.",
+      "Nothing on today. Check back tomorrow.",
+      "The IPL is taking a day off. So can you."
+    ],
+    "seasonPicksEmpty": [
+      "Season picks aren't locked yet. Opens before the first match.",
+      "Fill your season picks before the tournament begins.",
+      "Season predictions: 0 of {GROUP_SIZE} submitted."
+    ]
+  },
+
+  "reveal": {
+    "header": [
+      "Match done. Here's how it went.",
+      "Full time. Let's see the damage.",
+      "{TEAM_A} vs {TEAM_B}. Results are in."
+    ],
+    "groupSplit": [
+      "{COUNT} of {TOTAL} picked the winner.",
+      "The group was {SPLIT} on the winner.",
+      "{WINNER_COUNT} called {TEAM}. {LOSER_COUNT} didn't."
+    ],
+    "h2hWin": [
+      "{FRIEND} beat {OPPONENT} head-to-head. +10 pts.",
+      "H2H goes to {FRIEND} this match.",
+      "{FRIEND} takes the H2H. {OPPONENT} takes the loss."
+    ],
+    "h2hLoss": [
+      "{OPPONENT} won the H2H this match.",
+      "H2H: {OPPONENT} over {FRIEND}.",
+      "H2H lost to {OPPONENT}."
+    ]
+  },
+
+  "leaderboard": {
+    "rankUp": [
+      "{FRIEND} climbed to #{RANK}.",
+      "Up to #{RANK} for {FRIEND}.",
+      "{FRIEND} moves up. #{RANK} now."
+    ],
+    "rankDown": [
+      "{FRIEND} drops to #{RANK}.",
+      "Down to #{RANK}.",
+      "Slipped to #{RANK}. Still in it."
+    ],
+    "rankSame": [
+      "{FRIEND} stays at #{RANK}.",
+      "No change. #{RANK}.",
+      "Same spot. #{RANK} for {FRIEND}."
+    ],
+    "topOfLeaderboard": [
+      "{FRIEND} is top of the table.",
+      "#{RANK} in the group. {FRIEND} is leading.",
+      "Current leader: {FRIEND}."
+    ]
+  },
+
+  "onboarding": {
+    "welcome": "Pick your team. It sets your colours for the season.",
+    "teamPicked": "Locked in as a {TEAM} fan. Good choice.",
+    "displayNamePrompt": "What do the others call you?"
+  },
+
+  "seasonPicks": {
+    "open": "Season picks are open. Lock them in before the first ball of IPL {YEAR}.",
+    "locked": "Season picks locked. See you at the end.",
+    "partiallyFilled": "{COUNT} of {TOTAL} categories filled. Finish before the tournament starts."
+  }
+}

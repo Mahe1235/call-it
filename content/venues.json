@@ -1,0 +1,124 @@
+{
+  "venues": [
+    {
+      "id": "wankhede",
+      "name": "Wankhede Stadium",
+      "city": "Mumbai",
+      "capacity": 33108,
+      "pitchNotes": "Good batting surface, pace and bounce. Dew factor in evening matches.",
+      "defaultLines": {
+        "totalSixes": 14,
+        "totalRuns": 355,
+        "totalWickets": 12
+      }
+    },
+    {
+      "id": "ma_chidambaram",
+      "name": "M.A. Chidambaram Stadium",
+      "city": "Chennai",
+      "capacity": 50000,
+      "pitchNotes": "Spin-friendly surface. Lower scores typical. Slow outfield.",
+      "defaultLines": {
+        "totalSixes": 11,
+        "totalRuns": 320,
+        "totalWickets": 14
+      }
+    },
+    {
+      "id": "m_chinnaswamy",
+      "name": "M. Chinnaswamy Stadium",
+      "city": "Bengaluru",
+      "capacity": 38000,
+      "pitchNotes": "Flat pitch, short boundaries. High-scoring venue. Batting paradise.",
+      "defaultLines": {
+        "totalSixes": 16,
+        "totalRuns": 375,
+        "totalWickets": 11
+      }
+    },
+    {
+      "id": "eden_gardens",
+      "name": "Eden Gardens",
+      "city": "Kolkata",
+      "capacity": 68000,
+      "pitchNotes": "Good all-round surface. Slight help for pacers early. Dew a factor.",
+      "defaultLines": {
+        "totalSixes": 13,
+        "totalRuns": 345,
+        "totalWickets": 12
+      }
+    },
+    {
+      "id": "rajiv_gandhi",
+      "name": "Rajiv Gandhi International Cricket Stadium",
+      "city": "Hyderabad",
+      "capacity": 55000,
+      "pitchNotes": "Batting-friendly. Good pace and bounce. Big ground reduces sixes slightly.",
+      "defaultLines": {
+        "totalSixes": 12,
+        "totalRuns": 340,
+        "totalWickets": 13
+      }
+    },
+    {
+      "id": "arun_jaitley",
+      "name": "Arun Jaitley Stadium",
+      "city": "Delhi",
+      "capacity": 41842,
+      "pitchNotes": "Good batting surface. Even bounce. Slightly larger boundaries.",
+      "defaultLines": {
+        "totalSixes": 13,
+        "totalRuns": 340,
+        "totalWickets": 12
+      }
+    },
+    {
+      "id": "pca_mohali",
+      "name": "Punjab Cricket Association IS Bindra Stadium",
+      "city": "Mohali",
+      "capacity": 26950,
+      "pitchNotes": "Good batting track. Shorter boundaries on one side. Pace-friendly early.",
+      "defaultLines": {
+        "totalSixes": 14,
+        "totalRuns": 350,
+        "totalWickets": 12
+      }
+    },
+    {
+      "id": "sawai_mansingh",
+      "name": "Sawai Mansingh Stadium",
+      "city": "Jaipur",
+      "capacity": 30000,
+      "pitchNotes": "Produces high scores. Flat pitch, short square boundaries.",
+      "defaultLines": {
+        "totalSixes": 15,
+        "totalRuns": 360,
+        "totalWickets": 11
+      }
+    },
+    {
+      "id": "narendra_modi",
+      "name": "Narendra Modi Stadium",
+      "city": "Ahmedabad",
+      "capacity": 132000,
+      "pitchNotes": "Large ground, reduces sixes. Good batting track. Low dew.",
+      "defaultLines": {
+        "totalSixes": 11,
+        "totalRuns": 330,
+        "totalWickets": 13
+      }
+    },
+    {
+      "id": "atal_bihari",
+      "name": "Atal Bihari Vajpayee Ekana Cricket Stadium",
+      "city": "Lucknow",
+      "capacity": 50000,
+      "pitchNotes": "Good batting surface. Short straight boundaries. Pace and bounce.",
+      "defaultLines": {
+        "totalSixes": 13,
+        "totalRuns": 345,
+        "totalWickets": 12
+      }
+    }
+  ]
+}

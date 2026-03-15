@@ -1,0 +1,43 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm create:*)",
+      "Bash(printf \"y\\\\n\")",
+      "Bash(npm install:*)",
+      "Bash(npm run:*)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(npm --version)",
+      "Bash(ls \"C:/Users/91897/OneDrive/Documents/GitHub/call-it/node_modules/.bin/vite\"*)",
+      "Bash(lsof -ti:5173)",
+      "Bash(xargs kill:*)",
+      "mcp__Desktop_Commander__list_sessions",
+      "mcp__Desktop_Commander__read_process_output",
+      "mcp__a340e9f3-fba1-4900-9306-03ea0db16cf7__list_organizations",
+      "mcp__a340e9f3-fba1-4900-9306-03ea0db16cf7__get_cost",
+      "mcp__a340e9f3-fba1-4900-9306-03ea0db16cf7__confirm_cost",
+      "mcp__a340e9f3-fba1-4900-9306-03ea0db16cf7__create_project",
+      "mcp__a340e9f3-fba1-4900-9306-03ea0db16cf7__get_project_url",
+      "mcp__a340e9f3-fba1-4900-9306-03ea0db16cf7__get_publishable_keys",
+      "mcp__a340e9f3-fba1-4900-9306-03ea0db16cf7__apply_migration",
+      "mcp__a340e9f3-fba1-4900-9306-03ea0db16cf7__list_tables",
+      "mcp__a340e9f3-fba1-4900-9306-03ea0db16cf7__get_advisors",
+      "mcp__a340e9f3-fba1-4900-9306-03ea0db16cf7__execute_sql",
+      "mcp__Desktop_Commander__kill_process",
+      "mcp__Desktop_Commander__get_file_info",
+      "Bash(node scripts/seedSchedule.js --find-series \"indian premier league 2026\")",
+      "Bash(node scripts/seedSchedule.js --series-id 87c62aac-bc3c-4738-ab93-19da0690488f --dry-run)",
+      "Bash(node -e \"fetch\\(''''https://api.cricapi.com/v1/series_info?apikey=63357857-aa46-4386-bebe-df43d332e81d&id=87c62aac-bc3c-4738-ab93-19da0690488f''''\\).then\\(r=>r.json\\(\\)\\).then\\(d=>console.log\\(JSON.stringify\\(d,null,2\\)\\)\\)\")",
+      "Bash(node scripts/seedSchedule.js --series-id 87c62aac-bc3c-4738-ab93-19da0690488f)",
+      "Bash(node scripts/createTestUser.js)",
+      "Bash(grep -v \"^$\")",
+      "Bash(done)",
+      "Bash(node --input-type=module:*)",
+      "Bash(node scripts/seedSquads.js)",
+      "mcp__a340e9f3-fba1-4900-9306-03ea0db16cf7__list_projects",
+      "WebFetch(domain:scores.iplt20.com)",
+      "WebFetch(domain:bcciplayerimages.s3.ap-south-1.amazonaws.com)",
+      "WebFetch(domain:www.espncricinfo.com)",
+      "Bash(npx vite:*)"
+    ]
+  }
+}
