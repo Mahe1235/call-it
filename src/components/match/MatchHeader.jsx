@@ -20,7 +20,7 @@ export function MatchHeader({ match }) {
   return (
     <div style={{ marginBottom: '4px' }}>
       {/* Match meta */}
-      <p className="font-mono text-xs tracking-widest uppercase mb-3" style={{ color: 'var(--text-muted)' }}>
+      <p className="font-mono text-xs tracking-widest uppercase mb-3" style={{ color: 'var(--text-secondary)' }}>
         Match {match.match_number} · {dateStr} · {timeStr}
       </p>
 
@@ -39,7 +39,7 @@ export function MatchHeader({ match }) {
 
       {/* Venue */}
       {venue && (
-        <p className="font-body text-xs mt-3 text-center" style={{ color: 'var(--text-muted)' }}>
+        <p className="font-body text-xs mt-3 text-center" style={{ color: 'var(--text-secondary)' }}>
           📍 {venue.name}, {venue.city}
         </p>
       )}
@@ -51,24 +51,18 @@ function TeamBadge({ team, align }) {
   if (!team) return null
 
   return (
-    <div className={`flex flex-col ${align === 'right' ? 'items-end' : 'items-start'} flex-1 min-w-0`}>
-      {/* Coloured pill */}
-      <div
-        className="font-display font-black text-sm px-3 py-1.5 rounded-full mb-1.5"
+    <div className={`flex items-center ${align === 'right' ? 'justify-end' : 'justify-start'} flex-1 min-w-0`}>
+      <p
+        className="font-display font-black"
         style={{
-          background: team.colors.primary,
-          color: team.colors.textOnPrimary,
-          letterSpacing: '-0.3px',
+          fontSize: '22px',
+          letterSpacing: '-1px',
+          lineHeight: 1,
+          color: 'var(--text-primary)',
+          margin: 0,
         }}
       >
         {team.shortName}
-      </div>
-      {/* Full name */}
-      <p
-        className="font-body text-xs leading-tight"
-        style={{ color: 'var(--text-secondary)', maxWidth: '110px', textAlign: align === 'right' ? 'right' : 'left' }}
-      >
-        {team.name}
       </p>
     </div>
   )
