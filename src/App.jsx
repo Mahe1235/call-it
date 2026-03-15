@@ -74,6 +74,8 @@ function SignInScreen() {
   const { signInWithGoogle } = useAuth()
   const [idx, setIdx] = useState(0)
   const [visible, setVisible] = useState(true)
+  const [testLoading, setTestLoading] = useState(null) // email of account being logged into
+  const [testError, setTestError] = useState(null)
 
   useEffect(() => {
     const id = setInterval(() => {
@@ -181,24 +183,38 @@ function SignInScreen() {
             ].map(u => (
               <button
                 key={u.email}
+                disabled={testLoading !== null}
                 onClick={async () => {
-                  await supabase.auth.signInWithPassword({ email: u.email, password: 'test1234' })
+                  setTestLoading(u.email)
+                  setTestError(null)
+                  const { error } = await supabase.auth.signInWithPassword({ email: u.email, password: 'test1234' })
+                  if (error) {
+                    setTestError(`${u.name}: ${error.message}`)
+                    setTestLoading(null)
+                  }
+                  // on success useAuth() re-renders automatically — no manual nav needed
                 }}
                 className="w-full font-mono tap-feedback"
                 style={{
-                  background: 'transparent',
+                  background: testLoading === u.email ? 'var(--surface-subtle)' : 'transparent',
                   border: '1.5px dashed var(--border-default)',
                   borderRadius: '12px',
                   padding: '10px',
                   fontSize: '12px',
-                  color: 'var(--text-muted)',
+                  color: testLoading === u.email ? 'var(--text-primary)' : 'var(--text-muted)',
                   letterSpacing: '0.3px',
-                  cursor: 'pointer',
+                  cursor: testLoading !== null ? 'not-allowed' : 'pointer',
+                  opacity: testLoading !== null && testLoading !== u.email ? 0.4 : 1,
                 }}
               >
-                ⚡ {u.name} ({u.team})
+                {testLoading === u.email ? '⏳ Signing in…' : `⚡ ${u.name} (${u.team})`}
               </button>
             ))}
+            {testError && (
+              <p className="font-mono text-center" style={{ fontSize: '11px', color: '#cc0000', marginTop: '4px' }}>
+                ✗ {testError}
+              </p>
+            )}
           </div>
         )}
       </div>
