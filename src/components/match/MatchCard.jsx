@@ -366,36 +366,12 @@ function LockedCard({ prediction, theCall, chaosBall, teamA, teamB, canEdit, onE
         marginBottom: '16px',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'space-between',
         gap: '8px',
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
-          <span style={{ fontSize: '16px' }}>🔒</span>
-          <p className="font-display font-bold text-sm" style={{ color: 'var(--text-primary)', margin: 0 }}>
-            {banter}
-          </p>
-        </div>
-        {canEdit && (
-          <button
-            onClick={onEdit}
-            className="font-mono tap-feedback"
-            style={{
-              flexShrink: 0,
-              fontSize: '11px',
-              fontWeight: 700,
-              letterSpacing: '0.5px',
-              textTransform: 'uppercase',
-              background: 'rgba(255,255,255,0.2)',
-              border: 'none',
-              borderRadius: '8px',
-              padding: '5px 10px',
-              color: 'var(--text-primary)',
-              cursor: 'pointer',
-            }}
-          >
-            Edit
-          </button>
-        )}
+        <span style={{ fontSize: '16px' }}>🔒</span>
+        <p className="font-display font-bold text-sm" style={{ color: 'var(--text-primary)', margin: 0 }}>
+          {banter}
+        </p>
       </div>
 
       {/* Pick rows */}
@@ -415,6 +391,32 @@ function LockedCard({ prediction, theCall, chaosBall, teamA, teamB, canEdit, onE
           <LockedRow icon="💥" label={chaosBall.display_text} value={prediction.chaos_ball_pick} />
         )}
       </div>
+
+      {/* Edit link — only before match starts */}
+      {canEdit && (
+        <div style={{ textAlign: 'center', marginTop: '14px' }}>
+          <button
+            onClick={onEdit}
+            className="font-mono tap-feedback"
+            style={{
+              background: 'none',
+              border: 'none',
+              padding: '6px 12px',
+              fontSize: '11px',
+              fontWeight: 700,
+              letterSpacing: '0.5px',
+              textTransform: 'uppercase',
+              color: 'var(--text-muted)',
+              cursor: 'pointer',
+              textDecoration: 'underline',
+              textDecorationColor: 'var(--border-default)',
+              textUnderlineOffset: '3px',
+            }}
+          >
+            ✏️ Change picks
+          </button>
+        </div>
+      )}
     </div>
   )
 }
