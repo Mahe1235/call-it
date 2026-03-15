@@ -17,6 +17,7 @@ export function MatchCard({ match, questions, prediction, onLocked }) {
   const chaosBall = questions.find(q => q.type === 'chaos_ball')
   const teamA = getTeam(match.team_a)
   const teamB = getTeam(match.team_b)
+  const [editing, setEditing] = useState(false)
 
   // Client-side time check: treat match as started if date has passed,
   // even if admin hasn't updated status yet
@@ -32,7 +33,23 @@ export function MatchCard({ match, questions, prediction, onLocked }) {
     )
   }
 
-  // Locked: prediction submitted
+  // Locked + editing: show form pre-filled with existing picks
+  if (prediction && !matchStarted && editing) {
+    return (
+      <OpenCard
+        match={match}
+        theCall={theCall}
+        chaosBall={chaosBall}
+        teamA={teamA}
+        teamB={teamB}
+        initialPicks={prediction}
+        onLocked={(updated) => { setEditing(false); onLocked?.(updated) }}
+        onCancel={() => setEditing(false)}
+      />
+    )
+  }
+
+  // Locked: prediction submitted (after match starts, no edit allowed)
   if (prediction) {
     return (
       <>
@@ -42,6 +59,8 @@ export function MatchCard({ match, questions, prediction, onLocked }) {
           chaosBall={chaosBall}
           teamA={teamA}
           teamB={teamB}
+          canEdit={!matchStarted}
+          onEdit={() => setEditing(true)}
         />
         {/* Show group picks only after match has started */}
         {matchStarted && (
@@ -66,13 +85,14 @@ export function MatchCard({ match, questions, prediction, onLocked }) {
 
 /* ─── Open card ──────────────────────────────────────────────────────────── */
 
-function OpenCard({ match, theCall, chaosBall, teamA, teamB, onLocked }) {
+function OpenCard({ match, theCall, chaosBall, teamA, teamB, onLocked, onCancel, initialPicks = null }) {
   const { user } = useAuth()
+  const isEditing = initialPicks !== null
 
-  const [winner,  setWinner]  = useState(null)
-  const [call,    setCall]    = useState(null)
-  const [villain, setVillain] = useState('')
-  const [chaos,   setChaos]   = useState(null)
+  const [winner,  setWinner]  = useState(initialPicks?.match_winner_pick  ?? null)
+  const [call,    setCall]    = useState(initialPicks?.the_call_pick       ?? null)
+  const [villain, setVillain] = useState(initialPicks?.villain_pick_player ?? '')
+  const [chaos,   setChaos]   = useState(initialPicks?.chaos_ball_pick     ?? null)
   const [submitting,   setSubmitting]   = useState(false)
   const [submitError,  setSubmitError]  = useState(null)
   const [authExpired,  setAuthExpired]  = useState(false)
@@ -285,32 +305,53 @@ function OpenCard({ match, theCall, chaosBall, teamA, teamB, onLocked }) {
         </p>
       )}
 
-      {/* Submit button */}
-      <button
-        onClick={handleSubmit}
-        disabled={!allPicked || submitting}
-        className="w-full font-display font-extrabold tap-feedback"
-        style={{
-          background: allPicked ? 'var(--team-primary)' : 'var(--surface-subtle)',
-          color: allPicked ? 'var(--team-text-on-primary)' : 'var(--text-muted)',
-          border: 'none',
-          borderRadius: '14px',
-          padding: '17px',
-          fontSize: '17px',
-          letterSpacing: '-0.3px',
-          cursor: allPicked ? 'pointer' : 'not-allowed',
-          transition: 'background 0.2s ease, color 0.2s ease',
-        }}
-      >
-        {submitting ? 'Locking in…' : 'Lock it in'}
-      </button>
+      {/* Submit + optional cancel when editing */}
+      <div style={{ display: 'flex', gap: '10px' }}>
+        {isEditing && onCancel && (
+          <button
+            onClick={onCancel}
+            className="font-display font-bold tap-feedback"
+            style={{
+              flex: '0 0 auto',
+              padding: '17px 18px',
+              borderRadius: '14px',
+              border: '1.5px solid var(--border-subtle)',
+              background: 'var(--card)',
+              color: 'var(--text-muted)',
+              fontSize: '14px',
+              cursor: 'pointer',
+            }}
+          >
+            Cancel
+          </button>
+        )}
+        <button
+          onClick={handleSubmit}
+          disabled={!allPicked || submitting}
+          className="font-display font-extrabold tap-feedback"
+          style={{
+            flex: 1,
+            background: allPicked ? 'var(--team-primary)' : 'var(--surface-subtle)',
+            color: allPicked ? 'var(--team-text-on-primary)' : 'var(--text-muted)',
+            border: 'none',
+            borderRadius: '14px',
+            padding: '17px',
+            fontSize: '17px',
+            letterSpacing: '-0.3px',
+            cursor: allPicked ? 'pointer' : 'not-allowed',
+            transition: 'background 0.2s ease, color 0.2s ease',
+          }}
+        >
+          {submitting ? 'Saving…' : isEditing ? 'Save changes ✓' : 'Lock it in'}
+        </button>
+      </div>
     </div>
   )
 }
 
 /* ─── Locked card ────────────────────────────────────────────────────────── */
 
-function LockedCard({ prediction, theCall, chaosBall, teamA, teamB }) {
+function LockedCard({ prediction, theCall, chaosBall, teamA, teamB, canEdit, onEdit }) {
   const { profile } = useAuth()
   const winnerTeam = prediction.match_winner_pick === teamA?.id ? teamA : teamB
   const banter = getBanter('cardStates.locked', { FRIEND: profile?.display_name?.split(' ')[0] ?? 'You' })
@@ -325,12 +366,36 @@ function LockedCard({ prediction, theCall, chaosBall, teamA, teamB }) {
         marginBottom: '16px',
         display: 'flex',
         alignItems: 'center',
+        justifyContent: 'space-between',
         gap: '8px',
       }}>
-        <span style={{ fontSize: '16px' }}>🔒</span>
-        <p className="font-display font-bold text-sm" style={{ color: 'var(--text-primary)', margin: 0 }}>
-          {banter}
-        </p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
+          <span style={{ fontSize: '16px' }}>🔒</span>
+          <p className="font-display font-bold text-sm" style={{ color: 'var(--text-primary)', margin: 0 }}>
+            {banter}
+          </p>
+        </div>
+        {canEdit && (
+          <button
+            onClick={onEdit}
+            className="font-mono tap-feedback"
+            style={{
+              flexShrink: 0,
+              fontSize: '11px',
+              fontWeight: 700,
+              letterSpacing: '0.5px',
+              textTransform: 'uppercase',
+              background: 'rgba(255,255,255,0.2)',
+              border: 'none',
+              borderRadius: '8px',
+              padding: '5px 10px',
+              color: 'var(--text-primary)',
+              cursor: 'pointer',
+            }}
+          >
+            Edit
+          </button>
+        )}
       </div>
 
       {/* Pick rows */}
