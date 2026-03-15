@@ -9,14 +9,22 @@ export { teams, scoring, questions, venues, season, banter }
 
 /** Lookup helpers */
 
-const IPL_LOGO_BASE = 'https://scores.iplt20.com/ipl/teamlogos'
+const IPL_CDN = 'https://documents.iplt20.com/ipl'
+
+// Transparent-background logo URLs from the official IPL CDN.
+// DC uses a capital O in LogoOutline; RR has a different path entirely.
+function getLogoUrl(shortName) {
+  if (shortName === 'DC') return `${IPL_CDN}/DC/Logos/LogoOutline/DCoutline.png`
+  if (shortName === 'RR') return `${IPL_CDN}/RR/Logos/RR_Logo.png`
+  return `${IPL_CDN}/${shortName}/Logos/Logooutline/${shortName}outline.png`
+}
 
 export function getTeam(id) {
   const team = teams.teams.find((t) => t.id === id) ?? null
   if (!team) return null
   return {
     ...team,
-    logoUrl: `${IPL_LOGO_BASE}/${team.shortName}.png`,
+    logoUrl: getLogoUrl(team.shortName),
   }
 }
 

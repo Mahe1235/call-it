@@ -388,11 +388,11 @@ function TeamDisplayCard({ id, label, onClick, tall = false }) {
         aria-hidden="true"
         style={{
           position: 'absolute',
-          right: '-6px',
+          right: '-16px',
           top: '50%',
           transform: 'translateY(-50%)',
-          height: tall ? '90px' : '72px',
-          opacity: 0.13,
+          height: tall ? '110px' : '90px',
+          opacity: 0.22,
           pointerEvents: 'none',
           userSelect: 'none',
         }}
@@ -433,26 +433,6 @@ function TeamDisplayCard({ id, label, onClick, tall = false }) {
         </p>
       </div>
 
-      {/* Edit pencil */}
-      {onClick && (
-        <div style={{
-          position: 'absolute',
-          top: '10px',
-          right: '10px',
-          zIndex: 2,
-          width: '24px',
-          height: '24px',
-          borderRadius: '8px',
-          background: 'rgba(255,255,255,0.75)',
-          backdropFilter: 'blur(4px)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontSize: '12px',
-        }}>
-          ✏️
-        </div>
-      )}
     </div>
   )
 }

@@ -72,13 +72,13 @@ function LeaderboardRow({ entry, isMe }) {
           aria-hidden="true"
           style={{
             position: 'absolute',
-            right: '-2px',
+            right: '-14px',
             top: '50%',
             transform: 'translateY(-50%)',
-            height: '56px',
-            width: '56px',
+            height: '80px',
+            width: '80px',
             objectFit: 'contain',
-            opacity: 0.08,
+            opacity: 0.18,
             pointerEvents: 'none',
             userSelect: 'none',
           }}

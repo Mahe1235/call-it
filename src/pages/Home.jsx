@@ -66,8 +66,8 @@ function UpcomingMatchCard({ match, questions }) {
     TEAM_B: teamB?.shortName ?? match.team_b.toUpperCase(),
   })
 
-  const tintA = hexToRgba(teamA?.colors?.primary, 0.18)
-  const tintB = hexToRgba(teamB?.colors?.primary, 0.18)
+  const tintA = hexToRgba(teamA?.colors?.primary, 0.25)
+  const tintB = hexToRgba(teamB?.colors?.primary, 0.25)
 
   return (
     <div
@@ -82,30 +82,28 @@ function UpcomingMatchCard({ match, questions }) {
         boxShadow: '0 2px 16px rgba(0,0,0,0.06)',
       }}
     >
-      {/* Bold logo watermarks — large and clearly visible */}
-      {teamA?.logo && (
+      {/* Bold logo watermarks */}
+      {teamA?.logoUrl && (
         <img
-          src={teamA.logo} alt=""
+          src={teamA.logoUrl} alt=""
           aria-hidden="true"
           style={{
-            position: 'absolute', top: '-10px', left: '-10px',
-            width: '260px', height: '260px',
-            opacity: 0.22,
-            filter: 'grayscale(0%)',
+            position: 'absolute', top: '-50px', left: '-50px',
+            width: '220px', height: '220px',
+            opacity: 0.30,
             transform: 'rotate(-10deg)',
             pointerEvents: 'none', userSelect: 'none',
           }}
         />
       )}
-      {teamB?.logo && (
+      {teamB?.logoUrl && (
         <img
-          src={teamB.logo} alt=""
+          src={teamB.logoUrl} alt=""
           aria-hidden="true"
           style={{
-            position: 'absolute', bottom: '-10px', right: '-10px',
-            width: '260px', height: '260px',
-            opacity: 0.22,
-            filter: 'grayscale(0%)',
+            position: 'absolute', bottom: '-50px', right: '-50px',
+            width: '220px', height: '220px',
+            opacity: 0.30,
             transform: 'rotate(10deg)',
             pointerEvents: 'none', userSelect: 'none',
           }}
