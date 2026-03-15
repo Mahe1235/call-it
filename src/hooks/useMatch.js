@@ -2,6 +2,71 @@ import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
 
 /**
+ * Returns a feed of matches for the home carousel:
+ *   - up to 2 most-recent completed matches (oldest first)
+ *   - up to 3 upcoming / live matches (soonest first)
+ * activeIndex points to the first upcoming/live match.
+ * { matches: [{match, questions}], activeIndex, loading, error }
+ */
+export function useMatchFeed() {
+  const [matches, setMatches] = useState([])
+  const [activeIndex, setActiveIndex] = useState(0)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    let cancelled = false
+
+    async function load() {
+      setLoading(true)
+      setError(null)
+
+      const [{ data: completed, error: e1 }, { data: upcoming, error: e2 }] = await Promise.all([
+        supabase
+          .from('matches')
+          .select('*, match_questions(*)')
+          .eq('status', 'completed')
+          .order('date', { ascending: false })
+          .limit(2),
+        supabase
+          .from('matches')
+          .select('*, match_questions(*)')
+          .in('status', ['upcoming', 'live'])
+          .order('date', { ascending: true })
+          .limit(3),
+      ])
+
+      if (cancelled) return
+
+      if (e1 || e2) {
+        setError((e1 || e2).message)
+        setLoading(false)
+        return
+      }
+
+      const toItem = (row) => {
+        const { match_questions, ...matchData } = row
+        return { match: matchData, questions: match_questions ?? [] }
+      }
+
+      // Completed arrive newest-first; reverse so oldest is leftmost in carousel
+      const completedItems = (completed ?? []).reverse().map(toItem)
+      const upcomingItems  = (upcoming  ?? []).map(toItem)
+      const all = [...completedItems, ...upcomingItems]
+
+      setMatches(all)
+      setActiveIndex(completedItems.length > 0 ? completedItems.length : 0)
+      setLoading(false)
+    }
+
+    load()
+    return () => { cancelled = true }
+  }, [])
+
+  return { matches, activeIndex, loading, error }
+}
+
+/**
  * Returns the next upcoming or currently live match, with its questions.
  * { match, questions, loading, error }
  *
