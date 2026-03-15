@@ -165,8 +165,8 @@ function SignInScreen() {
           Sign in with Google
         </button>
 
-        {/* Dev-only shortcuts — never shown in production */}
-        {import.meta.env.DEV && (
+        {/* TEMP: test logins visible until Google OAuth is confirmed — remove before launch */}
+        {true && (
           <div style={{ marginTop: '12px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
             <p className="font-mono text-center" style={{ fontSize: '10px', color: 'var(--text-muted)', letterSpacing: '0.5px', textTransform: 'uppercase', marginBottom: '2px' }}>
               Dev accounts
