@@ -61,73 +61,95 @@ export default function Home() {
   )
 }
 
-/* ─── Carousel ────────────────────────────────────────────────────────────── */
+/* ─── Peek carousel ───────────────────────────────────────────────────────── */
 
 function MatchCarousel({ matches, currentIndex, onChange }) {
-  const touchStartX = useRef(null)
+  const scrollRef = useRef(null)
   const slideRefs = useRef([])
   const [containerHeight, setContainerHeight] = useState(null)
+  const isProgrammatic = useRef(false)
+  const scrollEndTimer = useRef(null)
 
-  // Measure active slide height and update container — runs on index change and after renders
+  // Animate container height to match active slide (incl. when form expands)
   useEffect(() => {
     const el = slideRefs.current[currentIndex]
     if (!el) return
     setContainerHeight(el.offsetHeight)
-
-    // Also watch for content changes within the active slide (e.g. prediction submitted)
-    const ro = new ResizeObserver(() => {
-      setContainerHeight(el.offsetHeight)
-    })
+    const ro = new ResizeObserver(() => setContainerHeight(el.offsetHeight))
     ro.observe(el)
     return () => ro.disconnect()
   }, [currentIndex, matches])
 
-  function prev() { if (currentIndex > 0) onChange(currentIndex - 1) }
-  function next() { if (currentIndex < matches.length - 1) onChange(currentIndex + 1) }
+  // Programmatically scroll to active card when index changes via dots
+  useEffect(() => {
+    const container = scrollRef.current
+    const slide = slideRefs.current[currentIndex]
+    if (!container || !slide) return
+    isProgrammatic.current = true
+    const cw = container.offsetWidth
+    const sw = slide.offsetWidth
+    container.scrollTo({ left: slide.offsetLeft - (cw - sw) / 2, behavior: 'smooth' })
+    // Release lock after scroll settles
+    clearTimeout(scrollEndTimer.current)
+    scrollEndTimer.current = setTimeout(() => { isProgrammatic.current = false }, 600)
+  }, [currentIndex])
 
-  function onTouchStart(e) { touchStartX.current = e.touches[0].clientX }
-  function onTouchEnd(e) {
-    if (touchStartX.current === null) return
-    const dx = e.changedTouches[0].clientX - touchStartX.current
-    touchStartX.current = null
-    if (dx < -40) next()
-    else if (dx > 40) prev()
+  // Sync dots while user manually scrolls
+  function onScroll() {
+    if (isProgrammatic.current) return
+    clearTimeout(scrollEndTimer.current)
+    scrollEndTimer.current = setTimeout(() => {
+      const container = scrollRef.current
+      if (!container) return
+      const center = container.scrollLeft + container.offsetWidth / 2
+      let closest = 0, minDist = Infinity
+      slideRefs.current.forEach((el, i) => {
+        if (!el) return
+        const dist = Math.abs(el.offsetLeft + el.offsetWidth / 2 - center)
+        if (dist < minDist) { minDist = dist; closest = i }
+      })
+      if (closest !== currentIndex) onChange(closest)
+    }, 80)
   }
 
   return (
-    <div style={{ marginBottom: '0' }}>
-      {/* Sliding window — height animates to match the active slide */}
+    <div>
+      {/* Scroll container — bleeds 16px into page padding on each side for peek */}
       <div
+        ref={scrollRef}
+        onScroll={onScroll}
         style={{
-          overflow: 'hidden',
+          margin: '0 -16px',
+          overflowX: 'auto',
+          overflowY: 'hidden',
+          scrollSnapType: 'x mandatory',
+          scrollbarWidth: 'none',
+          msOverflowStyle: 'none',
+          display: 'flex',
+          alignItems: 'flex-start',
+          gap: '10px',
+          paddingInline: '16px',   // restores page edge; peek comes from narrower cards
           height: containerHeight ? `${containerHeight}px` : 'auto',
           transition: 'height 0.38s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
         }}
-        onTouchStart={onTouchStart}
-        onTouchEnd={onTouchEnd}
       >
-        <div
-          style={{
-            display: 'flex',
-            transform: `translateX(calc(-${currentIndex} * 100%))`,
-            transition: 'transform 0.38s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-            willChange: 'transform',
-            alignItems: 'flex-start',
-          }}
-        >
-          {matches.map((item, i) => (
-            <div
-              key={item.match.id}
-              ref={el => slideRefs.current[i] = el}
-              style={{ minWidth: '100%' }}
-            >
-              {item.match.status === 'completed'
-                ? <CompletedMatchCard match={item.match} />
-                : <UpcomingMatchCard match={item.match} questions={item.questions} />
-              }
-            </div>
-          ))}
-        </div>
+        {matches.map((item, i) => (
+          <div
+            key={item.match.id}
+            ref={el => slideRefs.current[i] = el}
+            style={{
+              scrollSnapAlign: 'center',
+              flexShrink: 0,
+              // Cards are narrower than viewport so adjacent cards peek in
+              width: 'calc(100vw - 80px)',
+            }}
+          >
+            {item.match.status === 'completed'
+              ? <CompletedMatchCard match={item.match} />
+              : <UpcomingMatchCard match={item.match} questions={item.questions} />
+            }
+          </div>
+        ))}
       </div>
 
       {/* Dot indicators */}
@@ -144,11 +166,7 @@ function MatchCarousel({ matches, currentIndex, onChange }) {
                 width: isActive ? '22px' : '6px',
                 height: '6px',
                 borderRadius: '3px',
-                background: isActive
-                  ? 'var(--text-primary)'
-                  : isCompleted
-                    ? 'var(--border-default)'
-                    : 'var(--border-subtle)',
+                background: isActive ? 'var(--text-primary)' : isCompleted ? 'var(--border-default)' : 'var(--border-subtle)',
                 border: 'none',
                 padding: 0,
                 cursor: 'pointer',
@@ -167,15 +185,14 @@ function MatchCarousel({ matches, currentIndex, onChange }) {
 
 function UpcomingMatchCard({ match, questions }) {
   const { prediction, setPrediction, loading: predLoading } = useMyPrediction(match.id)
+  const [formOpen, setFormOpen] = useState(false)
 
   const teamA = getTeam(match.team_a)
   const teamB = getTeam(match.team_b)
 
-  const banterText = getBanter('cardStates.countdown', {
-    TIME: '...',
-    TEAM_A: teamA?.shortName ?? match.team_a.toUpperCase(),
-    TEAM_B: teamB?.shortName ?? match.team_b.toUpperCase(),
-  })
+  const matchStarted = match.status !== 'upcoming' || Date.now() >= new Date(match.date).getTime()
+  // Show prediction form when: user explicitly opened it, OR prediction already exists
+  const showForm = formOpen || !!prediction
 
   const tintA = hexToRgba(teamA?.colors?.primary, 0.25)
   const tintB = hexToRgba(teamB?.colors?.primary, 0.25)
@@ -212,30 +229,51 @@ function UpcomingMatchCard({ match, questions }) {
       <div style={{ position: 'relative', zIndex: 1 }}>
         <MatchHeader match={match} />
 
-        <div style={{ margin: '20px 0 4px', height: '1px', background: 'var(--border-subtle)' }} />
+        <div style={{ margin: '16px 0 0', height: '1px', background: 'var(--border-subtle)' }} />
 
-        {/* Countdown */}
-        <div className="flex flex-col items-center" style={{ paddingTop: '16px' }}>
-          <p className="font-mono text-xs tracking-widest uppercase mb-3" style={{ color: 'var(--text-muted)' }}>
+        {/* Countdown — always visible */}
+        <div className="flex flex-col items-center" style={{ paddingTop: '14px', paddingBottom: '4px' }}>
+          <p className="font-mono text-xs tracking-widest uppercase mb-2" style={{ color: 'var(--text-muted)' }}>
             {match.status === 'live' ? 'Match in progress' : 'Card closes in'}
           </p>
           <Countdown targetDate={match.date} status={match.status} />
-          {match.status !== 'live' && (
-            <p className="font-body text-xs text-center mt-3" style={{ color: 'var(--text-muted)', maxWidth: '240px' }}>
-              {banterText}
-            </p>
-          )}
         </div>
 
+        {/* Bottom area: compact CTA or full prediction form */}
         {predLoading ? (
-          <PredictionSkeleton />
-        ) : (
+          <CompactSkeleton />
+        ) : showForm ? (
           <MatchCard
             match={match}
             questions={questions}
             prediction={prediction}
-            onLocked={setPrediction}
+            onLocked={(p) => { setPrediction(p); setFormOpen(false) }}
           />
+        ) : matchStarted ? (
+          // Match started, no picks — missed state handled inside MatchCard
+          <MatchCard match={match} questions={questions} prediction={null} />
+        ) : (
+          // Compact default — tap to expand form
+          <button
+            onClick={() => setFormOpen(true)}
+            style={{
+              marginTop: '14px',
+              width: '100%',
+              padding: '14px',
+              borderRadius: '14px',
+              border: 'none',
+              background: 'var(--text-primary)',
+              color: 'var(--card)',
+              fontSize: '15px',
+              fontWeight: 800,
+              fontFamily: 'var(--font-display)',
+              cursor: 'pointer',
+              letterSpacing: '-0.3px',
+              transition: 'opacity 0.15s',
+            }}
+          >
+            Call it →
+          </button>
         )}
       </div>
     </div>
@@ -342,6 +380,16 @@ function EmptyState() {
         No matches right now
       </p>
       <p className="font-body text-sm" style={{ color: 'var(--text-muted)' }}>{text}</p>
+    </div>
+  )
+}
+
+/* ─── Compact skeleton (while checking for existing pick) ────────────────── */
+
+function CompactSkeleton() {
+  return (
+    <div style={{ marginTop: '14px' }}>
+      <Shimmer style={{ height: '48px', borderRadius: '14px' }} />
     </div>
   )
 }
