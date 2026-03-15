@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useMatchFeed } from '../hooks/useMatch'
 import { useMyPrediction } from '../hooks/usePredictions'
 import { useAuth } from '../hooks/useAuth'
@@ -65,6 +65,22 @@ export default function Home() {
 
 function MatchCarousel({ matches, currentIndex, onChange }) {
   const touchStartX = useRef(null)
+  const slideRefs = useRef([])
+  const [containerHeight, setContainerHeight] = useState(null)
+
+  // Measure active slide height and update container — runs on index change and after renders
+  useEffect(() => {
+    const el = slideRefs.current[currentIndex]
+    if (!el) return
+    setContainerHeight(el.offsetHeight)
+
+    // Also watch for content changes within the active slide (e.g. prediction submitted)
+    const ro = new ResizeObserver(() => {
+      setContainerHeight(el.offsetHeight)
+    })
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [currentIndex, matches])
 
   function prev() { if (currentIndex > 0) onChange(currentIndex - 1) }
   function next() { if (currentIndex < matches.length - 1) onChange(currentIndex + 1) }
@@ -80,9 +96,13 @@ function MatchCarousel({ matches, currentIndex, onChange }) {
 
   return (
     <div style={{ marginBottom: '0' }}>
-      {/* Sliding window */}
+      {/* Sliding window — height animates to match the active slide */}
       <div
-        style={{ overflow: 'hidden' }}
+        style={{
+          overflow: 'hidden',
+          height: containerHeight ? `${containerHeight}px` : 'auto',
+          transition: 'height 0.38s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+        }}
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
       >
@@ -96,7 +116,11 @@ function MatchCarousel({ matches, currentIndex, onChange }) {
           }}
         >
           {matches.map((item, i) => (
-            <div key={item.match.id} style={{ minWidth: '100%' }}>
+            <div
+              key={item.match.id}
+              ref={el => slideRefs.current[i] = el}
+              style={{ minWidth: '100%' }}
+            >
               {item.match.status === 'completed'
                 ? <CompletedMatchCard match={item.match} />
                 : <UpcomingMatchCard match={item.match} questions={item.questions} />
