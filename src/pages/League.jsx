@@ -65,7 +65,7 @@ function LeaderboardSkeleton() {
         <div key={i} style={{
           height: '54px',
           borderRadius: '14px',
-          background: 'linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%)',
+          background: 'linear-gradient(90deg, var(--surface-subtle) 25%, var(--border-subtle) 50%, var(--surface-subtle) 75%)',
           backgroundSize: '200% 100%',
           animation: 'shimmer 1.4s ease-in-out infinite',
           animationDelay: `${i * 0.08}s`,

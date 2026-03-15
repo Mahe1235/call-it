@@ -71,7 +71,7 @@ function UpcomingMatchCard({ match, questions }) {
         style={{
           margin: '20px 0 4px',
           height: '1px',
-          background: 'rgba(0,0,0,0.06)',
+          background: 'var(--border-subtle)',
         }}
       />
 

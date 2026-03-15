@@ -291,7 +291,7 @@ function OpenCard({ match, theCall, chaosBall, teamA, teamB, onLocked }) {
         disabled={!allPicked || submitting}
         className="w-full font-display font-extrabold tap-feedback"
         style={{
-          background: allPicked ? 'var(--team-primary)' : 'rgba(0,0,0,0.08)',
+          background: allPicked ? 'var(--team-primary)' : 'var(--surface-subtle)',
           color: allPicked ? 'var(--team-text-on-primary)' : 'var(--text-muted)',
           border: 'none',
           borderRadius: '14px',
@@ -539,7 +539,7 @@ function GroupMemberRow({ prediction, match, teamA, teamB }) {
         padding: '4px 10px',
         borderRadius: '99px',
         background: 'var(--team-tinted-bg)',
-        border: '1px solid rgba(0,0,0,0.08)',
+        border: '1px solid var(--border-subtle)',
         flexShrink: 0,
       }}>
         <p className="font-display font-bold" style={{

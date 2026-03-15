@@ -39,7 +39,7 @@ export default function Season() {
             padding: '14px 16px',
             borderRadius: '14px',
             background: 'var(--card)',
-            border: '1.5px solid rgba(0,0,0,0.07)',
+            border: '1.5px solid var(--border-subtle)',
             boxShadow: '0 1px 6px rgba(0,0,0,0.04)',
           }}>
             <p className="font-display font-bold text-sm" style={{ color: 'var(--text-primary)', margin: '0 0 4px' }}>
@@ -64,7 +64,7 @@ function MissedState() {
       borderRadius: '20px',
       padding: '32px 20px',
       background: 'var(--card)',
-      border: '1.5px solid rgba(0,0,0,0.07)',
+      border: '1.5px solid var(--border-subtle)',
       textAlign: 'center',
     }}>
       <div style={{ fontSize: '40px', marginBottom: '12px' }}>😬</div>

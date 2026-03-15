@@ -164,7 +164,7 @@ export function SeasonPicksForm({ onSaved, onCancel, initialPicks = null }) {
         background: 'var(--card)',
         borderRadius: '20px',
         padding: '20px 18px 18px',
-        border: '1.5px solid rgba(0,0,0,0.07)',
+        border: '1.5px solid var(--border-subtle)',
         boxShadow: '0 2px 16px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)',
         minHeight: '300px',
         display: 'flex',
@@ -256,7 +256,7 @@ export function SeasonPicksForm({ onSaved, onCancel, initialPicks = null }) {
               flex: '0 0 auto',
               padding: '14px 20px',
               borderRadius: '14px',
-              border: '1.5px solid rgba(0,0,0,0.1)',
+              border: '1.5px solid var(--border-subtle)',
               background: 'var(--card)',
               color: 'var(--text-primary)',
               fontSize: '16px',
@@ -278,7 +278,7 @@ export function SeasonPicksForm({ onSaved, onCancel, initialPicks = null }) {
             padding: '14px',
             borderRadius: '14px',
             border: 'none',
-            background: currentDone ? 'var(--team-primary)' : 'rgba(0,0,0,0.07)',
+            background: currentDone ? 'var(--team-primary)' : 'var(--surface-subtle)',
             color: currentDone ? 'var(--team-text-on-primary, #111)' : 'var(--text-muted)',
             fontSize: '15px',
             fontWeight: 800,
@@ -337,7 +337,7 @@ function PointsBreakdown({ info }) {
     <div style={{
       borderRadius: '12px',
       background: 'var(--surface-subtle)',
-      border: '1px solid rgba(0,0,0,0.06)',
+      border: '1px solid var(--border-subtle)',
       padding: '12px 14px',
       marginBottom: '4px',
     }}>
@@ -383,8 +383,8 @@ function PointsBreakdown({ info }) {
               gap: '4px',
               padding: '8px 6px',
               borderRadius: '10px',
-              background: r.pts.startsWith('+') ? 'rgba(22,163,74,0.06)' : 'rgba(0,0,0,0.03)',
-              border: `1px solid ${r.pts.startsWith('+') ? 'rgba(22,163,74,0.15)' : 'rgba(0,0,0,0.06)'}`,
+              background: r.pts.startsWith('+') ? 'rgba(22,163,74,0.06)' : 'var(--surface-subtle)',
+              border: `1px solid ${r.pts.startsWith('+') ? 'rgba(22,163,74,0.15)' : 'var(--border-subtle)'}`,
             }}>
               <span className="font-display font-black" style={{
                 fontSize: '17px',
@@ -426,7 +426,7 @@ function PtsPill({ value }) {
     <span className="font-mono text-xs" style={{
       fontWeight: 700,
       color: isPositive ? '#16a34a' : 'var(--text-muted)',
-      background: isPositive ? 'rgba(22,163,74,0.08)' : 'rgba(0,0,0,0.05)',
+      background: isPositive ? 'rgba(22,163,74,0.08)' : 'var(--surface-subtle)',
       padding: '2px 7px',
       borderRadius: '99px',
     }}>
@@ -448,7 +448,7 @@ function StepIndicator({ current, total, done }) {
       padding: '10px 16px',
       borderRadius: '14px',
       background: 'var(--card)',
-      border: '1.5px solid rgba(0,0,0,0.07)',
+      border: '1.5px solid var(--border-subtle)',
       boxShadow: '0 1px 6px rgba(0,0,0,0.04)',
     }}>
       <div style={{ flex: 1 }}>

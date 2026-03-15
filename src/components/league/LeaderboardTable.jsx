@@ -59,7 +59,7 @@ function LeaderboardRow({ entry, isMe }) {
       gap: '12px',
       padding: '13px 14px',
       borderRadius: '14px',
-      background: isMe ? 'var(--team-tinted-bg)' : '#fff',
+      background: isMe ? 'var(--team-tinted-bg)' : 'var(--card)',
       border: `1.5px solid ${isMe ? 'var(--team-primary)' : 'var(--border-subtle)'}`,
       transition: 'background 0.2s',
     }}>

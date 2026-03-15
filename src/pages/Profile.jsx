@@ -118,7 +118,7 @@ export default function Profile() {
               width: '22px',
               height: '22px',
               borderRadius: '50%',
-              background: '#fff',
+              background: 'var(--card)',
               boxShadow: '0 1px 4px rgba(0,0,0,0.25)',
               transition: 'left 0.25s ease',
               display: 'flex',

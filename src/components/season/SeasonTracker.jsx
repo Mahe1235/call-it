@@ -333,8 +333,8 @@ function SectionCard({ label, pts, canEdit, editing, onEdit, onClose, children }
             style={{
               padding: '4px 12px',
               borderRadius: '8px',
-              border: '1px solid rgba(0,0,0,0.1)',
-              background: editing ? 'rgba(0,0,0,0.05)' : 'transparent',
+              border: '1px solid var(--border-subtle)',
+              background: editing ? 'var(--surface-subtle)' : 'transparent',
               color: editing ? 'var(--text-primary)' : 'var(--text-muted)',
               fontSize: '11px',
               fontWeight: 600,
@@ -691,7 +691,7 @@ function PlayerSlotCard({ slotNum, playerName, allPlayers, canEdit, editing, onE
         )}
 
         {query.trim().length > 0 && filtered.length === 0 && (
-          <div style={{ marginTop: '4px', padding: '12px 16px', borderRadius: '13px', background: 'var(--card)', border: '1.5px solid rgba(0,0,0,0.07)' }}>
+          <div style={{ marginTop: '4px', padding: '12px 16px', borderRadius: '13px', background: 'var(--card)', border: '1.5px solid var(--border-subtle)' }}>
             <p className="font-body text-sm" style={{ color: 'var(--text-muted)', margin: 0 }}>No player found</p>
           </div>
         )}
