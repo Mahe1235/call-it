@@ -20,14 +20,9 @@ export function MatchHeader({ match }) {
   return (
     <div style={{ marginBottom: '4px' }}>
       {/* Match meta */}
-      <div className="flex items-baseline gap-2 mb-3">
-        <span className="font-mono text-xs tracking-widest uppercase" style={{ color: 'var(--text-primary)', fontWeight: 700 }}>
-          M{match.match_number}
-        </span>
-        <span className="font-mono text-xs tracking-wide uppercase" style={{ color: 'var(--text-muted)' }}>
-          {dateStr} · {timeStr}
-        </span>
-      </div>
+      <p className="font-mono text-xs tracking-wide uppercase mb-3" style={{ color: 'var(--text-secondary)' }}>
+        M{match.match_number} · {dateStr} · {timeStr}
+      </p>
 
       {/* Teams row */}
       <div className="flex items-center justify-between gap-3">

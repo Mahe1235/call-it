@@ -218,29 +218,28 @@ function MatchInfoCard({ match, isActive, onClick }) {
       )}
 
       <div style={{ position: 'relative', zIndex: 1 }}>
-        {/* Status badge row */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-          <p className="font-mono text-xs tracking-widest uppercase" style={{ color: 'var(--text-muted)' }}>
-            Match {match.match_number}
-          </p>
-          {isCompleted && (
-            <span style={{
-              fontSize: '10px', fontWeight: 700, fontFamily: 'var(--font-mono)',
-              letterSpacing: '0.06em', textTransform: 'uppercase',
-              padding: '3px 8px', borderRadius: '99px',
-              background: 'var(--surface-subtle)', color: 'var(--text-muted)',
-              border: '1px solid var(--border-subtle)',
-            }}>Done</span>
-          )}
-          {match.status === 'live' && (
-            <span style={{
-              fontSize: '10px', fontWeight: 700, fontFamily: 'var(--font-mono)',
-              letterSpacing: '0.06em', textTransform: 'uppercase',
-              padding: '3px 8px', borderRadius: '99px',
-              background: '#dc2626', color: '#fff',
-            }}>● Live</span>
-          )}
-        </div>
+        {/* Status badge — only shown when needed, top-right */}
+        {(isCompleted || match.status === 'live') && (
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '8px' }}>
+            {isCompleted && (
+              <span style={{
+                fontSize: '10px', fontWeight: 700, fontFamily: 'var(--font-mono)',
+                letterSpacing: '0.06em', textTransform: 'uppercase',
+                padding: '3px 8px', borderRadius: '99px',
+                background: 'var(--surface-subtle)', color: 'var(--text-secondary)',
+                border: '1px solid var(--border-subtle)',
+              }}>Done</span>
+            )}
+            {match.status === 'live' && (
+              <span style={{
+                fontSize: '10px', fontWeight: 700, fontFamily: 'var(--font-mono)',
+                letterSpacing: '0.06em', textTransform: 'uppercase',
+                padding: '3px 8px', borderRadius: '99px',
+                background: '#dc2626', color: '#fff',
+              }}>● Live</span>
+            )}
+          </div>
+        )}
 
         <MatchHeader match={match} />
 
@@ -264,7 +263,7 @@ function MatchInfoCard({ match, isActive, onClick }) {
         {/* Countdown for upcoming/live */}
         {!isCompleted && (
           <div style={{ marginTop: '14px', textAlign: 'center' }}>
-            <p className="font-mono text-xs tracking-widest uppercase mb-2" style={{ color: 'var(--text-muted)' }}>
+            <p className="font-mono text-xs tracking-widest uppercase mb-2" style={{ color: 'var(--text-secondary)' }}>
               {match.status === 'live' ? 'In progress' : 'Card closes in'}
             </p>
             <Countdown targetDate={match.date} status={match.status} />
