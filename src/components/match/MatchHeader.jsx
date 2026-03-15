@@ -20,9 +20,14 @@ export function MatchHeader({ match }) {
   return (
     <div style={{ marginBottom: '4px' }}>
       {/* Match meta */}
-      <p className="font-mono text-xs tracking-widest uppercase mb-3" style={{ color: 'var(--text-secondary)' }}>
-        Match {match.match_number} · {dateStr} · {timeStr}
-      </p>
+      <div className="flex items-baseline gap-2 mb-3">
+        <span className="font-mono text-xs tracking-widest uppercase" style={{ color: 'var(--text-primary)', fontWeight: 700 }}>
+          M{match.match_number}
+        </span>
+        <span className="font-mono text-xs tracking-wide uppercase" style={{ color: 'var(--text-muted)' }}>
+          {dateStr} · {timeStr}
+        </span>
+      </div>
 
       {/* Teams row */}
       <div className="flex items-center justify-between gap-3">
@@ -39,7 +44,12 @@ export function MatchHeader({ match }) {
 
       {/* Venue */}
       {venue && (
-        <p className="font-body text-xs mt-3 text-center" style={{ color: 'var(--text-secondary)' }}>
+        <p className="font-body text-xs mt-3 text-center" style={{
+          color: 'var(--text-muted)',
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+        }}>
           📍 {venue.name}, {venue.city}
         </p>
       )}
