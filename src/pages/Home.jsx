@@ -66,8 +66,8 @@ function UpcomingMatchCard({ match, questions }) {
     TEAM_B: teamB?.shortName ?? match.team_b.toUpperCase(),
   })
 
-  const tintA = hexToRgba(teamA?.colors?.primary, 0.13)
-  const tintB = hexToRgba(teamB?.colors?.primary, 0.13)
+  const tintA = hexToRgba(teamA?.colors?.primary, 0.18)
+  const tintB = hexToRgba(teamB?.colors?.primary, 0.18)
 
   return (
     <div
@@ -77,23 +77,22 @@ function UpcomingMatchCard({ match, questions }) {
         padding: '20px',
         position: 'relative',
         overflow: 'hidden',
-        // Strong diagonal split — each team owns a corner
-        background: `linear-gradient(140deg, ${tintA} 0%, var(--card) 42%, var(--card) 58%, ${tintB} 100%)`,
+        background: `linear-gradient(140deg, ${tintA} 0%, var(--card) 40%, var(--card) 60%, ${tintB} 100%)`,
         border: '1.5px solid var(--border-subtle)',
         boxShadow: '0 2px 16px rgba(0,0,0,0.06)',
       }}
     >
-      {/* Large logo watermarks — dominate their corners */}
+      {/* Bold logo watermarks — large and clearly visible */}
       {teamA?.logo && (
         <img
           src={teamA.logo} alt=""
           aria-hidden="true"
           style={{
-            position: 'absolute', top: '-30px', left: '-30px',
-            width: '210px', height: '210px',
-            opacity: 0.13,
-            filter: 'grayscale(10%)',
-            transform: 'rotate(-8deg)',
+            position: 'absolute', top: '-10px', left: '-10px',
+            width: '260px', height: '260px',
+            opacity: 0.22,
+            filter: 'grayscale(0%)',
+            transform: 'rotate(-10deg)',
             pointerEvents: 'none', userSelect: 'none',
           }}
         />
@@ -103,11 +102,11 @@ function UpcomingMatchCard({ match, questions }) {
           src={teamB.logo} alt=""
           aria-hidden="true"
           style={{
-            position: 'absolute', bottom: '-30px', right: '-30px',
-            width: '210px', height: '210px',
-            opacity: 0.13,
-            filter: 'grayscale(10%)',
-            transform: 'rotate(8deg)',
+            position: 'absolute', bottom: '-10px', right: '-10px',
+            width: '260px', height: '260px',
+            opacity: 0.22,
+            filter: 'grayscale(0%)',
+            transform: 'rotate(10deg)',
             pointerEvents: 'none', userSelect: 'none',
           }}
         />
