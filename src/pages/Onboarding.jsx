@@ -2,23 +2,27 @@ import { useState } from 'react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../hooks/useAuth'
 import { teams } from '../lib/content'
+import { JERSEY_AVATARS } from '../lib/avatars'
 
 export default function Onboarding() {
   const { user } = useAuth()
   const [selectedTeam, setSelectedTeam] = useState(null)
   const [displayName, setDisplayName] = useState('')
+  const [selectedSeed, setSelectedSeed] = useState(null)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState(null)
 
   async function handleSubmit(e) {
     e.preventDefault()
-    if (!selectedTeam || !displayName.trim()) return
+    if (!selectedTeam || !displayName.trim() || !selectedSeed) return
     setSaving(true)
     setError(null)
+    const jersey = JERSEY_AVATARS.find(j => j.id === selectedSeed)
     const { error } = await supabase.from('users').insert({
       id: user.id,
       display_name: displayName.trim(),
       team: selectedTeam,
+      avatar_url: jersey?.url ?? null,
     })
     if (error) {
       setError(error.message)
@@ -26,6 +30,8 @@ export default function Onboarding() {
     }
     // On success, useAuth listener will pick up the new profile and re-render App
   }
+
+  const canSubmit = selectedTeam && displayName.trim() && selectedSeed
 
   return (
     <div className="min-h-dvh flex flex-col justify-end p-4 pb-8 animate-slide-up">
@@ -51,6 +57,49 @@ export default function Onboarding() {
             maxLength={24}
             className="w-full bg-white border border-[var(--border)] rounded-btn px-4 py-3 font-body text-[var(--text-primary)] placeholder:text-[var(--text-placeholder)] focus:outline-none focus:ring-2 focus:ring-[var(--team-primary)]"
           />
+        </div>
+
+        {/* Avatar picker */}
+        <div>
+          <label className="block text-xs font-mono uppercase tracking-widest text-[var(--text-muted)] mb-3">
+            Pick your number
+          </label>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '10px' }}>
+            {JERSEY_AVATARS.map((jersey) => {
+              const isSelected = selectedSeed === jersey.id
+              return (
+                <button
+                  key={jersey.id}
+                  type="button"
+                  onClick={() => setSelectedSeed(jersey.id)}
+                  style={{
+                    display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px',
+                    padding: '6px 4px',
+                    borderRadius: '12px',
+                    border: isSelected ? '2px solid var(--text-primary)' : '2px solid transparent',
+                    background: isSelected ? 'var(--surface-subtle)' : 'transparent',
+                    cursor: 'pointer',
+                    transform: isSelected ? 'scale(1.06)' : 'scale(1)',
+                    transition: 'transform 0.15s, border-color 0.15s, background 0.15s',
+                    boxShadow: isSelected ? '0 2px 10px rgba(0,0,0,0.15)' : 'none',
+                  }}
+                >
+                  <img
+                    src={jersey.url}
+                    alt={jersey.label}
+                    style={{ width: '100%', aspectRatio: '1', borderRadius: '8px', display: 'block' }}
+                  />
+                  <span style={{
+                    fontSize: '9px', fontWeight: 700, fontFamily: 'var(--font-mono)',
+                    color: isSelected ? 'var(--text-primary)' : 'var(--text-muted)',
+                    letterSpacing: '0.02em', lineHeight: 1, textAlign: 'center',
+                    whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+                    width: '100%',
+                  }}>{jersey.sublabel}</span>
+                </button>
+              )
+            })}
+          </div>
         </div>
 
         {/* Team picker */}
@@ -87,7 +136,7 @@ export default function Onboarding() {
 
         <button
           type="submit"
-          disabled={!selectedTeam || !displayName.trim() || saving}
+          disabled={!canSubmit || saving}
           className="w-full py-4 rounded-btn font-display font-bold text-lg disabled:opacity-40 transition-all tap-feedback"
           style={{
             backgroundColor: selectedTeam

@@ -89,6 +89,19 @@ Correct answers are set by the admin after each match via the Admin panel.
 
 ---
 
+## Test Data (Dev Only)
+
+For local testing there's a separate script that seeds 5 fake matches (M90–M94), 4 fake users, predictions, and computed scores — so every app flow can be tested without real data.
+
+```bash
+npm run seed:test          # seed fake matches + users + scores
+npm run seed:test:reset    # remove all fake data (run before the real season)
+```
+
+See `docs/pre-season-checklist.md` for the full teardown steps before Match 1.
+
+---
+
 ## Troubleshooting
 
 **"No matches returned"** — The series ID is wrong or CricAPI hasn't published fixtures yet. Run `--find-series "ipl 2026"` to verify the ID.

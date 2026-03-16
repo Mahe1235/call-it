@@ -33,22 +33,30 @@ export default function Profile() {
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
             {/* Avatar */}
-            <div style={{
-              width: '48px',
-              height: '48px',
-              borderRadius: '50%',
-              background: 'var(--team-primary)',
-              color: 'var(--team-text-on-primary)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontFamily: 'Bricolage Grotesque, sans-serif',
-              fontWeight: 800,
-              fontSize: '20px',
-              flexShrink: 0,
-            }}>
-              {profile.display_name?.charAt(0).toUpperCase()}
-            </div>
+            {profile.avatar_url ? (
+              <img
+                src={profile.avatar_url}
+                alt={profile.display_name}
+                style={{ width: '56px', height: '56px', borderRadius: '50%', flexShrink: 0, background: 'var(--surface-subtle)' }}
+              />
+            ) : (
+              <div style={{
+                width: '56px',
+                height: '56px',
+                borderRadius: '50%',
+                background: 'var(--team-primary)',
+                color: 'var(--team-text-on-primary)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontFamily: 'Bricolage Grotesque, sans-serif',
+                fontWeight: 800,
+                fontSize: '22px',
+                flexShrink: 0,
+              }}>
+                {profile.display_name?.charAt(0).toUpperCase()}
+              </div>
+            )}
             <div>
               <p className="font-display font-bold" style={{ fontSize: '18px', color: 'var(--text-primary)', margin: 0, letterSpacing: '-0.3px' }}>
                 {profile.display_name}

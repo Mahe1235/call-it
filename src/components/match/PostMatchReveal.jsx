@@ -200,8 +200,8 @@ function VillainRow({ playerName, pts, scorecard }) {
   return (
     <div style={{
       padding: '10px 12px', borderRadius: '12px',
-      background: pts === -5 ? 'rgba(220,38,38,0.06)' : pts === 15 ? 'rgba(22,163,74,0.06)' : 'var(--surface-subtle)',
-      border: `1px solid ${pts === -5 ? 'rgba(220,38,38,0.18)' : pts === 15 ? 'rgba(22,163,74,0.18)' : 'var(--border-subtle)'}`,
+      background: 'var(--surface-subtle)',
+      border: '1px solid var(--border-subtle)',
       display: 'flex', alignItems: 'center', gap: '10px',
     }}>
       <span style={{ fontSize: '14px', flexShrink: 0, width: '18px', textAlign: 'center' }}>

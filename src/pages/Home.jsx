@@ -223,33 +223,15 @@ function MatchInfoCard({ match, isActive, onClick }) {
         {isCompleted && (
           <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '8px' }}>
             <span style={{
-              fontSize: '10px', fontWeight: 700, fontFamily: 'var(--font-mono)',
-              letterSpacing: '0.06em', textTransform: 'uppercase',
-              padding: '3px 8px', borderRadius: '99px',
-              background: 'var(--surface-subtle)', color: 'var(--text-secondary)',
-              border: '1px solid var(--border-subtle)',
+              fontSize: '11px', fontWeight: 800, fontFamily: 'var(--font-mono)',
+              letterSpacing: '0.08em', textTransform: 'uppercase',
+              padding: '4px 10px', borderRadius: '99px',
+              background: 'var(--text-primary)', color: 'var(--card)',
             }}>Done</span>
           </div>
         )}
 
         <MatchHeader match={match} />
-
-        {/* Winner strip for completed matches */}
-        {winnerTeam && (
-          <div style={{
-            marginTop: '14px',
-            padding: '10px 14px',
-            borderRadius: '10px',
-            background: hexToRgba(winnerTeam.colors.primary, 0.12),
-            border: `1px solid ${hexToRgba(winnerTeam.colors.primary, 0.22)}`,
-            display: 'flex', alignItems: 'center', gap: '7px',
-          }}>
-            <span style={{ fontSize: '14px' }}>🏆</span>
-            <p className="font-display font-black text-sm" style={{ color: 'var(--text-primary)', margin: 0 }}>
-              {winnerTeam.shortName} won
-            </p>
-          </div>
-        )}
 
         {/* Countdown for upcoming/live */}
         {!isCompleted && (

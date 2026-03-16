@@ -8,7 +8,9 @@
     "build": "vite build",
     "preview": "vite preview",
     "seed:schedule": "node scripts/seedSchedule.js",
-    "seed:squads": "node scripts/seedSquads.js"
+    "seed:squads": "node scripts/seedSquads.js",
+    "seed:test": "node scripts/seedTestData.js",
+    "seed:test:reset": "node scripts/seedTestData.js --reset"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.47.0",
