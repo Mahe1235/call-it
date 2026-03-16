@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
 import { getTeam } from '../lib/content'
 import { useTheme } from '../contexts/ThemeContext'
@@ -5,6 +6,7 @@ import { useTheme } from '../contexts/ThemeContext'
 export default function Profile() {
   const { profile, signOut } = useAuth()
   const { isDark, toggle }   = useTheme()
+  const navigate = useNavigate()
   const team = profile ? getTeam(profile.team) : null
 
   return (
@@ -131,6 +133,39 @@ export default function Profile() {
           </button>
         </div>
       </div>
+
+      {/* Admin portal link — only for admins */}
+      {profile?.is_admin && (
+        <div
+          onClick={() => navigate('/admin')}
+          className="tap-feedback"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '14px 20px',
+            marginBottom: '12px',
+            background: 'var(--card)',
+            borderRadius: '20px',
+            border: '1.5px solid var(--border-subtle)',
+            boxShadow: 'var(--shadow-card)',
+            cursor: 'pointer',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <span style={{ fontSize: '20px' }}>⚙️</span>
+            <div>
+              <p className="font-display font-bold text-sm" style={{ color: 'var(--text-primary)', margin: 0 }}>
+                Scoring Panel
+              </p>
+              <p className="font-body text-xs" style={{ color: 'var(--text-muted)', margin: '1px 0 0' }}>
+                Score matches and publish results
+              </p>
+            </div>
+          </div>
+          <span style={{ color: 'var(--text-muted)', fontSize: '16px' }}>›</span>
+        </div>
+      )}
 
       {/* Sign out */}
       <button
