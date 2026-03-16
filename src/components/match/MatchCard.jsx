@@ -148,6 +148,31 @@ function OpenCard({ match, theCall, chaosBall, teamA, teamB, onLocked, onCancel,
     }
   }
 
+  // ── Confirmation banter (must be before any early return) ───────────────────
+  const winnerConfirmation = useMemo(() => {
+    if (!winner) return null
+    const shortName = winner === match.team_a
+      ? (teamA?.shortName ?? winner.toUpperCase())
+      : (teamB?.shortName ?? winner.toUpperCase())
+    return getBanter('pickConfirmations.matchWinner', { TEAM: shortName })
+  }, [winner])
+
+  const callConfirmation = useMemo(() => {
+    if (!call) return null
+    return getBanter('pickConfirmations.theCall', { ANSWER: call })
+  }, [call])
+
+  const villainConfirmation = useMemo(() => {
+    if (!villain) return null
+    return getBanter('pickConfirmations.villainPick', { PLAYER: villain, FRIEND: 'someone' })
+  }, [villain])
+
+  const chaosConfirmation = useMemo(() => {
+    if (!chaos) return null
+    return getBanter('pickConfirmations.chaosBall', { ANSWER: chaos })
+  }, [chaos])
+
+  // ── Auth expired — early return after all hooks ───────────────────────────
   if (authExpired) {
     return (
       <div style={{
@@ -183,29 +208,6 @@ function OpenCard({ match, theCall, chaosBall, teamA, teamB, onLocked, onCancel,
       </div>
     )
   }
-
-  const winnerConfirmation = useMemo(() => {
-    if (!winner) return null
-    const shortName = winner === match.team_a
-      ? (teamA?.shortName ?? winner.toUpperCase())
-      : (teamB?.shortName ?? winner.toUpperCase())
-    return getBanter('pickConfirmations.matchWinner', { TEAM: shortName })
-  }, [winner])
-
-  const callConfirmation = useMemo(() => {
-    if (!call) return null
-    return getBanter('pickConfirmations.theCall', { ANSWER: call })
-  }, [call])
-
-  const villainConfirmation = useMemo(() => {
-    if (!villain) return null
-    return getBanter('pickConfirmations.villainPick', { PLAYER: villain, FRIEND: 'someone' })
-  }, [villain])
-
-  const chaosConfirmation = useMemo(() => {
-    if (!chaos) return null
-    return getBanter('pickConfirmations.chaosBall', { ANSWER: chaos })
-  }, [chaos])
 
   return (
     <div style={{ marginTop: '20px' }}>
