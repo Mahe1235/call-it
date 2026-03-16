@@ -2,11 +2,9 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
 import { getTeam } from '../lib/content'
-import { useTheme } from '../contexts/ThemeContext'
 
 export default function Profile() {
   const { profile, signOut } = useAuth()
-  const { isDark, toggle }   = useTheme()
   const navigate = useNavigate()
   const team = profile ? getTeam(profile.team) : null
   const [rulesOpen, setRulesOpen] = useState(false)
@@ -78,71 +76,6 @@ export default function Profile() {
         </div>
       )}
 
-      {/* Settings card */}
-      <div style={{
-        background: 'var(--card)',
-        borderRadius: '20px',
-        border: '1.5px solid var(--border-subtle)',
-        boxShadow: 'var(--shadow-card)',
-        overflow: 'hidden',
-        marginBottom: '12px',
-      }}>
-        {/* Dark mode row */}
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: '16px 20px',
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <span style={{ fontSize: '20px' }}>{isDark ? '🌙' : '☀️'}</span>
-            <div>
-              <p className="font-display font-bold text-sm" style={{ color: 'var(--text-primary)', margin: 0 }}>
-                {isDark ? 'Dark mode' : 'Light mode'}
-              </p>
-              <p className="font-body text-xs" style={{ color: 'var(--text-muted)', margin: '1px 0 0' }}>
-                {isDark ? 'Night owl mode on' : 'Switch to dark mode'}
-              </p>
-            </div>
-          </div>
-
-          {/* Toggle pill */}
-          <button
-            onClick={toggle}
-            aria-label="Toggle dark mode"
-            style={{
-              position: 'relative',
-              width: '50px',
-              height: '28px',
-              borderRadius: '99px',
-              border: 'none',
-              background: isDark ? 'var(--team-primary)' : 'rgba(0,0,0,0.12)',
-              cursor: 'pointer',
-              padding: 0,
-              transition: 'background 0.25s ease',
-              flexShrink: 0,
-            }}
-          >
-            <span style={{
-              position: 'absolute',
-              top: '3px',
-              left: isDark ? '25px' : '3px',
-              width: '22px',
-              height: '22px',
-              borderRadius: '50%',
-              background: 'var(--card)',
-              boxShadow: '0 1px 4px rgba(0,0,0,0.25)',
-              transition: 'left 0.25s ease',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '12px',
-            }}>
-              {isDark ? '🌙' : '☀️'}
-            </span>
-          </button>
-        </div>
-      </div>
 
       {/* How to Play */}
       <div style={{
@@ -181,57 +114,100 @@ export default function Profile() {
           <div style={{ padding: '0 20px 20px', borderTop: '1px solid var(--border-subtle)' }}>
 
             {/* Deadline */}
-            <div style={{ marginTop: '16px', marginBottom: '16px' }}>
-              <p className="font-mono text-xs uppercase tracking-widest" style={{ color: 'var(--text-muted)', marginBottom: '6px' }}>Deadline</p>
-              <p className="font-body text-sm" style={{ color: 'var(--text-secondary)', margin: 0, lineHeight: 1.5 }}>
-                Lock your picks before the match starts. Once the first ball is bowled, the card is sealed — no changes.
+            <Section label="Deadline">
+              <p className="font-body text-sm" style={{ color: 'var(--text-secondary)', margin: 0, lineHeight: 1.6 }}>
+                Every match has a card you fill before the first ball is bowled. Once the match goes live, your card locks automatically — no edits, no excuses.
               </p>
-            </div>
+            </Section>
 
-            {/* Match card scoring */}
-            <p className="font-mono text-xs uppercase tracking-widest" style={{ color: 'var(--text-muted)', marginBottom: '10px' }}>Match Card</p>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '16px' }}>
-              {[
-                { label: 'Winner Pick', pts: '+10', desc: 'Pick which team wins' },
-                { label: 'The Call', pts: '+10', desc: 'Match stat over/under or team question' },
-                { label: 'Chaos Ball', pts: '+12', desc: 'Yes/No wildcard question' },
-                { label: 'Villain — flopped', pts: '+15', desc: 'Your pick scores <10 & takes 0 wkts' },
-                { label: 'Villain — impact', pts: '−5', desc: 'Your pick scores 30+ or takes 2+ wkts', neg: true },
-                { label: 'Villain — neutral', pts: '0', desc: 'Everyone else' },
-              ].map(row => (
-                <div key={row.label} style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '8px' }}>
-                  <div style={{ flex: 1 }}>
-                    <p className="font-display font-bold" style={{ fontSize: '13px', color: 'var(--text-primary)', margin: 0 }}>{row.label}</p>
-                    <p className="font-body" style={{ fontSize: '11px', color: 'var(--text-muted)', margin: '1px 0 0', lineHeight: 1.4 }}>{row.desc}</p>
+            <Divider />
+
+            {/* Match card */}
+            <Section label="Match Card — 4 picks per match">
+              <RuleRow label="Winner Pick" pts="+10">
+                Simple: pick which team wins. Gets a contrarian multiplier — if you're the only one who called the upset, you earn double.
+              </RuleRow>
+              <RuleRow label="The Call" pts="+10">
+                A specific match stat question — e.g. "Total sixes: Over/Under 13" or "Which team scores more in the powerplay?". One question per match, same for everyone.
+              </RuleRow>
+              <RuleRow label="Villain Pick" pts="varies">
+                Pick one player from either squad to be your villain. You want them to <em>flop</em> — score under 10 runs and take zero wickets. The worse they do for their team, the better for you.
+                <div style={{ marginTop: '8px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                  {[
+                    { outcome: 'Flopped', detail: '<10 runs & 0 wickets', pts: '+15', neg: false },
+                    { outcome: 'Neutral', detail: 'Anything in between', pts: '0', neg: false },
+                    { outcome: 'Impact',  detail: '30+ runs or 2+ wickets', pts: '−5', neg: true },
+                  ].map(r => (
+                    <div key={r.outcome} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span className="font-body text-xs" style={{ color: 'var(--text-muted)' }}>
+                        <strong style={{ color: 'var(--text-secondary)' }}>{r.outcome}</strong> — {r.detail}
+                      </span>
+                      <span className="font-mono font-bold" style={{ fontSize: '12px', color: r.neg ? '#EF4444' : 'var(--team-primary)' }}>{r.pts}</span>
+                    </div>
+                  ))}
+                </div>
+              </RuleRow>
+              <RuleRow label="Chaos Ball" pts="+12">
+                A Yes/No wildcard question — something unpredictable like "Will the match go to the last over?" or "Will there be a super over?". Pays the most because it's the hardest to call.
+              </RuleRow>
+            </Section>
+
+            <Divider />
+
+            {/* Contrarian */}
+            <Section label="Contrarian Bonus">
+              <p className="font-body text-sm" style={{ color: 'var(--text-secondary)', margin: '0 0 8px', lineHeight: 1.5 }}>
+                Your Winner, The Call, and Chaos Ball points are multiplied based on how many people picked the same thing.
+              </p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                {[
+                  { label: 'Only you picked it', mult: '2×' },
+                  { label: '2 of you picked it', mult: '1.5×' },
+                  { label: '3 or more picked it', mult: '1×' },
+                ].map(row => (
+                  <div key={row.label} style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <p className="font-body text-sm" style={{ color: 'var(--text-secondary)', margin: 0 }}>{row.label}</p>
+                    <span className="font-mono font-bold" style={{ fontSize: '13px', color: 'var(--team-primary)' }}>{row.mult}</span>
                   </div>
-                  <span className="font-mono font-bold" style={{ fontSize: '13px', color: row.neg ? '#EF4444' : 'var(--team-primary)', flexShrink: 0 }}>{row.pts}</span>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+              <p className="font-body text-xs" style={{ color: 'var(--text-muted)', margin: '8px 0 0', lineHeight: 1.5 }}>
+                Safe consensus picks earn normal points. Brave solo calls earn double. Villain Pick has no multiplier.
+              </p>
+            </Section>
 
-            {/* Contrarian bonus */}
-            <p className="font-mono text-xs uppercase tracking-widest" style={{ color: 'var(--text-muted)', marginBottom: '10px' }}>Contrarian Bonus</p>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '16px' }}>
-              {[
-                { label: 'Only you picked it', mult: '2×' },
-                { label: '2 of the group picked it', mult: '1.5×' },
-                { label: '3 or more picked it', mult: '1×' },
-              ].map(row => (
-                <div key={row.label} style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <p className="font-body text-sm" style={{ color: 'var(--text-secondary)', margin: 0 }}>{row.label}</p>
-                  <span className="font-mono font-bold" style={{ fontSize: '13px', color: 'var(--team-primary)' }}>{row.mult}</span>
-                </div>
-              ))}
-            </div>
-            <p className="font-body text-xs" style={{ color: 'var(--text-muted)', margin: 0, lineHeight: 1.5 }}>
-              Applies to Winner, The Call, and Chaos Ball. Brave solo calls pay double.
-            </p>
+            <Divider />
 
-            <div style={{ marginTop: '16px', height: '1px', background: 'var(--border-subtle)' }} />
+            {/* Season picks */}
+            <Section label="Season Picks — lock before Match 1">
+              <p className="font-body text-sm" style={{ color: 'var(--text-secondary)', margin: '0 0 10px', lineHeight: 1.5 }}>
+                One set of predictions for the whole season, locked before the first match. You can't change them once play begins.
+              </p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                {[
+                  { label: 'Top 4 teams', pts: '+30 each', desc: 'Pick 4 teams to qualify for the playoffs. 30 pts per correct pick.' },
+                  { label: 'Champion', pts: '+200', desc: 'Pick the IPL 2026 winner.' },
+                  { label: 'Runner-Up', pts: '+100', desc: 'Pick the finalist who loses.' },
+                  { label: 'Wooden Spoon', pts: '+50', desc: 'Pick the team that finishes last.' },
+                  { label: 'Orange Cap', pts: 'up to +80', desc: 'Pick up to 3 players for top run-scorer. Points based on their final rank.' },
+                  { label: 'Purple Cap', pts: 'up to +80', desc: 'Pick up to 3 players for top wicket-taker.' },
+                  { label: 'Most Sixes', pts: 'up to +60', desc: 'Pick up to 3 players for most sixes hit.' },
+                ].map(row => (
+                  <div key={row.label} style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '8px' }}>
+                    <div style={{ flex: 1 }}>
+                      <p className="font-display font-bold" style={{ fontSize: '13px', color: 'var(--text-primary)', margin: 0 }}>{row.label}</p>
+                      <p className="font-body" style={{ fontSize: '11px', color: 'var(--text-muted)', margin: '1px 0 0', lineHeight: 1.4 }}>{row.desc}</p>
+                    </div>
+                    <span className="font-mono font-bold" style={{ fontSize: '12px', color: 'var(--team-primary)', flexShrink: 0, whiteSpace: 'nowrap' }}>{row.pts}</span>
+                  </div>
+                ))}
+              </div>
+            </Section>
 
-            {/* Max points note */}
-            <p className="font-body text-xs" style={{ color: 'var(--text-muted)', marginTop: '12px', margin: '12px 0 0', lineHeight: 1.5 }}>
-              Max per match card: <strong style={{ color: 'var(--text-secondary)' }}>47 pts</strong> · Good season: <strong style={{ color: 'var(--text-secondary)' }}>500–700 pts</strong>
+            <Divider />
+
+            <p className="font-body text-xs" style={{ color: 'var(--text-muted)', margin: '12px 0 0', lineHeight: 1.5 }}>
+              Max per match card: <strong style={{ color: 'var(--text-secondary)' }}>47 pts</strong> · Good season total: <strong style={{ color: 'var(--text-secondary)' }}>500–700 pts</strong>
             </p>
           </div>
         )}
@@ -270,7 +246,6 @@ export default function Profile() {
         </div>
       )}
 
-      {/* Sign out */}
       <button
         onClick={signOut}
         className="tap-feedback"
@@ -290,6 +265,33 @@ export default function Profile() {
       >
         Sign out
       </button>
+    </div>
+  )
+}
+
+/* ── Rules helpers ───────────────────────────────────────────────── */
+
+function Section({ label, children }) {
+  return (
+    <div style={{ marginTop: '16px', marginBottom: '4px' }}>
+      <p className="font-mono text-xs uppercase tracking-widest" style={{ color: 'var(--text-muted)', marginBottom: '10px' }}>{label}</p>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>{children}</div>
+    </div>
+  )
+}
+
+function Divider() {
+  return <div style={{ marginTop: '16px', height: '1px', background: 'var(--border-subtle)' }} />
+}
+
+function RuleRow({ label, pts, children }) {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: '8px' }}>
+        <p className="font-display font-bold" style={{ fontSize: '13px', color: 'var(--text-primary)', margin: 0 }}>{label}</p>
+        <span className="font-mono font-bold" style={{ fontSize: '12px', color: 'var(--team-primary)', flexShrink: 0 }}>{pts}</span>
+      </div>
+      <p className="font-body" style={{ fontSize: '12px', color: 'var(--text-muted)', margin: 0, lineHeight: 1.5 }}>{children}</p>
     </div>
   )
 }

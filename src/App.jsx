@@ -6,6 +6,7 @@ import { TeamThemeProvider } from './components/layout/TeamThemeProvider'
 import { BottomNav } from './components/layout/BottomNav'
 import { AppBackground } from './components/layout/AppBackground'
 import { ThemeProvider } from './contexts/ThemeContext'
+import { useTheme } from './contexts/ThemeContext'
 import Home from './pages/Home'
 import League from './pages/League'
 import Season from './pages/Season'
@@ -26,6 +27,7 @@ function AppShell() {
 
   return (
     <TeamThemeProvider team={profile.team}>
+      <DarkModeToggle />
       <div className="pb-16">
         <Routes>
           <Route path="/"        element={<Home />} />
@@ -49,6 +51,38 @@ export default function App() {
         <AppShell />
       </BrowserRouter>
     </ThemeProvider>
+  )
+}
+
+/* ── Dark mode toggle — fixed top-right, visible on all pages ───── */
+
+function DarkModeToggle() {
+  const { isDark, toggle } = useTheme()
+  return (
+    <button
+      onClick={toggle}
+      aria-label="Toggle dark mode"
+      style={{
+        position: 'fixed',
+        top: '14px',
+        right: '16px',
+        zIndex: 100,
+        width: '36px',
+        height: '36px',
+        borderRadius: '50%',
+        border: '1.5px solid var(--border-subtle)',
+        background: 'var(--card)',
+        boxShadow: 'var(--shadow-card)',
+        cursor: 'pointer',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontSize: '16px',
+        transition: 'background 0.2s, border-color 0.2s',
+      }}
+    >
+      {isDark ? '🌙' : '☀️'}
+    </button>
   )
 }
 
