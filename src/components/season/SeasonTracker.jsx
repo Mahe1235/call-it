@@ -720,7 +720,7 @@ function PlayerSlotCard({ slotNum, playerName, allPlayers, canEdit, editing, onE
         {/* Gradient overlay */}
         <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(100deg, var(--card) 45%, transparent 80%)`, pointerEvents: 'none' }} />
 
-        <span className="font-mono" style={{ fontSize: '11px', fontWeight: 700, color: primary, width: '16px', textAlign: 'center', flexShrink: 0, position: 'relative', zIndex: 1 }}>
+        <span className="font-mono" style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-muted)', width: '16px', textAlign: 'center', flexShrink: 0, position: 'relative', zIndex: 1 }}>
           {slotNum}
         </span>
         <div style={{ flex: 1, minWidth: 0, position: 'relative', zIndex: 1 }}>
@@ -731,11 +731,6 @@ function PlayerSlotCard({ slotNum, playerName, allPlayers, canEdit, editing, onE
             {playerInfo.teamShort} · {playerInfo.role}
           </p>
         </div>
-        {canEdit && (
-          <div style={{ position: 'absolute', top: 8, right: 8, zIndex: 2, width: '22px', height: '22px', borderRadius: '6px', background: 'rgba(255,255,255,0.75)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px' }}>
-            ✏️
-          </div>
-        )}
       </div>
     )
   }
