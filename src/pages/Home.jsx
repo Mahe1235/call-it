@@ -218,26 +218,16 @@ function MatchInfoCard({ match, isActive, onClick }) {
       )}
 
       <div style={{ position: 'relative', zIndex: 1 }}>
-        {/* Status badge — only shown when needed, top-right */}
-        {(isCompleted || match.status === 'live') && (
+        {/* Status badge — only for completed */}
+        {isCompleted && (
           <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '8px' }}>
-            {isCompleted && (
-              <span style={{
-                fontSize: '10px', fontWeight: 700, fontFamily: 'var(--font-mono)',
-                letterSpacing: '0.06em', textTransform: 'uppercase',
-                padding: '3px 8px', borderRadius: '99px',
-                background: 'var(--surface-subtle)', color: 'var(--text-secondary)',
-                border: '1px solid var(--border-subtle)',
-              }}>Done</span>
-            )}
-            {match.status === 'live' && (
-              <span style={{
-                fontSize: '10px', fontWeight: 700, fontFamily: 'var(--font-mono)',
-                letterSpacing: '0.06em', textTransform: 'uppercase',
-                padding: '3px 8px', borderRadius: '99px',
-                background: '#dc2626', color: '#fff',
-              }}>● Live</span>
-            )}
+            <span style={{
+              fontSize: '10px', fontWeight: 700, fontFamily: 'var(--font-mono)',
+              letterSpacing: '0.06em', textTransform: 'uppercase',
+              padding: '3px 8px', borderRadius: '99px',
+              background: 'var(--surface-subtle)', color: 'var(--text-secondary)',
+              border: '1px solid var(--border-subtle)',
+            }}>Done</span>
           </div>
         )}
 

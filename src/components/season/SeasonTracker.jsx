@@ -1,5 +1,14 @@
 import { useState, useMemo, useRef, useEffect } from 'react'
 import { getTeam, teams as teamsData } from '../../lib/content'
+
+function hexToRgba(hex = '#000000', alpha = 0.10) {
+  const clean = hex.replace('#', '')
+  const full = clean.length === 3 ? clean.split('').map(c => c + c).join('') : clean
+  const r = parseInt(full.slice(0, 2), 16)
+  const g = parseInt(full.slice(2, 4), 16)
+  const b = parseInt(full.slice(4, 6), 16)
+  return `rgba(${r},${g},${b},${alpha})`
+}
 import { saveSeasonPicks } from '../../hooks/useSeasonPicks'
 import { useAuth } from '../../hooks/useAuth'
 
@@ -360,8 +369,8 @@ function TeamDisplayCard({ id, label, onClick, tall = false }) {
   const team = getTeam(id)
   if (!team) return null
 
-  const tint    = team.colors.tintedBg
   const primary = team.colors.primary
+  const tint    = hexToRgba(primary, 0.12)
 
   return (
     <div
@@ -372,7 +381,7 @@ function TeamDisplayCard({ id, label, onClick, tall = false }) {
         borderRadius: '14px',
         padding: tall ? '18px 16px' : '14px',
         background: tint,
-        border: `1.5px solid ${primary}44`,
+        border: `1.5px solid ${hexToRgba(primary, 0.30)}`,
         cursor: onClick ? 'pointer' : 'default',
         minHeight: tall ? '88px' : '76px',
         display: 'flex',
@@ -401,7 +410,7 @@ function TeamDisplayCard({ id, label, onClick, tall = false }) {
       <div style={{
         position: 'absolute',
         inset: 0,
-        background: `linear-gradient(100deg, ${tint} 52%, transparent 88%)`,
+        background: `linear-gradient(100deg, var(--card) 45%, transparent 80%)`,
         pointerEvents: 'none',
       }} />
 
@@ -421,7 +430,7 @@ function TeamDisplayCard({ id, label, onClick, tall = false }) {
         )}
         <p className="font-display font-black" style={{
           fontSize: tall ? '22px' : '18px',
-          color: team.colors.secondary && team.colors.secondary !== '#fff' ? team.colors.secondary : '#111',
+          color: 'var(--text-primary)',
           margin: 0,
           letterSpacing: '-0.5px',
           lineHeight: 1,
@@ -681,8 +690,8 @@ function PlayerSlotCard({ slotNum, playerName, allPlayers, canEdit, editing, onE
 
   /* ── Filled state — logo-background card ── */
   if (playerName && team) {
-    const tint    = team.colors.tintedBg
     const primary = team.colors.primary
+    const tint    = hexToRgba(primary, 0.12)
     return (
       <div
         onClick={canEdit ? onEdit : undefined}
@@ -692,7 +701,7 @@ function PlayerSlotCard({ slotNum, playerName, allPlayers, canEdit, editing, onE
           borderRadius: '13px',
           padding: '12px 14px',
           background: tint,
-          border: `1.5px solid ${primary}40`,
+          border: `1.5px solid ${hexToRgba(primary, 0.30)}`,
           cursor: canEdit ? 'pointer' : 'default',
           display: 'flex',
           alignItems: 'center',
@@ -709,7 +718,7 @@ function PlayerSlotCard({ slotNum, playerName, allPlayers, canEdit, editing, onE
           style={{ position: 'absolute', right: '-6px', top: '50%', transform: 'translateY(-50%)', height: '64px', opacity: 0.12, pointerEvents: 'none', userSelect: 'none' }}
         />
         {/* Gradient overlay */}
-        <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(100deg, ${tint} 55%, transparent 88%)`, pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(100deg, var(--card) 45%, transparent 80%)`, pointerEvents: 'none' }} />
 
         <span className="font-mono" style={{ fontSize: '11px', fontWeight: 700, color: primary, width: '16px', textAlign: 'center', flexShrink: 0, position: 'relative', zIndex: 1 }}>
           {slotNum}
