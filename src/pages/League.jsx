@@ -1,8 +1,11 @@
 import { useLeaderboard } from '../hooks/useLeaderboard'
+import { usePointsProgression } from '../hooks/usePointsProgression'
 import { LeaderboardTable } from '../components/league/LeaderboardTable'
+import { PointsProgressionChart } from '../components/league/PointsProgressionChart'
 
 export default function League() {
   const { entries, loading, error } = useLeaderboard()
+  const { chartData, players, loading: chartLoading } = usePointsProgression()
 
   return (
     <div className="p-4 animate-slide-up">
@@ -31,26 +34,22 @@ export default function League() {
         )}
       </section>
 
-      {/* H2H — placeholder for Milestone 7 */}
+      {/* Points progression */}
       <section>
         <p className="font-mono text-xs tracking-widest uppercase mb-3" style={{ color: 'var(--text-muted)' }}>
-          Head to Head
+          Points Race
         </p>
-        <div style={{
-          borderRadius: '16px',
-          padding: '24px 20px',
-          background: 'var(--card)',
-          border: '1.5px solid var(--border-subtle)',
-          textAlign: 'center',
-        }}>
-          <p style={{ fontSize: '28px', marginBottom: '8px' }}>⚔️</p>
-          <p className="font-display font-bold text-sm mb-1" style={{ color: 'var(--text-primary)' }}>
-            H2H unlocks after Match 1
-          </p>
-          <p className="font-body text-xs" style={{ color: 'var(--text-muted)' }}>
-            Your head-to-head record against one other player each month.
-          </p>
-        </div>
+        {chartLoading ? (
+          <div style={{ height: '280px', borderRadius: '20px', background: 'var(--surface-subtle)', border: '1.5px solid var(--border-subtle)' }} />
+        ) : !chartData.length ? (
+          <div style={{ borderRadius: '20px', padding: '28px 20px', background: 'var(--card)', border: '1.5px solid var(--border-subtle)', textAlign: 'center' }}>
+            <p style={{ fontSize: '28px', marginBottom: '8px' }}>📈</p>
+            <p className="font-display font-bold text-sm mb-1" style={{ color: 'var(--text-primary)' }}>No matches scored yet</p>
+            <p className="font-body text-xs" style={{ color: 'var(--text-muted)' }}>The race starts after Match 1 is scored.</p>
+          </div>
+        ) : (
+          <PointsProgressionChart chartData={chartData} players={players} />
+        )}
       </section>
     </div>
   )
