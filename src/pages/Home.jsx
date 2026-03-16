@@ -5,6 +5,7 @@ import { useAuth } from '../hooks/useAuth'
 import { MatchHeader } from '../components/match/MatchHeader'
 import { Countdown } from '../components/match/Countdown'
 import { MatchCard } from '../components/match/MatchCard'
+import { PostMatchReveal } from '../components/match/PostMatchReveal'
 import { LeaderboardSnapshot } from '../components/league/LeaderboardSnapshot'
 import { getBanter, getTeam } from '../lib/content'
 
@@ -270,7 +271,7 @@ function PicksCard({ match, questions }) {
   const { prediction, setPrediction, loading } = useMyPrediction(match.id)
   const isCompleted = match.status === 'completed'
 
-  if (isCompleted) return null  // no picks for completed matches
+  if (isCompleted) return <PostMatchReveal match={match} questions={questions} />
 
   return (
     <div style={{
