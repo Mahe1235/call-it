@@ -192,6 +192,21 @@ function OpenCard({ match, theCall, chaosBall, teamA, teamB, onLocked, onCancel,
     return getBanter('pickConfirmations.matchWinner', { TEAM: shortName })
   }, [winner])
 
+  const callConfirmation = useMemo(() => {
+    if (!call) return null
+    return getBanter('pickConfirmations.theCall', { ANSWER: call })
+  }, [call])
+
+  const villainConfirmation = useMemo(() => {
+    if (!villain) return null
+    return getBanter('pickConfirmations.villainPick', { PLAYER: villain, FRIEND: 'someone' })
+  }, [villain])
+
+  const chaosConfirmation = useMemo(() => {
+    if (!chaos) return null
+    return getBanter('pickConfirmations.chaosBall', { ANSWER: chaos })
+  }, [chaos])
+
   return (
     <div style={{ marginTop: '20px' }}>
 
@@ -229,7 +244,7 @@ function OpenCard({ match, theCall, chaosBall, teamA, teamB, onLocked, onCancel,
           <p className="font-body text-sm mb-3" style={{ color: 'var(--text-secondary)' }}>
             {theCall.display_text}
           </p>
-          <div style={{ display: 'flex', gap: '10px', marginBottom: '20px', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: '10px', marginBottom: call ? '8px' : '20px', flexWrap: 'wrap' }}>
             {(theCall.answer_options ?? []).map(opt => (
               <PickButton
                 key={opt}
@@ -239,6 +254,11 @@ function OpenCard({ match, theCall, chaosBall, teamA, teamB, onLocked, onCancel,
               />
             ))}
           </div>
+          {callConfirmation && (
+            <p className="font-mono text-xs mb-4" style={{ color: 'var(--text-muted)', letterSpacing: '0.03em' }}>
+              {callConfirmation}
+            </p>
+          )}
         </>
       )}
 
@@ -302,6 +322,11 @@ function OpenCard({ match, theCall, chaosBall, teamA, teamB, onLocked, onCancel,
           </p>
         </div>
       )}
+      {villainConfirmation && (
+        <p className="font-mono text-xs mb-4" style={{ color: 'var(--text-muted)', letterSpacing: '0.03em' }}>
+          {villainConfirmation}
+        </p>
+      )}
 
       {/* Chaos Ball */}
       {chaosBall && (
@@ -310,7 +335,7 @@ function OpenCard({ match, theCall, chaosBall, teamA, teamB, onLocked, onCancel,
           <p className="font-body text-sm mb-3" style={{ color: 'var(--text-secondary)' }}>
             {chaosBall.display_text}
           </p>
-          <div style={{ display: 'flex', gap: '10px', marginBottom: '24px', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: '10px', marginBottom: chaos ? '8px' : '24px', flexWrap: 'wrap' }}>
             {(chaosBall.answer_options ?? []).map(opt => (
               <PickButton
                 key={opt}
@@ -320,6 +345,11 @@ function OpenCard({ match, theCall, chaosBall, teamA, teamB, onLocked, onCancel,
               />
             ))}
           </div>
+          {chaosConfirmation && (
+            <p className="font-mono text-xs mb-4" style={{ color: 'var(--text-muted)', letterSpacing: '0.03em' }}>
+              {chaosConfirmation}
+            </p>
+          )}
         </>
       )}
 
