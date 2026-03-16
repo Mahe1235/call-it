@@ -114,6 +114,7 @@ export function PostMatchReveal({ match, questions }) {
             sublabel={chaosQ.correct_answer ? `Answer: ${chaosQ.correct_answer}` : null}
           />
         )}
+
       </div>
 
       {/* Group split */}
@@ -188,9 +189,9 @@ function VillainRow({ playerName, pts, scorecard }) {
   if (player && !player.didNotPlay) {
     const runs = player.runs ?? 0
     const wkts = player.wickets ?? 0
-    if (pts === 15) outcome = `${runs} runs · ${wkts} wkts — flopped`
-    else if (pts === -5) outcome = `${runs} runs · ${wkts} wkts — had impact`
-    else outcome = `${runs} runs · ${wkts} wkts — neutral`
+    if (pts === 15) outcome = getBanter('scoringResults.villainUnder10', { PLAYER: playerName, RUNS: runs })
+    else if (pts === -5) outcome = getBanter('scoringResults.villainOver30', { PLAYER: playerName, RUNS: runs })
+    else outcome = getBanter('scoringResults.villainNeutral', { PLAYER: playerName, RUNS: `${runs} runs · ${wkts} wkts` })
   } else if (player?.didNotPlay) {
     outcome = 'Did not play'
   }
@@ -226,13 +227,19 @@ function GroupSplit({ match, groupPredictions }) {
   const correct = groupPredictions.filter(p => p.match_winner_pick === match.winner).length
   const winnerTeam = getTeam(match.winner)
 
-  const banter = getBanter('reveal.groupSplit', {
-    COUNT: correct,
-    TOTAL: total,
-    WINNER_COUNT: correct,
-    LOSER_COUNT: total - correct,
-    TEAM: winnerTeam?.shortName ?? match.winner,
-  })
+  const wrong = total - correct
+  const vars = { TOTAL: total, WINNER_COUNT: correct, LOSER_COUNT: wrong, TEAM: winnerTeam?.shortName ?? match.winner, COUNT: correct }
+
+  let banterKey
+  if (correct === total)          banterKey = 'reveal.groupSplitUnanimousCorrect'
+  else if (correct === 0)         banterKey = 'reveal.groupSplitUnanimousWrong'
+  else if (correct * 2 === total) banterKey = 'reveal.groupSplitEven'
+  else if (correct === 1)         banterKey = 'reveal.groupSplitLoneCorrect'
+  else if (wrong === 1)           banterKey = 'reveal.groupSplitLoneWrong'
+  else if (correct < wrong)       banterKey = 'reveal.groupSplitMajorityWrong'
+  else                            banterKey = 'reveal.groupSplit'
+
+  const banter = getBanter(banterKey, vars)
 
   return (
     <div style={{

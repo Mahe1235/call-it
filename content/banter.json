@@ -1,21 +1,28 @@
 {
-  "_note": "All banter copy. Use {PLAYER}, {TEAM}, {TEAM_A}, {TEAM_B}, {FRIEND}, {PTS}, {RANK}, {TIME}, {ANSWER}, {RUNS} as template vars. Arrays rotate randomly — add more lines to any array and they'll appear automatically.",
+  "_note": "All banter copy. Use {PLAYER}, {TEAM}, {TEAM_A}, {TEAM_B}, {FRIEND}, {PTS}, {RANK}, {TIME}, {ANSWER}, {RUNS}, {N} as template vars. Arrays rotate randomly.",
 
   "cardStates": {
     "open": [
-      "{TEAM_A} vs {TEAM_B}. Pick your side before the toss.",
-      "Card's open. {TEAM_A} take on {TEAM_B}. What do you know that the others don't?",
-      "{TEAM_A} vs {TEAM_B}. The group is watching. Make your call.",
-      "This one's yours to call. {TEAM_A} vs {TEAM_B}.",
-      "Match is live. {TEAM_A} take on {TEAM_B}. Clock's not waiting."
+      "Today's card is open. {TEAM_A} vs {TEAM_B}. Lock it in before the first ball.",
+      "{FRIEND} already submitted. The card is still open for you.",
+      "Card's open. {TEAM_A} vs {TEAM_B}. Most of the group has already picked.",
+      "{TEAM_A} vs {TEAM_B}. The group is watching. Make the call.",
+      "Match starts soon. {TEAM_A} vs {TEAM_B}. Still time. Not much of it."
+    ],
+    "saved": [
+      "Picks saved. You can change them before the first ball. Not that you will.",
+      "In. Plenty of time to overthink this. The match hasn't started.",
+      "Noted. Come back and change it 4 times if you need to.",
+      "Saved. Still editable. The first ball is the deadline, not this.",
+      "Picks are in. The card isn't locked until the match starts."
     ],
     "locked": [
-      "Card locked. {FRIEND}'s on record.",
-      "Locked in. Now we wait.",
-      "Done. Can't change your mind now. Good.",
-      "Picks saved. Whatever happens, you called it.",
-      "On the record. No take-backs.",
-      "{FRIEND} has spoken. The match will decide."
+      "You're on record. Whatever happens next, you called it.",
+      "Locked in. {FRIEND} picked the other side. This is already interesting.",
+      "No take-backs. The match has started and so has the reckoning.",
+      "Card closed. The group is watching. Everyone is watching.",
+      "On the record. The match will have the final say.",
+      "Locked. {FRIEND}'s in too. One of you is having a worse night than the other."
     ],
     "missedTitle": [
       "Card missed.",
@@ -23,48 +30,48 @@
       "Missed it."
     ],
     "missed": [
-      "No card this match. You had time.",
-      "Card closed. No picks from you. The group noticed.",
-      "Missed the window. {TEAM_A} vs {TEAM_B} kicked off without your picks.",
-      "That one got away. Better luck next match.",
-      "Zero picks. Zero points. The others are not surprised."
+      "Card didn't make it in time. The {TEAM_A} fan excuse is ready when you are.",
+      "{TEAM_A} vs {TEAM_B} started without your picks. Everyone noticed. Nobody said anything. Yet.",
+      "Zero picks. The group has formed its own opinion about what this means.",
+      "Missed it. {FRIEND} did not miss it. These two facts will come up.",
+      "No card submitted. The match started. You were not on record. {FRIEND} was."
     ],
     "countdown": [
       "Card closes in {TIME}.",
       "{TIME} left. Still time.",
       "Lock in before {TIME} is gone.",
-      "{TIME} on the clock."
+      "{TIME} on the clock. {FRIEND} is already in."
     ]
   },
 
   "pickConfirmations": {
     "matchWinner": [
-      "You've got {TEAM}. Bold.",
-      "{TEAM} it is. Let's see.",
-      "On record: {TEAM} to win.",
-      "{TEAM}. Noted. Hope you're right.",
-      "Backing {TEAM}. The group will judge you for this.",
-      "{TEAM} fans everywhere are nodding."
+      "Loyal. Possibly correct. {FRIEND} picked the same, for what it's worth.",
+      "Going against your own team? Bold. {FRIEND} is going to have questions.",
+      "{TEAM} to win. On record. {FRIEND} backed the other side. One of you is in for a night.",
+      "Backing {TEAM}. Fine. If they lose, this one's entirely on you.",
+      "{TEAM}. Noted. The match will decide if this was brave or just optimistic."
     ],
     "theCall": [
-      "{ANSWER}. The Call is set.",
-      "You said {ANSWER}. Committing.",
-      "Noted. {ANSWER}.",
-      "{ANSWER}. Interesting choice.",
-      "The Call: {ANSWER}. Bold or obvious — we'll see."
+      "You went over. {FRIEND} went under. One of you checked the pitch report.",
+      "Playing it safe? Or do you know something? {FRIEND} went the same way.",
+      "{ANSWER}. The Call is set. The match will cooperate or it won't.",
+      "{ANSWER}. {FRIEND} went the other way. May the better guess win.",
+      "Locked: {ANSWER}. {FRIEND} is already second-guessing you from across the group."
     ],
     "villainPick": [
-      "{PLAYER} is your villain. Hope they flop.",
-      "Villain locked: {PLAYER}. Under 10 or 0 wickets and you're laughing.",
-      "{PLAYER} is the pick. If they go big, that's on you.",
-      "You villain-picked {PLAYER}. One of you will regret this.",
-      "{PLAYER}: villain. The match will settle this."
+      "Villain locked: {PLAYER}. {FRIEND} villain-picked someone different. One of you is a genius. Neither knows which.",
+      "You villain-picked {PLAYER}. That's either genius or the worst call you've made this week. No in-between.",
+      "{PLAYER}. Your villain. Under 10 and you're laughing. Over 30 and you deserve it.",
+      "Villain: {PLAYER}. {FRIEND} has recorded this. It will surface at the exact wrong moment.",
+      "{PLAYER} is the villain. The match will decide if you were brave or just delusional."
     ],
     "chaosBall": [
-      "Chaos Ball: {ANSWER}. The match will decide.",
-      "You said {ANSWER}. The chaos will reveal itself.",
-      "{ANSWER}. Either the match cooperates or it doesn't.",
-      "Chaos Ball locked. {ANSWER}. Good luck."
+      "Yes on the Chaos Ball. {FRIEND} also said yes. One of you is definitely guessing.",
+      "No on the Chaos Ball. The safe call. Except nothing about a Chaos Ball is safe.",
+      "{ANSWER}. The Chaos Ball is set. May it cooperate. It probably won't.",
+      "{ANSWER} on Chaos Ball. {FRIEND} went the other way. The universe will settle this.",
+      "Chaos Ball: {ANSWER}. This is either intuition or completely random. Indistinguishable."
     ],
     "noSquad": [
       "Squad not announced yet — villain pick skipped for this match.",
@@ -75,146 +82,167 @@
 
   "groupPicks": {
     "justYou": [
-      "Just you so far. The others are still deciding.",
-      "First in. The group hasn't moved yet.",
-      "Only your card right now. More coming.",
-      "You're the only one who's locked in. Typical."
+      "You're the first one in. Now sit with the uncertainty for a few hours.",
+      "First in. The group hasn't moved yet. Very on-brand for all of them.",
+      "Only your card right now. The others will show up eventually. Maybe.",
+      "You're the only one locked in. Classic."
     ]
   },
 
   "scoringResults": {
     "matchWinnerCorrect": [
-      "{TEAM} won. {FRIEND} called it. +{PTS} pts.",
-      "Correct. {TEAM} wins. {FRIEND} takes {PTS}.",
-      "{FRIEND} predicted {TEAM}. {TEAM} delivered. {PTS} points.",
-      "{FRIEND} backed {TEAM} and got paid. +{PTS}.",
-      "Winner: {TEAM}. {FRIEND} had it. {PTS} points on the board."
+      "Called it. +{PTS}.",
+      "{TEAM} won. You had it. +{PTS}.",
+      "Correct. {TEAM} came through. {PTS} points and the right to say nothing while saying everything.",
+      "+{PTS}. {TEAM} delivered."
     ],
     "matchWinnerWrong": [
-      "{TEAM} lost. {FRIEND} predicted {TEAM}. {FRIEND} is available for questions.",
-      "{TEAM} didn't win. {FRIEND} thought they would. Zero on the winner.",
-      "Wrong team. {FRIEND} had {TEAM}. The match disagreed.",
-      "{FRIEND} went with {TEAM}. {TEAM} went home. Zero pts.",
-      "Backed {TEAM}. {TEAM} didn't show up. The points didn't either."
+      "Didn't land. The group is deciding whether to say something or let you stew.",
+      "{TEAM} lost. You predicted {TEAM}. You are available for questions.",
+      "{TEAM} didn't win. Zero on the winner.",
+      "Wrong team. The match was extremely clear about it.",
+      "Backed {TEAM}. {TEAM} had other plans. The points did too."
     ],
     "theCallCorrect": [
-      "The Call landed. {ANSWER}. +{PTS}.",
-      "{FRIEND} said {ANSWER}. Correct. {PTS} points.",
-      "Right call. {ANSWER}. That's {PTS}.",
+      "The Call landed. +{PTS}.",
       "{ANSWER} — and it happened. {PTS} points.",
-      "{FRIEND} read it. {ANSWER}. {PTS} pts."
+      "Right call. {ANSWER}. {PTS} pts. Say it quietly or loudly. Your choice.",
+      "The Call: correct. +{PTS}. The group has been informed."
     ],
     "theCallWrong": [
-      "Didn't land. {FRIEND} said {ANSWER}.",
-      "The Call missed. {ANSWER} was wrong.",
-      "{ANSWER}. Nope. Zero.",
-      "Called {ANSWER}. The match had other plans.",
-      "{ANSWER} didn't happen. Painful, but zero."
+      "The Call missed. Someone in the group got it. They have a tab for this.",
+      "Didn't land. {ANSWER} was wrong. The match was very clear about it.",
+      "{ANSWER} didn't happen. The match went elsewhere. Zero.",
+      "The Call missed. The conversation has already started."
     ],
     "villainUnder10": [
-      "{PLAYER} made {RUNS}. Your villain pick delivered. +15.",
-      "Under 10. {PLAYER} flopped exactly as predicted. +15 pts.",
-      "{PLAYER}: {RUNS} runs. Villain confirmed. +15.",
-      "{PLAYER} did nothing. That was the plan. +15 pts.",
-      "The villain flopped. {PLAYER} with {RUNS}. +15."
+      "Villain pick landed. {PLAYER} scored {RUNS}. Under 10. +15 pts. Ruthless and correct.",
+      "{PLAYER} with {RUNS}. Flopped exactly as called. +15. The villain narrative is running perfectly.",
+      "Under 10. {PLAYER} delivered the flop. +15 pts. The group will hear about this.",
+      "{PLAYER}: {RUNS} runs. Villain confirmed. +15. The accuracy is genuinely concerning.",
+      "Called it. {PLAYER} with {RUNS}. Under 10. +15. Take a bow."
     ],
     "villainOver30": [
-      "{PLAYER} scored {RUNS}. Your villain pick cost you 5.",
-      "Villain backfired. {PLAYER} got {RUNS}. -5 pts.",
-      "{PLAYER} had {RUNS}. Villain penalty. -5.",
-      "Should have picked someone worse. {PLAYER}: {RUNS}. -5.",
-      "{PLAYER} went big. {RUNS} runs. The villain won. -5."
+      "{PLAYER} scored {RUNS}. That's 30+. −5 pts. The villain picked up the bat and won. Painful.",
+      "Villain backfired. {PLAYER} got {RUNS}. The hero narrative destroyed the villain pick. −5.",
+      "{PLAYER} had {RUNS}. The villain won. This is the wrong outcome in every sense. −5.",
+      "Should have picked someone who shows up worse. {PLAYER}: {RUNS}. −5."
     ],
     "villainNeutral": [
-      "{PLAYER} scored {RUNS}. Between 10 and 30. No points, no damage.",
-      "{RUNS} for {PLAYER}. Neutral. The villain sat this one out.",
-      "{PLAYER}: {RUNS}. Not enough to hurt, not few enough to score.",
-      "In the grey zone. {PLAYER} with {RUNS}. Zero either way."
+      "{PLAYER} scored {RUNS}. Not under 10. Not 30+. The villain just sort of existed. Zero points, zero penalty, zero satisfaction.",
+      "Grey zone. {PLAYER} with {RUNS}. Not enough to score, not few enough to flop. Unsatisfying for everyone.",
+      "{PLAYER}: {RUNS}. Right in the middle. The match refused to commit either way.",
+      "Neutral. {PLAYER} with {RUNS}. The villain had a mediocre match and so did this pick."
     ],
     "chaosBallCorrect": [
-      "Chaos Ball hit. +{PTS} pts.",
-      "Called it. Chaos Ball correct. +{PTS}.",
-      "The chaos cooperated. {PTS} points.",
+      "Chaos Ball landed. +{PTS}. Nobody planned for this.",
+      "Called it. Chaos Ball correct. +{PTS}. The chaos cooperated exactly once.",
+      "The chaos cooperated. {PTS} points. Write this date down.",
       "Chaos Ball: right. The match delivered. +{PTS}."
     ],
     "chaosBallWrong": [
-      "Chaos Ball missed. That's what chaos means.",
-      "Didn't happen. Zero from the Chaos Ball.",
-      "Chaos Ball: wrong. The match had other ideas.",
-      "The chaos went the other way. Zero."
+      "Chaos Ball missed. 0 pts. It was chaos. That's the entire point.",
+      "Didn't happen. Zero from the Chaos Ball. The chaos went the other way.",
+      "Chaos Ball: wrong. The match had other ideas. It always has other ideas.",
+      "The chaos went the wrong way. Zero."
     ]
   },
 
   "emptyStates": {
     "noCardYet": [
-      "Nobody's filled their card yet. Typical. {TIME} left.",
-      "Zero cards submitted. You have {TIME}.",
-      "Empty. The group hasn't moved. {TIME} left.",
-      "Still waiting on everyone. {TIME} on the clock."
+      "Nobody's filled their card yet. Classic. {TIME} left.",
+      "Zero cards submitted. The group hasn't moved. {TIME} left to be first.",
+      "Empty. The whole group is thinking about it. {TIME} on the clock.",
+      "Still waiting on everyone. {TIME} left. Usual suspects, usual timeline."
     ],
     "noMatchesToday": [
-      "No matches today. Rest day.",
-      "Nothing on today. Check back tomorrow.",
-      "The IPL is taking a day off. So can you.",
-      "No fixture today. Come back when there's cricket."
+      "Rest day. Revisit yesterday's damage or argue about it. Both will happen.",
+      "Nothing on today. {FRIEND} is already watching old highlights and making predictions about the past.",
+      "The IPL is taking a day off. Use the time to prepare your excuses.",
+      "No fixture today. Come back tomorrow. The cricket will resume and so will the suffering."
     ],
     "seasonPicksEmpty": [
       "Season picks aren't locked yet. Opens before the first match.",
-      "Fill your season picks before the tournament begins.",
-      "Season predictions: 0 of {GROUP_SIZE} submitted."
+      "Fill your season picks before the tournament begins. {FRIEND} already has a draft.",
+      "Season predictions: 0 of {GROUP_SIZE} submitted. Nobody has committed to anything yet."
     ]
   },
 
   "reveal": {
     "header": [
-      "Match done. Here's how it went.",
-      "Full time. Let's see the damage.",
-      "{TEAM_A} vs {TEAM_B}. Results are in.",
-      "Stumps drawn. Time to count the points.",
-      "It's over. Let's see who called it."
+      "Stumps drawn. Let's see the damage.",
+      "Full time. The numbers are in.",
+      "{TEAM_A} vs {TEAM_B}. Match done. Here's how it landed.",
+      "Scores are in. Brace yourself.",
+      "Match over. Whatever happened, happened. Here it is."
+    ],
+    "groupSplitUnanimousCorrect": [
+      "All {TOTAL} of you picked {TEAM}. All correct. No bragging rights when the whole group got it. You agreed, you got lucky, move on.",
+      "Unanimous. {TEAM} to win. Everyone right. The group chat will be suspiciously quiet about this one."
+    ],
+    "groupSplitUnanimousWrong": [
+      "All {TOTAL} of you picked {TEAM}. All wrong. Collective humiliation, which is somehow worse than individual humiliation.",
+      "Unanimous. {TEAM} to win. {TEAM} didn't win. The group managed to be wrong in perfect agreement. Impressive."
+    ],
+    "groupSplitEven": [
+      "Dead split. {WINNER_COUNT} right, {LOSER_COUNT} wrong. Half the group celebrating, the other half composing messages.",
+      "{WINNER_COUNT} called {TEAM}. {LOSER_COUNT} didn't. The group is now two groups and they are not on speaking terms."
+    ],
+    "groupSplitLoneCorrect": [
+      "One person picked {TEAM}. One. That person was right. They are already typing.",
+      "The lone {TEAM} call was correct. {WINNER_COUNT} of {TOTAL}. They said nothing before. They will not shut up now."
+    ],
+    "groupSplitLoneWrong": [
+      "Everyone picked the winner except one. That one person is currently unavailable for comment.",
+      "{WINNER_COUNT} of {TOTAL} got it right. The holdout is very aware of what happened. The group is being polite. For now."
+    ],
+    "groupSplitMajorityWrong": [
+      "{LOSER_COUNT} of you picked {TEAM}. {TEAM} lost. The {WINNER_COUNT} who got it right are being completely unbearable about it.",
+      "Majority call: {TEAM}. {TEAM} didn't show up. The minority was right. They said nothing before. They are making up for it now."
     ],
     "groupSplit": [
-      "{COUNT} of {TOTAL} picked the winner.",
       "{WINNER_COUNT} called {TEAM}. {LOSER_COUNT} didn't.",
+      "{COUNT} of {TOTAL} picked the winner.",
       "The group was split. {WINNER_COUNT} right, {LOSER_COUNT} wrong."
     ],
     "h2hWin": [
-      "{FRIEND} beat {OPPONENT} head-to-head. +10 pts.",
-      "H2H goes to {FRIEND} this match.",
-      "{FRIEND} takes the H2H. {OPPONENT} takes the loss.",
+      "{FRIEND} beat {OPPONENT} head-to-head this match. +10 pts.",
+      "H2H goes to {FRIEND}. {OPPONENT} is aware.",
+      "{FRIEND} takes the H2H. {OPPONENT} takes the loss and the silence that follows.",
       "Head-to-head: {FRIEND} wins. {OPPONENT} loses. +10."
     ],
     "h2hLoss": [
-      "{OPPONENT} won the H2H this match.",
-      "H2H: {OPPONENT} over {FRIEND}.",
-      "H2H lost to {OPPONENT}. They'll mention this."
+      "{OPPONENT} won the H2H this match. They will mention this.",
+      "H2H: {OPPONENT} over {FRIEND}. The gap is noted.",
+      "H2H lost to {OPPONENT}. They're being very calm about it. That's the worst kind."
     ]
   },
 
   "leaderboard": {
     "rankUp": [
-      "{FRIEND} climbed to #{RANK}.",
-      "Up to #{RANK} for {FRIEND}.",
-      "{FRIEND} moves up. #{RANK} now.",
-      "#{RANK}. {FRIEND} is moving."
+      "Up {N} spots. {FRIEND} is watching the leaderboard and pretending not to.",
+      "#{RANK}. Moving. {FRIEND} dropped a place. Nobody has told them yet.",
+      "Climbed to #{RANK}. The board has been updated. The group will notice.",
+      "Up {N} places. {FRIEND} has already refreshed the leaderboard twice."
     ],
     "rankDown": [
-      "{FRIEND} drops to #{RANK}.",
-      "Down to #{RANK}.",
-      "Slipped to #{RANK}. Still in it.",
-      "#{RANK} now. {FRIEND} is not happy."
+      "Down {N} places. {FRIEND} will bring this up at the worst possible time.",
+      "#{RANK}. Dropped. The group has been very diplomatic so far.",
+      "Down to #{RANK}. {FRIEND} is recalculating the gap and they're not subtle about it.",
+      "#{RANK} now. Down {N}. It's fine. It's early. It's not fine."
     ],
     "rankSame": [
-      "{FRIEND} stays at #{RANK}.",
-      "No change. #{RANK}.",
-      "Same spot. #{RANK} for {FRIEND}.",
-      "#{RANK}. Holding steady."
+      "{FRIEND} stays at #{RANK}. Holding.",
+      "No movement. #{RANK}. The table hasn't shifted.",
+      "Same spot. #{RANK}. {FRIEND} is neither celebrating nor panicking. This is somehow worse.",
+      "#{RANK}. Holding. {FRIEND} had a quiet match too."
     ],
     "topOfLeaderboard": [
-      "{FRIEND} is leading the group.",
-      "#{RANK} in the group. {FRIEND} is on top.",
-      "Current leader: {FRIEND}. For now.",
-      "{FRIEND} leads. The others are taking notes."
+      "Top of the table. {FRIEND} is {N} pts back and not sleeping.",
+      "#1. The group is taking notes and pretending they aren't.",
+      "Leading the group. {FRIEND} has seen this and is saying nothing. Which is louder than something.",
+      "Current leader: {FRIEND}. For now. Everyone else has circled this on the calendar.",
+      "{FRIEND} leads. The others are taking notes and calling it 'early season'."
     ]
   },
 
@@ -225,8 +253,8 @@
   },
 
   "seasonPicks": {
-    "open": "Season picks are open. Lock them in before the first ball of IPL {YEAR}.",
-    "locked": "Season picks locked. See you at the end.",
-    "partiallyFilled": "{COUNT} of {TOTAL} categories filled. Finish before the tournament starts."
+    "open": "Season Picks are open. 7 calls. One shot. Nobody in this group is going to get all 7. Lock yours before Match 1.",
+    "locked": "Season Picks locked. 7 predictions in the vault. See you at the end of the tournament.",
+    "partiallyFilled": "You've filled {COUNT} of 7. The rest aren't going to pick themselves. {FRIEND} finished theirs already and is already certain about all of them."
   }
 }

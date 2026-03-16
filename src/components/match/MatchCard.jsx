@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react'
 import { getTeam, getBanter } from '../../lib/content'
 import { useAuth } from '../../hooks/useAuth'
 import { submitPrediction, useGroupPredictions } from '../../hooks/usePredictions'
+import { useMatchStartCheck } from '../../hooks/useMatchStartCheck'
 
 /**
  * MatchCard — the prediction form for a single match.
@@ -13,21 +14,31 @@ import { submitPrediction, useGroupPredictions } from '../../hooks/usePrediction
  *   onLocked   — called with new prediction after successful submit
  */
 export function MatchCard({ match, questions, prediction, onLocked }) {
+  const { user } = useAuth()
   const theCall   = questions.find(q => q.type === 'the_call')
   const chaosBall = questions.find(q => q.type === 'chaos_ball')
   const teamA = getTeam(match.team_a)
   const teamB = getTeam(match.team_b)
   const [editing, setEditing] = useState(false)
 
-  // Client-side time check: treat match as started if date has passed,
-  // even if admin hasn't updated status yet
-  const matchStarted = match.status !== 'upcoming' || Date.now() >= new Date(match.date).getTime()
+  // Get a real friend name for banter — pick a random group member (not the current user)
+  const { predictions: groupPreds } = useGroupPredictions(match.id)
+  const friendName = useMemo(() => {
+    const others = groupPreds.filter(p => p.user_id !== user?.id)
+    if (!others.length) return null
+    const picked = others[Math.floor(Math.random() * others.length)]
+    return picked.users?.display_name?.split(' ')[0] ?? null
+  }, [groupPreds.length, user?.id])
+
+  // CricAPI-aware start check: polls within 5 mins of scheduled start to detect delays
+  const matchStartedByApi = useMatchStartCheck(match)
+  const matchStarted = match.status !== 'upcoming' || matchStartedByApi
 
   // Missed: match started but user never submitted
   if (matchStarted && !prediction) {
     return (
       <>
-        <MissedCard match={match} teamA={teamA} teamB={teamB} />
+        <MissedCard match={match} teamA={teamA} teamB={teamB} friendName={friendName} />
         <GroupPicksSection match={match} teamA={teamA} teamB={teamB} />
       </>
     )
@@ -42,6 +53,7 @@ export function MatchCard({ match, questions, prediction, onLocked }) {
         chaosBall={chaosBall}
         teamA={teamA}
         teamB={teamB}
+        friendName={friendName}
         initialPicks={prediction}
         onLocked={(updated) => { setEditing(false); onLocked?.(updated) }}
         onCancel={() => setEditing(false)}
@@ -61,6 +73,7 @@ export function MatchCard({ match, questions, prediction, onLocked }) {
           teamB={teamB}
           canEdit={!matchStarted}
           onEdit={() => setEditing(true)}
+          friendName={friendName}
         />
         {/* Show group picks only after match has started */}
         {matchStarted && (
@@ -78,6 +91,7 @@ export function MatchCard({ match, questions, prediction, onLocked }) {
       chaosBall={chaosBall}
       teamA={teamA}
       teamB={teamB}
+      friendName={friendName}
       onLocked={onLocked}
     />
   )
@@ -85,14 +99,16 @@ export function MatchCard({ match, questions, prediction, onLocked }) {
 
 /* ─── Open card ──────────────────────────────────────────────────────────── */
 
-function OpenCard({ match, theCall, chaosBall, teamA, teamB, onLocked, onCancel, initialPicks = null }) {
+function OpenCard({ match, theCall, chaosBall, teamA, teamB, onLocked, onCancel, initialPicks = null, friendName = null }) {
   const { user } = useAuth()
   const isEditing = initialPicks !== null
+  const friend = friendName ?? 'someone'
 
   const openBanter = useMemo(() => getBanter('cardStates.open', {
     TEAM_A: teamA?.shortName ?? match.team_a.toUpperCase(),
     TEAM_B: teamB?.shortName ?? match.team_b.toUpperCase(),
-  }), [match.id])
+    FRIEND: friend,
+  }), [match.id, friend])
 
   const [winner,  setWinner]  = useState(initialPicks?.match_winner_pick  ?? null)
   const [call,    setCall]    = useState(initialPicks?.the_call_pick       ?? null)
@@ -154,23 +170,23 @@ function OpenCard({ match, theCall, chaosBall, teamA, teamB, onLocked, onCancel,
     const shortName = winner === match.team_a
       ? (teamA?.shortName ?? winner.toUpperCase())
       : (teamB?.shortName ?? winner.toUpperCase())
-    return getBanter('pickConfirmations.matchWinner', { TEAM: shortName })
-  }, [winner])
+    return getBanter('pickConfirmations.matchWinner', { TEAM: shortName, FRIEND: friend })
+  }, [winner, friend])
 
   const callConfirmation = useMemo(() => {
     if (!call) return null
-    return getBanter('pickConfirmations.theCall', { ANSWER: call })
-  }, [call])
+    return getBanter('pickConfirmations.theCall', { ANSWER: call, FRIEND: friend })
+  }, [call, friend])
 
   const villainConfirmation = useMemo(() => {
     if (!villain) return null
-    return getBanter('pickConfirmations.villainPick', { PLAYER: villain, FRIEND: 'someone' })
-  }, [villain])
+    return getBanter('pickConfirmations.villainPick', { PLAYER: villain, FRIEND: friend })
+  }, [villain, friend])
 
   const chaosConfirmation = useMemo(() => {
     if (!chaos) return null
-    return getBanter('pickConfirmations.chaosBall', { ANSWER: chaos })
-  }, [chaos])
+    return getBanter('pickConfirmations.chaosBall', { ANSWER: chaos, FRIEND: friend })
+  }, [chaos, friend])
 
   // ── Auth expired — early return after all hooks ───────────────────────────
   if (authExpired) {
@@ -220,7 +236,7 @@ function OpenCard({ match, theCall, chaosBall, teamA, teamB, onLocked, onCancel,
       )}
 
       {/* Match Winner */}
-      <SectionLabel>Match Winner</SectionLabel>
+      <SectionLabel>🏆 Match Winner</SectionLabel>
       <div style={{ display: 'flex', gap: '10px', marginBottom: winner ? '8px' : '20px' }}>
         <PickButton
           label={teamA?.shortName ?? match.team_a.toUpperCase()}
@@ -242,7 +258,7 @@ function OpenCard({ match, theCall, chaosBall, teamA, teamB, onLocked, onCancel,
       {/* The Call */}
       {theCall && (
         <>
-          <SectionLabel>The Call</SectionLabel>
+          <SectionLabel>🎯 The Call</SectionLabel>
           <p className="font-body text-sm mb-3" style={{ color: 'var(--text-secondary)' }}>
             {theCall.display_text}
           </p>
@@ -265,7 +281,7 @@ function OpenCard({ match, theCall, chaosBall, teamA, teamB, onLocked, onCancel,
       )}
 
       {/* Villain Pick */}
-      <SectionLabel>Villain Pick</SectionLabel>
+      <SectionLabel>😈 Villain Pick</SectionLabel>
       <p className="font-body text-sm mb-3" style={{ color: 'var(--text-secondary)' }}>
         Pick any player. Under 10 runs / 0 wickets = +15 pts. Over 30 runs / 2+ wickets = −5 pts.
       </p>
@@ -333,7 +349,7 @@ function OpenCard({ match, theCall, chaosBall, teamA, teamB, onLocked, onCancel,
       {/* Chaos Ball */}
       {chaosBall && (
         <>
-          <SectionLabel>Chaos Ball</SectionLabel>
+          <SectionLabel>💥 Chaos Ball</SectionLabel>
           <p className="font-body text-sm mb-3" style={{ color: 'var(--text-secondary)' }}>
             {chaosBall.display_text}
           </p>
@@ -399,7 +415,7 @@ function OpenCard({ match, theCall, chaosBall, teamA, teamB, onLocked, onCancel,
             transition: 'background 0.2s ease, color 0.2s ease',
           }}
         >
-          {submitting ? 'Saving…' : isEditing ? 'Save changes ✓' : 'Lock it in'}
+          {submitting ? 'Saving…' : isEditing ? 'Save changes ✓' : 'Lock it in 🔒'}
         </button>
       </div>
     </div>
@@ -408,10 +424,12 @@ function OpenCard({ match, theCall, chaosBall, teamA, teamB, onLocked, onCancel,
 
 /* ─── Locked card ────────────────────────────────────────────────────────── */
 
-function LockedCard({ prediction, theCall, chaosBall, teamA, teamB, canEdit, onEdit }) {
-  const { profile } = useAuth()
+function LockedCard({ prediction, theCall, chaosBall, teamA, teamB, canEdit, onEdit, friendName = null }) {
   const winnerTeam = prediction.match_winner_pick === teamA?.id ? teamA : teamB
-  const banter = getBanter('cardStates.locked', { FRIEND: profile?.display_name?.split(' ')[0] ?? 'You' })
+  const friend = friendName ?? 'someone'
+  const banter = canEdit
+    ? getBanter('cardStates.saved', { FRIEND: friend })
+    : getBanter('cardStates.locked', { FRIEND: friend })
 
   return (
     <div style={{ marginTop: '20px' }}>
@@ -424,7 +442,7 @@ function LockedCard({ prediction, theCall, chaosBall, teamA, teamB, canEdit, onE
         borderRadius: '10px',
         border: '1px solid var(--border-subtle)',
       }}>
-        <span style={{ fontSize: '14px', flexShrink: 0 }}>🔒</span>
+        <span style={{ fontSize: '14px', flexShrink: 0 }}>{canEdit ? '✓' : '🔒'}</span>
         <p className="font-body text-sm" style={{ color: 'var(--text-secondary)', margin: 0 }}>
           {banter}
         </p>
@@ -504,11 +522,12 @@ function LockedRow({ icon, label, value }) {
 
 /* ─── Missed card ────────────────────────────────────────────────────────── */
 
-function MissedCard({ match, teamA, teamB }) {
+function MissedCard({ match, teamA, teamB, friendName = null }) {
   const title = getBanter('cardStates.missedTitle')
   const banter = getBanter('cardStates.missed', {
     TEAM_A: teamA?.shortName ?? match.team_a.toUpperCase(),
     TEAM_B: teamB?.shortName ?? match.team_b.toUpperCase(),
+    FRIEND: friendName ?? 'someone',
   })
 
   return (
@@ -520,7 +539,7 @@ function MissedCard({ match, teamA, teamB }) {
       border: '1.5px dashed var(--border-default)',
       textAlign: 'center',
     }}>
-      <p style={{ fontSize: '28px', marginBottom: '8px' }}>⏰</p>
+      <p style={{ fontSize: '28px', marginBottom: '8px' }}>😬</p>
       <p className="font-display font-bold text-sm mb-1" style={{ color: 'var(--text-primary)' }}>
         {title}
       </p>

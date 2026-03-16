@@ -87,7 +87,7 @@ function ScoringPanel() {
             const tA = getTeam(m.team_a)
             const tB = getTeam(m.team_b)
             const label = `M${m.match_number} — ${tA?.shortName ?? m.team_a} vs ${tB?.shortName ?? m.team_b}`
-            const badge = m.status === 'completed' ? ' ✓' : m.status === 'live' ? ' ●' : ''
+            const badge = m.status === 'completed' ? ' ✓' : m.status === 'cancelled' ? ' ✕' : m.status === 'live' ? ' ●' : ''
             return <option key={m.id} value={m.id}>{label}{badge}</option>
           })}
         </select>
@@ -115,6 +115,7 @@ function MatchScoringForm({ match, onPublished }) {
 
   // Form state
   const [winner, setWinner] = useState(match.winner ?? '')
+  const [resultType, setResultType] = useState(match.result_type ?? 'normal')
   const [questions, setQuestions] = useState([]) // [{id, type, display_text, answer_options, correct_answer}]
   const [callAnswer, setCallAnswer] = useState('')
   const [chaosAnswer, setChaosAnswer] = useState('')
@@ -125,7 +126,7 @@ function MatchScoringForm({ match, onPublished }) {
   const [preview, setPreview] = useState(null) // [{user_id, display_name, winner_pts, ...}]
   const [previewing, setPreviewing] = useState(false)
   const [publishing, setPublishing] = useState(false)
-  const [publishedAt, setPublishedAt] = useState(match.status === 'completed' ? true : null)
+  const [publishedAt, setPublishedAt] = useState(null)
   const [error, setError] = useState(null)
 
   // Load questions + existing scores on mount
@@ -158,6 +159,8 @@ function MatchScoringForm({ match, onPublished }) {
   const callQ = questions.find(q => q.type === 'the_call')
   const chaosQ = questions.find(q => q.type === 'chaos_ball')
 
+  const isCancelled = resultType === 'no_result'
+
   // ── Compute preview ──────────────────────────────────────────
   const handlePreview = useCallback(async () => {
     setError(null)
@@ -165,12 +168,6 @@ function MatchScoringForm({ match, onPublished }) {
     setPreview(null)
 
     try {
-      let parsedScorecard = []
-      if (scorecard.trim()) {
-        try { parsedScorecard = JSON.parse(scorecard) }
-        catch { throw new Error('Scorecard JSON is invalid. Fix it before previewing.') }
-      }
-
       // Fetch all predictions for this match + user display names
       const { data: preds, error: predsError } = await supabase
         .from('predictions')
@@ -179,6 +176,23 @@ function MatchScoringForm({ match, onPublished }) {
 
       if (predsError) throw predsError
       if (!preds?.length) throw new Error('No predictions found for this match.')
+
+      // Cancelled / No Result — zero all scores
+      if (isCancelled) {
+        const rows = preds.map(pred => ({
+          user_id: pred.user_id,
+          display_name: pred.users?.display_name ?? pred.user_id.slice(0, 8),
+          winner_pts: 0, call_pts: 0, villain_pts: 0, chaos_pts: 0, h2h_pts: 0, total: 0,
+        }))
+        setPreview(rows)
+        return
+      }
+
+      let parsedScorecard = []
+      if (scorecard.trim()) {
+        try { parsedScorecard = JSON.parse(scorecard) }
+        catch { throw new Error('Scorecard JSON is invalid. Fix it before previewing.') }
+      }
 
       const allWinnerPicks = preds.map(p => p.match_winner_pick).filter(Boolean)
       const allCallPicks = preds.map(p => p.the_call_pick).filter(Boolean)
@@ -217,7 +231,7 @@ function MatchScoringForm({ match, onPublished }) {
     } finally {
       setPreviewing(false)
     }
-  }, [match.id, winner, callAnswer, chaosAnswer, scorecard, h2hPairings])
+  }, [match.id, winner, callAnswer, chaosAnswer, scorecard, h2hPairings, isCancelled])
 
   // ── Publish ──────────────────────────────────────────────────
   const handlePublish = useCallback(async () => {
@@ -226,33 +240,42 @@ function MatchScoringForm({ match, onPublished }) {
     setPublishing(true)
 
     try {
-      // 1. Update match — winner + status
+      const newStatus = isCancelled ? 'cancelled' : 'completed'
+
+      // 1. Update match — status + result_type (+ winner/scorecard if not cancelled)
+      const matchUpdate = { status: newStatus, result_type: resultType }
+      if (!isCancelled) {
+        matchUpdate.winner = winner
+        matchUpdate.scorecard_json = scorecard.trim() ? JSON.parse(scorecard) : null
+      }
       const { error: matchErr } = await supabase
         .from('matches')
-        .update({ winner, status: 'completed', scorecard_json: scorecard.trim() ? JSON.parse(scorecard) : null })
+        .update(matchUpdate)
         .eq('id', match.id)
       if (matchErr) throw matchErr
 
-      // 2. Set correct answers on match_questions
-      const updates = []
-      if (callQ && callAnswer) updates.push(
-        supabase.from('match_questions').update({ correct_answer: callAnswer }).eq('id', callQ.id)
-      )
-      if (chaosQ && chaosAnswer) updates.push(
-        supabase.from('match_questions').update({ correct_answer: chaosAnswer }).eq('id', chaosQ.id)
-      )
-      await Promise.all(updates)
+      // 2. Set correct answers on match_questions (skip for cancelled)
+      if (!isCancelled) {
+        const updates = []
+        if (callQ && callAnswer) updates.push(
+          supabase.from('match_questions').update({ correct_answer: callAnswer }).eq('id', callQ.id)
+        )
+        if (chaosQ && chaosAnswer) updates.push(
+          supabase.from('match_questions').update({ correct_answer: chaosAnswer }).eq('id', chaosQ.id)
+        )
+        await Promise.all(updates)
+      }
 
-      // 3. Upsert match_scores
+      // 3. Upsert match_scores (zeroed for cancelled)
       const scoreRows = preview.map(row => ({
         user_id: row.user_id,
         match_id: match.id,
-        winner_pts: row.winner_pts,
-        call_pts: row.call_pts,
-        villain_pts: row.villain_pts,
-        chaos_pts: row.chaos_pts,
-        h2h_pts: row.h2h_pts,
-        total: row.total,
+        winner_pts: row.winner_pts ?? 0,
+        call_pts: row.call_pts ?? 0,
+        villain_pts: row.villain_pts ?? 0,
+        chaos_pts: row.chaos_pts ?? 0,
+        h2h_pts: row.h2h_pts ?? 0,
+        total: row.total ?? 0,
       }))
       const { error: scoresErr } = await supabase
         .from('match_scores')
@@ -260,15 +283,16 @@ function MatchScoringForm({ match, onPublished }) {
       if (scoresErr) throw scoresErr
 
       setPublishedAt(true)
-      onPublished({ id: match.id, winner, status: 'completed' })
+      onPublished({ id: match.id, winner: isCancelled ? null : winner, status: newStatus, result_type: resultType })
     } catch (e) {
       setError(e.message)
     } finally {
       setPublishing(false)
     }
-  }, [match.id, winner, callAnswer, chaosAnswer, scorecard, callQ, chaosQ, preview, onPublished])
+  }, [match.id, winner, resultType, isCancelled, callAnswer, chaosAnswer, scorecard, callQ, chaosQ, preview, onPublished])
 
-  const isCompleted = publishedAt || match.status === 'completed'
+  const alreadyPublished = match.status === 'completed' || match.status === 'cancelled'
+  const justPublished = !!publishedAt
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
@@ -287,9 +311,12 @@ function MatchScoringForm({ match, onPublished }) {
             {teamB?.shortName ?? match.team_b}
           </span>
         </div>
-        {isCompleted && (
+        {(alreadyPublished || justPublished) && (
           <div className="mt-2">
-            <StatusBadge label="Published" color="green" />
+            <StatusBadge
+              label={match.status === 'cancelled' || (justPublished && isCancelled) ? 'Cancelled' : 'Published'}
+              color={match.status === 'cancelled' || (justPublished && isCancelled) ? 'red' : 'green'}
+            />
           </div>
         )}
       </Card>
@@ -331,8 +358,59 @@ function MatchScoringForm({ match, onPublished }) {
         )}
       </Card>
 
+      {/* Result Type */}
+      <Card>
+        <SectionLabel>Result Type</SectionLabel>
+        <div className="flex flex-wrap gap-2 mt-2">
+          {[
+            { value: 'normal',     label: 'Normal' },
+            { value: 'super_over', label: 'Super Over' },
+            { value: 'dls',        label: 'DLS' },
+            { value: 'no_result',  label: 'Cancelled / No Result' },
+          ].map(opt => {
+            const active = resultType === opt.value
+            const isCancelOpt = opt.value === 'no_result'
+            return (
+              <button
+                key={opt.value}
+                onClick={() => setResultType(opt.value)}
+                style={{
+                  padding: '7px 14px',
+                  borderRadius: '8px',
+                  border: `1.5px solid ${active ? (isCancelOpt ? '#dc2626' : 'var(--text-primary)') : 'var(--border-subtle)'}`,
+                  background: active ? (isCancelOpt ? 'rgba(220,38,38,0.10)' : 'var(--text-primary)') : 'var(--surface-subtle)',
+                  color: active ? (isCancelOpt ? '#dc2626' : 'var(--card)') : 'var(--text-secondary)',
+                  fontFamily: 'var(--font-body)',
+                  fontSize: '13px',
+                  fontWeight: active ? 700 : 400,
+                  cursor: 'pointer',
+                  transition: 'all 0.15s',
+                }}
+              >
+                {opt.label}
+              </button>
+            )
+          })}
+        </div>
+        {isCancelled && (
+          <p className="font-mono text-xs mt-2" style={{ color: '#dc2626' }}>
+            All scores will be set to 0. Match status → cancelled.
+          </p>
+        )}
+        {resultType === 'super_over' && (
+          <p className="font-mono text-xs mt-2" style={{ color: 'var(--text-muted)' }}>
+            Winner is determined by super over result. Scoring unchanged.
+          </p>
+        )}
+        {resultType === 'dls' && (
+          <p className="font-mono text-xs mt-2" style={{ color: 'var(--text-muted)' }}>
+            DLS applied. Winner as set above. Scoring unchanged.
+          </p>
+        )}
+      </Card>
+
       {/* The Call */}
-      {callQ && (
+      {callQ && !isCancelled && (
         <Card>
           <SectionLabel>The Call</SectionLabel>
           <p className="font-body text-sm mt-1 mb-3" style={{ color: 'var(--text-secondary)' }}>{callQ.display_text}</p>
@@ -345,7 +423,7 @@ function MatchScoringForm({ match, onPublished }) {
       )}
 
       {/* Chaos Ball */}
-      {chaosQ && (
+      {chaosQ && !isCancelled && (
         <Card>
           <SectionLabel>Chaos Ball</SectionLabel>
           <p className="font-body text-sm mt-1 mb-3" style={{ color: 'var(--text-secondary)' }}>{chaosQ.display_text}</p>
@@ -358,31 +436,33 @@ function MatchScoringForm({ match, onPublished }) {
       )}
 
       {/* Scorecard JSON */}
-      <Card>
-        <SectionLabel>Scorecard (JSON)</SectionLabel>
-        <p className="font-body text-xs mt-1 mb-2" style={{ color: 'var(--text-muted)' }}>
-          Array of player objects: {`{ name, runs?, wickets?, role?, didNotPlay? }`}
-        </p>
-        <textarea
-          value={scorecard}
-          onChange={e => setScorecard(e.target.value)}
-          placeholder='[{"name":"Virat Kohli","runs":45,"wickets":0,"role":"batter"}]'
-          rows={6}
-          style={{
-            width: '100%',
-            padding: '10px 12px',
-            borderRadius: '10px',
-            border: '1.5px solid var(--border-subtle)',
-            background: 'var(--surface-subtle)',
-            color: 'var(--text-primary)',
-            fontFamily: 'var(--font-mono)',
-            fontSize: '12px',
-            resize: 'vertical',
-            outline: 'none',
-            boxSizing: 'border-box',
-          }}
-        />
-      </Card>
+      {!isCancelled && (
+        <Card>
+          <SectionLabel>Scorecard (JSON)</SectionLabel>
+          <p className="font-body text-xs mt-1 mb-2" style={{ color: 'var(--text-muted)' }}>
+            Array of player objects: {`{ name, runs?, wickets?, role?, didNotPlay? }`}
+          </p>
+          <textarea
+            value={scorecard}
+            onChange={e => setScorecard(e.target.value)}
+            placeholder='[{"name":"Virat Kohli","runs":45,"wickets":0,"role":"batter"}]'
+            rows={6}
+            style={{
+              width: '100%',
+              padding: '10px 12px',
+              borderRadius: '10px',
+              border: '1.5px solid var(--border-subtle)',
+              background: 'var(--surface-subtle)',
+              color: 'var(--text-primary)',
+              fontFamily: 'var(--font-mono)',
+              fontSize: '12px',
+              resize: 'vertical',
+              outline: 'none',
+              boxSizing: 'border-box',
+            }}
+          />
+        </Card>
+      )}
 
       {/* Error */}
       {error && (
@@ -398,17 +478,17 @@ function MatchScoringForm({ match, onPublished }) {
       <div className="flex gap-3">
         <button
           onClick={handlePreview}
-          disabled={previewing || !winner}
-          style={btnStyle('secondary', previewing || !winner)}
+          disabled={previewing || (!winner && !isCancelled)}
+          style={btnStyle('secondary', previewing || (!winner && !isCancelled))}
         >
           {previewing ? 'Computing…' : 'Preview Scores'}
         </button>
         <button
           onClick={handlePublish}
-          disabled={publishing || !preview || isCompleted}
-          style={btnStyle('primary', publishing || !preview || isCompleted)}
+          disabled={publishing || !preview || justPublished}
+          style={btnStyle('primary', publishing || !preview || justPublished)}
         >
-          {publishing ? 'Publishing…' : isCompleted ? 'Published ✓' : 'Publish'}
+          {publishing ? 'Publishing…' : justPublished ? 'Published ✓' : alreadyPublished ? 'Re-publish' : 'Publish'}
         </button>
       </div>
     </div>
@@ -522,6 +602,7 @@ function SectionLabel({ children }) {
 function StatusBadge({ label, color }) {
   const colors = {
     green: { bg: 'rgba(22,163,74,0.10)', border: 'rgba(22,163,74,0.25)', text: '#16a34a' },
+    red:   { bg: 'rgba(220,38,38,0.10)', border: 'rgba(220,38,38,0.25)', text: '#dc2626' },
   }
   const c = colors[color] ?? colors.green
   return (
