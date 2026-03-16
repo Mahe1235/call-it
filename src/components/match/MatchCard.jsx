@@ -318,7 +318,7 @@ function OpenCard({ match, theCall, chaosBall, teamA, teamB, onLocked, onCancel,
           border: '1.5px dashed var(--border-default)',
         }}>
           <p className="font-body text-sm" style={{ color: 'var(--text-muted)', margin: 0 }}>
-            Squad not announced yet — villain pick skipped
+            {getBanter('pickConfirmations.noSquad')}
           </p>
         </div>
       )}
@@ -503,6 +503,7 @@ function LockedRow({ icon, label, value }) {
 /* ─── Missed card ────────────────────────────────────────────────────────── */
 
 function MissedCard({ match, teamA, teamB }) {
+  const title = getBanter('cardStates.missedTitle')
   const banter = getBanter('cardStates.missed', {
     TEAM_A: teamA?.shortName ?? match.team_a.toUpperCase(),
     TEAM_B: teamB?.shortName ?? match.team_b.toUpperCase(),
@@ -519,7 +520,7 @@ function MissedCard({ match, teamA, teamB }) {
     }}>
       <p style={{ fontSize: '28px', marginBottom: '8px' }}>⏰</p>
       <p className="font-display font-bold text-sm mb-1" style={{ color: 'var(--text-primary)' }}>
-        Card missed
+        {title}
       </p>
       <p className="font-body text-xs" style={{ color: 'var(--text-muted)' }}>
         {banter}
@@ -548,7 +549,7 @@ function GroupPicksSection({ match, teamA, teamB }) {
         <Divider />
         <SectionLabel>The Group</SectionLabel>
         <p className="font-body text-sm" style={{ color: 'var(--text-muted)' }}>
-          Just you so far. The others haven't locked in.
+          {getBanter('groupPicks.justYou')}
         </p>
       </div>
     )
