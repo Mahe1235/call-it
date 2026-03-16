@@ -40,10 +40,11 @@ export function scoreChaosBall(pick, correctAnswer) {
 /**
  * Score the villain pick.
  *
- * Batter rule:  runs < 10 → +15 pts | runs > 30 → −5 pts | 10–30 → 0
- * Bowler rule:  wickets === 0 → +15 pts | wickets >= 2 → −5 pts | 1 wicket → 0
- * Allrounder:   batter rule applies (runs is the primary stat)
- * Did not play: 0 pts
+ * Applies to ALL player types — both runs and wickets count as impact:
+ *   Penalty  (−5): runs > 30 OR wickets >= 2
+ *   Reward  (+15): runs < 10 AND wickets === 0
+ *   Neutral   (0): everything else (e.g. 15 runs + 0 wkts, or 5 runs + 1 wkt)
+ *   DNP       (0): did not play
  *
  * @param {string} playerName
  * @param {Array<{name: string, runs?: number, wickets?: number, role?: string, didNotPlay?: boolean}>} scorecard
@@ -66,20 +67,16 @@ export function scoreVillainPick(playerName, scorecard) {
     return { pts: S.matchCard.villainPick.didNotPlay, reason: 'dnp' }
   }
 
-  // Bowler-only: no runs field, use wickets
-  const isBowlerOnly = player.role === 'bowler' && player.runs === undefined
-  if (isBowlerOnly) {
-    const wickets = player.wickets ?? 0
-    if (wickets === 0) return { pts: S.matchCard.villainPick.under10, reason: 'wickets_0' }
-    if (wickets >= 2) return { pts: S.matchCard.villainPick.over30, reason: 'wickets_2plus' }
-    return { pts: S.matchCard.villainPick.between10and30, reason: 'wickets_1' }
-  }
-
-  // Batter / allrounder / keeper: use runs
   const runs = player.runs ?? 0
-  if (runs < 10) return { pts: S.matchCard.villainPick.under10, reason: 'runs_under10' }
-  if (runs > 30) return { pts: S.matchCard.villainPick.over30, reason: 'runs_over30' }
-  return { pts: S.matchCard.villainPick.between10and30, reason: 'runs_neutral' }
+  const wickets = player.wickets ?? 0
+
+  if (runs > 30 || wickets >= 2) {
+    return { pts: S.matchCard.villainPick.over30, reason: 'impact' }
+  }
+  if (runs < 10 && wickets === 0) {
+    return { pts: S.matchCard.villainPick.under10, reason: 'flopped' }
+  }
+  return { pts: S.matchCard.villainPick.between10and30, reason: 'neutral' }
 }
 
 // ─── Contrarian Multiplier ───────────────────────────────────────────────────
