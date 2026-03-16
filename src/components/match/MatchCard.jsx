@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { getTeam, getBanter } from '../../lib/content'
 import { useAuth } from '../../hooks/useAuth'
 import { submitPrediction, useGroupPredictions } from '../../hooks/usePredictions'
@@ -88,6 +88,11 @@ export function MatchCard({ match, questions, prediction, onLocked }) {
 function OpenCard({ match, theCall, chaosBall, teamA, teamB, onLocked, onCancel, initialPicks = null }) {
   const { user } = useAuth()
   const isEditing = initialPicks !== null
+
+  const openBanter = useMemo(() => getBanter('cardStates.open', {
+    TEAM_A: teamA?.shortName ?? match.team_a.toUpperCase(),
+    TEAM_B: teamB?.shortName ?? match.team_b.toUpperCase(),
+  }), [match.id])
 
   const [winner,  setWinner]  = useState(initialPicks?.match_winner_pick  ?? null)
   const [call,    setCall]    = useState(initialPicks?.the_call_pick       ?? null)
@@ -179,12 +184,27 @@ function OpenCard({ match, theCall, chaosBall, teamA, teamB, onLocked, onCancel,
     )
   }
 
+  const winnerConfirmation = useMemo(() => {
+    if (!winner) return null
+    const shortName = winner === match.team_a
+      ? (teamA?.shortName ?? winner.toUpperCase())
+      : (teamB?.shortName ?? winner.toUpperCase())
+    return getBanter('pickConfirmations.matchWinner', { TEAM: shortName })
+  }, [winner])
+
   return (
     <div style={{ marginTop: '20px' }}>
 
+      {/* Open banter */}
+      {!isEditing && (
+        <p className="font-body text-sm mb-4" style={{ color: 'var(--text-secondary)' }}>
+          {openBanter}
+        </p>
+      )}
+
       {/* Match Winner */}
       <SectionLabel>Match Winner</SectionLabel>
-      <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
+      <div style={{ display: 'flex', gap: '10px', marginBottom: winner ? '8px' : '20px' }}>
         <PickButton
           label={teamA?.shortName ?? match.team_a.toUpperCase()}
           selected={winner === match.team_a}
@@ -196,6 +216,11 @@ function OpenCard({ match, theCall, chaosBall, teamA, teamB, onLocked, onCancel,
           onClick={() => setWinner(match.team_b)}
         />
       </div>
+      {winnerConfirmation && (
+        <p className="font-mono text-xs mb-4" style={{ color: 'var(--text-muted)', letterSpacing: '0.03em' }}>
+          {winnerConfirmation}
+        </p>
+      )}
 
       {/* The Call */}
       {theCall && (
@@ -358,18 +383,17 @@ function LockedCard({ prediction, theCall, chaosBall, teamA, teamB, canEdit, onE
 
   return (
     <div style={{ marginTop: '20px' }}>
-      {/* Banter header */}
+      {/* Banter line */}
       <div style={{
-        background: 'var(--team-tinted-bg)',
-        borderRadius: '12px',
-        padding: '12px 14px',
-        marginBottom: '16px',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '8px',
+        display: 'flex', alignItems: 'center', gap: '7px',
+        marginBottom: '14px',
+        padding: '10px 14px',
+        background: 'var(--surface-subtle)',
+        borderRadius: '10px',
+        border: '1px solid var(--border-subtle)',
       }}>
-        <span style={{ fontSize: '16px' }}>🔒</span>
-        <p className="font-display font-bold text-sm" style={{ color: 'var(--text-primary)', margin: 0 }}>
+        <span style={{ fontSize: '14px', flexShrink: 0 }}>🔒</span>
+        <p className="font-body text-sm" style={{ color: 'var(--text-secondary)', margin: 0 }}>
           {banter}
         </p>
       </div>
@@ -488,7 +512,17 @@ function GroupPicksSection({ match, teamA, teamB }) {
     )
   }
 
-  if (!predictions.length) return null
+  if (!predictions.length) {
+    return (
+      <div style={{ marginTop: '24px' }}>
+        <Divider />
+        <SectionLabel>The Group</SectionLabel>
+        <p className="font-body text-sm" style={{ color: 'var(--text-muted)' }}>
+          Just you so far. The others haven't locked in.
+        </p>
+      </div>
+    )
+  }
 
   const countA = predictions.filter(p => p.match_winner_pick === match.team_a).length
   const countB = predictions.filter(p => p.match_winner_pick === match.team_b).length
