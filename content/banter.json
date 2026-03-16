@@ -37,8 +37,8 @@
     ],
     "villainPick": [
       "You villain-picked {PLAYER}. {FRIEND} villain-picked someone different. One of you will regret this.",
-      "{PLAYER} is your villain. If they score 30, that's on you.",
-      "Villain: {PLAYER}. Under 10 and you're laughing. Over 30 and it costs you."
+      "{PLAYER} is your villain. If they score 30 or take 2 wickets, that's on you.",
+      "Villain: {PLAYER}. Under 10 runs or no wickets and you're laughing. Over 30 or 2+ wickets and it costs you."
     ],
     "chaosBall": [
       "Chaos Ball locked. {ANSWER}.",

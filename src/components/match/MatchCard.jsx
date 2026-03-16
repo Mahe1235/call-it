@@ -244,8 +244,8 @@ function OpenCard({ match, theCall, chaosBall, teamA, teamB, onLocked, onCancel,
 
       {/* Villain Pick */}
       <SectionLabel>Villain Pick</SectionLabel>
-      <p className="font-body text-xs mb-2" style={{ color: 'var(--text-muted)' }}>
-        Pick a batter. Under 10 runs = +15 pts. Over 30 runs = −5 pts.
+      <p className="font-body text-sm mb-3" style={{ color: 'var(--text-secondary)' }}>
+        Pick any player. Under 10 runs / 0 wickets = +15 pts. Over 30 runs / 2+ wickets = −5 pts.
       </p>
       {hasSquad ? (
         <div style={{ position: 'relative', marginBottom: '20px' }}>
