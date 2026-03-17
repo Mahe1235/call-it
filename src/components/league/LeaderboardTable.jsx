@@ -64,7 +64,7 @@ function LeaderboardRow({ entry, isMe }) {
       transition: 'background 0.2s',
     }}>
 
-      {/* Ghost team logo watermark */}
+      {/* Ghost team logo watermark + team abbrev overlay */}
       {team?.logoUrl && (
         <img
           src={team.logoUrl}
@@ -83,6 +83,27 @@ function LeaderboardRow({ entry, isMe }) {
             userSelect: 'none',
           }}
         />
+      )}
+      {team?.shortName && (
+        <span
+          aria-hidden="true"
+          style={{
+            position: 'absolute',
+            right: '8px',
+            bottom: '6px',
+            fontFamily: 'Bricolage Grotesque, sans-serif',
+            fontWeight: 900,
+            fontSize: '10px',
+            letterSpacing: '0.12em',
+            color: team?.colors?.primary ?? 'var(--text-muted)',
+            opacity: 0.28,
+            textTransform: 'uppercase',
+            pointerEvents: 'none',
+            userSelect: 'none',
+          }}
+        >
+          {team.shortName}
+        </span>
       )}
 
       {/* Rank */}
@@ -147,7 +168,7 @@ function LeaderboardRow({ entry, isMe }) {
         </span>
       )}
 
-      {/* Total pts */}
+      {/* Total pts + avg */}
       <div style={{ textAlign: 'right', flexShrink: 0, paddingRight: '44px' }}>
         <p className="font-display font-black" style={{
           fontSize: '18px',
@@ -160,6 +181,11 @@ function LeaderboardRow({ entry, isMe }) {
         <p className="font-mono" style={{ fontSize: '9px', color: 'var(--text-muted)', margin: 0, letterSpacing: '0.5px' }}>
           PTS
         </p>
+        {entry.matches_played > 0 && (
+          <p className="font-mono" style={{ fontSize: '9px', color: 'var(--text-muted)', margin: '1px 0 0', letterSpacing: '0.3px', opacity: 0.7 }}>
+            {(entry.total_pts / entry.matches_played).toFixed(1)} avg
+          </p>
+        )}
       </div>
     </div>
   )

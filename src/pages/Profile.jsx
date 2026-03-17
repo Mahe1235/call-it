@@ -1,13 +1,35 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
+import { useLeaderboard } from '../hooks/useLeaderboard'
+import { supabase } from '../lib/supabase'
 import { getTeam } from '../lib/content'
 
 export default function Profile() {
-  const { profile, signOut } = useAuth()
+  const { profile, session, signOut } = useAuth()
   const navigate = useNavigate()
   const team = profile ? getTeam(profile.team) : null
   const [rulesOpen, setRulesOpen] = useState(false)
+
+  const { entries, loading: leaderboardLoading } = useLeaderboard()
+  const myRow = session ? entries.find(e => e.user_id === session.user.id) : null
+
+  const [bestPts, setBestPts] = useState(null)
+  const [worstPts, setWorstPts] = useState(null)
+
+  useEffect(() => {
+    if (!session) return
+    supabase
+      .from('match_scores')
+      .select('total')
+      .eq('user_id', session.user.id)
+      .order('total', { ascending: false })
+      .then(({ data }) => {
+        if (!data || data.length === 0) return
+        setBestPts(data[0].total)
+        setWorstPts(data[data.length - 1].total)
+      })
+  }, [session])
 
   return (
     <div className="p-4 animate-slide-up">
@@ -76,6 +98,43 @@ export default function Profile() {
         </div>
       )}
 
+
+      {/* Stats card — skeleton while loading */}
+      {leaderboardLoading && session && (
+        <div className="shimmer" style={{
+          borderRadius: '20px',
+          height: '88px',
+          marginBottom: '12px',
+          border: '1.5px solid var(--border-subtle)',
+        }} />
+      )}
+
+      {/* Stats card — populated */}
+      {!leaderboardLoading && myRow && (
+        <div style={{
+          background: 'var(--card)',
+          borderRadius: '20px',
+          padding: '16px 20px',
+          border: '1.5px solid var(--border-subtle)',
+          boxShadow: 'var(--shadow-card)',
+          marginBottom: '12px',
+        }}>
+          <p className="font-mono text-xs uppercase tracking-widest" style={{ color: 'var(--text-muted)', marginBottom: '12px' }}>
+            Season Stats
+          </p>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px', textAlign: 'center' }}>
+            <StatCell label="Rank" value={`#${myRow.rank}`} />
+            <StatCell label="Total pts" value={myRow.total_pts ?? 0} />
+            <StatCell label="Matches" value={myRow.matches_played ?? 0} />
+          </div>
+          {(bestPts !== null || worstPts !== null) && (
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', textAlign: 'center', marginTop: '12px', paddingTop: '12px', borderTop: '1px solid var(--border-subtle)' }}>
+              <StatCell label="Best match" value={bestPts >= 0 ? `+${bestPts}` : `${bestPts}`} positive={bestPts > 0} />
+              <StatCell label="Worst match" value={worstPts >= 0 ? `+${worstPts}` : `${worstPts}`} negative={worstPts < 0} />
+            </div>
+          )}
+        </div>
+      )}
 
       {/* How to Play */}
       <div style={{
@@ -282,6 +341,16 @@ function Section({ label, children }) {
 
 function Divider() {
   return <div style={{ marginTop: '16px', height: '1px', background: 'var(--border-subtle)' }} />
+}
+
+function StatCell({ label, value, positive, negative }) {
+  const color = positive ? 'var(--team-primary)' : negative ? '#EF4444' : 'var(--text-primary)'
+  return (
+    <div>
+      <p className="font-display font-black" style={{ fontSize: '20px', color, margin: 0, letterSpacing: '-0.5px' }}>{value}</p>
+      <p className="font-body text-xs" style={{ color: 'var(--text-muted)', margin: '2px 0 0' }}>{label}</p>
+    </div>
+  )
 }
 
 function RuleRow({ label, pts, children }) {

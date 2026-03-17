@@ -3,7 +3,7 @@ import { SeasonPicksForm } from '../components/season/SeasonPicksForm'
 import { SeasonTracker } from '../components/season/SeasonTracker'
 
 export default function Season() {
-  const { picks, setPicks, seasonStarted, loading, error } = useSeasonPicks()
+  const { picks, setPicks, scores, seasonStarted, loading, error } = useSeasonPicks()
 
   return (
     <div className="p-4 animate-slide-up">
@@ -26,6 +26,7 @@ export default function Season() {
         <SeasonTracker
           picks={picks}
           setPicks={setPicks}
+          scores={scores}
           seasonStarted={seasonStarted}
         />
       ) : seasonStarted ? (

@@ -30,7 +30,7 @@ function buildPlayerList() {
    Main tracker — view + inline edit
    ══════════════════════════════════════════════════════════════════════════ */
 
-export function SeasonTracker({ picks, setPicks, seasonStarted }) {
+export function SeasonTracker({ picks, setPicks, scores, seasonStarted }) {
   const { user }     = useAuth()
   const allPlayers   = useMemo(() => buildPlayerList(), [])
   const [activeEdit, setActiveEdit] = useState(null) // section key
@@ -106,6 +106,27 @@ export function SeasonTracker({ picks, setPicks, seasonStarted }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
 
+      {/* ── Season score total banner ── */}
+      {scores && (
+        <div style={{
+          padding: '14px 18px',
+          borderRadius: '16px',
+          background: 'var(--team-tinted-bg)',
+          border: '1.5px solid var(--border-subtle)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}>
+          <div>
+            <p className="font-mono text-xs uppercase tracking-widest" style={{ color: 'var(--text-muted)', margin: '0 0 2px' }}>Season Score</p>
+            <p className="font-display font-black" style={{ fontSize: '28px', color: 'var(--team-primary)', margin: 0, letterSpacing: '-1px', lineHeight: 1 }}>
+              {scores.total > 0 ? `+${scores.total}` : scores.total} pts
+            </p>
+          </div>
+          <span style={{ fontSize: '28px' }}>🏆</span>
+        </div>
+      )}
+
       {/* ── Status banner ── */}
       <div style={{
         padding: '12px 16px',
@@ -134,6 +155,7 @@ export function SeasonTracker({ picks, setPicks, seasonStarted }) {
       <SectionCard
         label="Top 4 Teams"
         pts="up to 120 pts"
+        earnedPts={scores?.top4_pts}
         canEdit={canEdit}
         editing={activeEdit === 'top4'}
         onEdit={startEditTop4}
@@ -166,6 +188,7 @@ export function SeasonTracker({ picks, setPicks, seasonStarted }) {
       <SectionCard
         label="Champion"
         pts="200 pts"
+        earnedPts={scores?.champion_pts}
         canEdit={canEdit && top4.length === 4}
         editing={activeEdit === 'champion'}
         onEdit={() => setActiveEdit('champion')}
@@ -192,6 +215,7 @@ export function SeasonTracker({ picks, setPicks, seasonStarted }) {
       <SectionCard
         label="Runner-Up"
         pts="100 pts"
+        earnedPts={scores?.runner_up_pts}
         canEdit={canEdit && top4.length === 4}
         editing={activeEdit === 'runnerUp'}
         onEdit={() => setActiveEdit('runnerUp')}
@@ -218,6 +242,7 @@ export function SeasonTracker({ picks, setPicks, seasonStarted }) {
       <SectionCard
         label="Wooden Spoon"
         pts="50 pts"
+        earnedPts={scores?.wooden_spoon_pts}
         canEdit={canEdit}
         editing={activeEdit === 'woodenSpoon'}
         onEdit={() => setActiveEdit('woodenSpoon')}
@@ -242,7 +267,7 @@ export function SeasonTracker({ picks, setPicks, seasonStarted }) {
       </SectionCard>
 
       {/* ── ORANGE CAP ── */}
-      <SectionCard label="Orange Cap" pts="80 / 40 / 20 pts" canEdit={canEdit} editing={activeEdit === 'orangeCap'} onEdit={() => { setActiveEdit('orangeCap'); setActiveSlot(0) }} onClose={closeEdit}>
+      <SectionCard label="Orange Cap" pts="80 / 40 / 20 pts" earnedPts={scores?.orange_cap_pts} canEdit={canEdit} editing={activeEdit === 'orangeCap'} onEdit={() => { setActiveEdit('orangeCap'); setActiveSlot(0) }} onClose={closeEdit}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
           {[0, 1, 2].map(i => (
             <PlayerSlotCard
@@ -264,7 +289,7 @@ export function SeasonTracker({ picks, setPicks, seasonStarted }) {
       </SectionCard>
 
       {/* ── PURPLE CAP ── */}
-      <SectionCard label="Purple Cap" pts="80 / 40 / 20 pts" canEdit={canEdit} editing={activeEdit === 'purpleCap'} onEdit={() => { setActiveEdit('purpleCap'); setActiveSlot(0) }} onClose={closeEdit}>
+      <SectionCard label="Purple Cap" pts="80 / 40 / 20 pts" earnedPts={scores?.purple_cap_pts} canEdit={canEdit} editing={activeEdit === 'purpleCap'} onEdit={() => { setActiveEdit('purpleCap'); setActiveSlot(0) }} onClose={closeEdit}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
           {[0, 1, 2].map(i => (
             <PlayerSlotCard
@@ -286,7 +311,7 @@ export function SeasonTracker({ picks, setPicks, seasonStarted }) {
       </SectionCard>
 
       {/* ── MOST SIXES ── */}
-      <SectionCard label="Most Sixes" pts="60 / 30 / 15 pts" canEdit={canEdit} editing={activeEdit === 'mostSixes'} onEdit={() => { setActiveEdit('mostSixes'); setActiveSlot(0) }} onClose={closeEdit}>
+      <SectionCard label="Most Sixes" pts="60 / 30 / 15 pts" earnedPts={scores?.most_sixes_pts} canEdit={canEdit} editing={activeEdit === 'mostSixes'} onEdit={() => { setActiveEdit('mostSixes'); setActiveSlot(0) }} onClose={closeEdit}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
           {[0, 1, 2].map(i => (
             <PlayerSlotCard
@@ -315,7 +340,7 @@ export function SeasonTracker({ picks, setPicks, seasonStarted }) {
    Section card — white card wrapper matching app design language
    ══════════════════════════════════════════════════════════════════════════ */
 
-function SectionCard({ label, pts, canEdit, editing, onEdit, onClose, children }) {
+function SectionCard({ label, pts, earnedPts, canEdit, editing, onEdit, onClose, children }) {
   return (
     <div style={{
       background: 'var(--card)',
@@ -330,11 +355,15 @@ function SectionCard({ label, pts, canEdit, editing, onEdit, onClose, children }
           <p className="font-mono text-xs tracking-widest uppercase" style={{ color: 'var(--text-muted)', margin: 0, fontWeight: 700 }}>
             {label}
           </p>
-          {pts && (
+          {earnedPts != null ? (
+            <span className="font-mono font-bold" style={{ fontSize: '11px', color: earnedPts > 0 ? 'var(--team-primary)' : 'var(--text-muted)' }}>
+              {earnedPts > 0 ? `+${earnedPts}` : earnedPts} pts
+            </span>
+          ) : pts ? (
             <span className="font-mono" style={{ fontSize: '9px', color: 'var(--text-muted)', opacity: 0.7 }}>
               {pts}
             </span>
-          )}
+          ) : null}
         </div>
         {canEdit && onEdit && (
           <button

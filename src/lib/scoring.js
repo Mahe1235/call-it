@@ -179,3 +179,147 @@ export function scoreMatchCard(prediction, matchResult, questionResults, allPick
     },
   }
 }
+
+// ─── Season Scoring ───────────────────────────────────────────────────────────
+
+/**
+ * Helper: return pts for a player in a ranked list (orange/purple/sixes caps).
+ * rankList is ordered [rank1, rank2, rank3, rank4, rank5].
+ * capConfig is the scoring.json config for that cap (e.g. S.season.orangeCap).
+ */
+function _capPtsForPlayer(playerName, rankList, capConfig) {
+  if (!playerName) return 0
+  const idx = rankList.findIndex(p => p?.toLowerCase() === playerName.toLowerCase())
+  if (idx === -1) return capConfig.outsideTop5
+  const rankKey = `rank${idx + 1}`
+  return capConfig[rankKey] ?? capConfig.outsideTop5
+}
+
+/**
+ * Score one user's full season predictions.
+ *
+ * @param {Object} predictions  - single row from season_predictions
+ * @param {Object} results      - actual season outcomes:
+ *   {
+ *     top4: string[],          // 4 qualifying team ids
+ *     champion: string,        // winning team id
+ *     runner_up: string,       // runner-up team id
+ *     wooden_spoon: string,    // last-place team id
+ *     orange_cap: string[],    // top-5 run scorers [rank1, rank2, rank3, rank4, rank5]
+ *     purple_cap: string[],    // top-5 wicket takers
+ *     most_sixes: string[],    // top-5 six hitters
+ *   }
+ * @param {Object[]} allPredictions - all users' season_predictions rows (for contrarian calc)
+ * @returns {{ top4_pts, champion_pts, runner_up_pts, wooden_spoon_pts, orange_cap_pts, purple_cap_pts, most_sixes_pts, total, breakdown }}
+ */
+export function scoreSeasonPredictions(predictions, results, allPredictions) {
+  const Ss = S.season
+
+  // Build group pick lists for contrarian calc
+  const allTop4Flat       = allPredictions.flatMap(p => p.top_4_teams ?? [])
+  const allChampions      = allPredictions.map(p => p.champion).filter(Boolean)
+  const allRunnerUps      = allPredictions.map(p => p.runner_up).filter(Boolean)
+  const allWoodenSpoons   = allPredictions.map(p => p.wooden_spoon).filter(Boolean)
+  const allOrangeFlat     = allPredictions.flatMap(p => p.orange_cap_picks ?? []).filter(Boolean)
+  const allPurpleFlat     = allPredictions.flatMap(p => p.purple_cap_picks ?? []).filter(Boolean)
+  const allSixesFlat      = allPredictions.flatMap(p => p.most_sixes_picks ?? []).filter(Boolean)
+
+  // ── Top 4 ──────────────────────────────────────────────────────────────────
+  let top4_pts = 0
+  const top4Breakdown = []
+  for (const teamId of (predictions.top_4_teams ?? [])) {
+    if (results.top4?.includes(teamId)) {
+      const mult = calculateContrarianMultiplier(teamId, allTop4Flat)
+      const pts  = Math.round(Ss.top4.perTeam * mult)
+      top4_pts += pts
+      top4Breakdown.push({ teamId, pts, mult })
+    }
+  }
+
+  // ── Champion ───────────────────────────────────────────────────────────────
+  let champion_pts = 0
+  let championMult = 1.0
+  if (predictions.champion && predictions.champion === results.champion) {
+    championMult  = calculateContrarianMultiplier(predictions.champion, allChampions)
+    champion_pts  = Math.round(Ss.champion.base * championMult)
+  }
+
+  // ── Runner-Up ──────────────────────────────────────────────────────────────
+  let runner_up_pts = 0
+  let runnerUpMult  = 1.0
+  if (predictions.runner_up && predictions.runner_up === results.runner_up) {
+    runnerUpMult  = calculateContrarianMultiplier(predictions.runner_up, allRunnerUps)
+    runner_up_pts = Math.round(Ss.runnerUp.base * runnerUpMult)
+  }
+
+  // ── Wooden Spoon ───────────────────────────────────────────────────────────
+  let wooden_spoon_pts = 0
+  let woodenSpoonMult  = 1.0
+  if (predictions.wooden_spoon && predictions.wooden_spoon === results.wooden_spoon) {
+    woodenSpoonMult  = calculateContrarianMultiplier(predictions.wooden_spoon, allWoodenSpoons)
+    wooden_spoon_pts = Math.round(Ss.woodenSpoon.base * woodenSpoonMult)
+  }
+
+  // ── Orange Cap ─────────────────────────────────────────────────────────────
+  let orange_cap_pts = 0
+  const orangeBreakdown = []
+  for (const playerName of (predictions.orange_cap_picks ?? []).filter(Boolean)) {
+    const rawPts = _capPtsForPlayer(playerName, results.orange_cap ?? [], Ss.orangeCap)
+    if (rawPts > 0) {
+      const mult = calculateContrarianMultiplier(playerName, allOrangeFlat)
+      const pts  = Math.round(rawPts * mult)
+      orange_cap_pts += pts
+      orangeBreakdown.push({ playerName, pts, mult })
+    }
+  }
+
+  // ── Purple Cap ─────────────────────────────────────────────────────────────
+  let purple_cap_pts = 0
+  const purpleBreakdown = []
+  for (const playerName of (predictions.purple_cap_picks ?? []).filter(Boolean)) {
+    const rawPts = _capPtsForPlayer(playerName, results.purple_cap ?? [], Ss.purpleCap)
+    if (rawPts > 0) {
+      const mult = calculateContrarianMultiplier(playerName, allPurpleFlat)
+      const pts  = Math.round(rawPts * mult)
+      purple_cap_pts += pts
+      purpleBreakdown.push({ playerName, pts, mult })
+    }
+  }
+
+  // ── Most Sixes ─────────────────────────────────────────────────────────────
+  let most_sixes_pts = 0
+  const sixesBreakdown = []
+  for (const playerName of (predictions.most_sixes_picks ?? []).filter(Boolean)) {
+    const rawPts = _capPtsForPlayer(playerName, results.most_sixes ?? [], Ss.mostSixes)
+    if (rawPts > 0) {
+      const mult = calculateContrarianMultiplier(playerName, allSixesFlat)
+      const pts  = Math.round(rawPts * mult)
+      most_sixes_pts += pts
+      sixesBreakdown.push({ playerName, pts, mult })
+    }
+  }
+
+  const total =
+    top4_pts + champion_pts + runner_up_pts + wooden_spoon_pts +
+    orange_cap_pts + purple_cap_pts + most_sixes_pts
+
+  return {
+    top4_pts,
+    champion_pts,
+    runner_up_pts,
+    wooden_spoon_pts,
+    orange_cap_pts,
+    purple_cap_pts,
+    most_sixes_pts,
+    total,
+    breakdown: {
+      top4: top4Breakdown,
+      champion: { mult: championMult },
+      runnerUp: { mult: runnerUpMult },
+      woodenSpoon: { mult: woodenSpoonMult },
+      orangeCap: orangeBreakdown,
+      purpleCap: purpleBreakdown,
+      mostSixes: sixesBreakdown,
+    },
+  }
+}

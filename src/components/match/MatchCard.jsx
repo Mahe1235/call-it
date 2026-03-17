@@ -415,7 +415,7 @@ function OpenCard({ match, theCall, chaosBall, teamA, teamB, onLocked, onCancel,
             transition: 'background 0.2s ease, color 0.2s ease',
           }}
         >
-          {submitting ? 'Saving…' : isEditing ? 'Save changes ✓' : 'Lock it in 🔒'}
+          {submitting ? 'Saving…' : isEditing ? 'Update picks ✓' : 'Lock it in →'}
         </button>
       </div>
     </div>

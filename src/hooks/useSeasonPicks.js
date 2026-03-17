@@ -3,16 +3,21 @@ import { supabase } from '../lib/supabase'
 import { useAuth } from './useAuth'
 
 /**
- * Returns the current user's season picks + whether the season has started.
- * { picks, setPicks, seasonStarted, loading, error }
+ * Returns the current user's season picks + scores + whether the season has started.
+ * { picks, setPicks, scores, seasonStarted, loading, error }
  *
  * picks shape:
  *   { id, top_4_teams[], champion, runner_up, wooden_spoon,
  *     orange_cap_picks[], purple_cap_picks[], most_sixes_picks[], locked_at }
+ *
+ * scores shape (null if not yet scored):
+ *   { top4_pts, champion_pts, runner_up_pts, wooden_spoon_pts,
+ *     orange_cap_pts, purple_cap_pts, most_sixes_pts, total, breakdown_json }
  */
 export function useSeasonPicks() {
   const { user } = useAuth()
   const [picks, setPicks]               = useState(null)
+  const [scores, setScores]             = useState(null)
   const [seasonStarted, setSeasonStarted] = useState(false)
   const [loading, setLoading]           = useState(true)
   const [error, setError]               = useState(null)
@@ -26,7 +31,7 @@ export function useSeasonPicks() {
       setLoading(true)
       setError(null)
 
-      const [picksResult, matchResult] = await Promise.all([
+      const [picksResult, matchResult, scoresResult] = await Promise.all([
         supabase
           .from('season_predictions')
           .select('*')
@@ -37,6 +42,11 @@ export function useSeasonPicks() {
           .select('date, status')
           .order('match_number', { ascending: true })
           .limit(1)
+          .maybeSingle(),
+        supabase
+          .from('season_scores')
+          .select('*')
+          .eq('user_id', user.id)
           .maybeSingle(),
       ])
 
@@ -51,6 +61,8 @@ export function useSeasonPicks() {
         setSeasonStarted(started)
       }
 
+      setScores(scoresResult.data ?? null)
+
       setLoading(false)
     }
 
@@ -58,7 +70,7 @@ export function useSeasonPicks() {
     return () => { cancelled = true }
   }, [user?.id])
 
-  return { picks, setPicks, seasonStarted, loading, error }
+  return { picks, setPicks, scores, seasonStarted, loading, error }
 }
 
 /**

@@ -42,6 +42,9 @@ export function getChaosBallQuestion(id) {
 
 /**
  * Pick a random banter string from a key path, with optional template substitution.
+ * Lines that reference a {VAR} not present in vars are automatically excluded —
+ * so if FRIEND is null/missing, {FRIEND} lines are skipped entirely.
+ *
  * @param {string} path - dot-separated key e.g. "cardStates.open"
  * @param {Object} vars - template vars e.g. { TEAM_A: 'CSK', TEAM_B: 'MI' }
  */
@@ -53,9 +56,17 @@ export function getBanter(path, vars = {}) {
     if (node === undefined) return ''
   }
   const options = Array.isArray(node) ? node : [node]
-  let text = options[Math.floor(Math.random() * options.length)]
+
+  // Only pick lines where every referenced {VAR} has a non-null value in vars
+  const available = options.filter(opt => {
+    const placeholders = [...opt.matchAll(/\{([A-Z_]+)\}/g)].map(m => m[1])
+    return placeholders.every(p => vars[p] != null)
+  })
+
+  const pool = available.length ? available : options  // fallback: use all if none pass
+  let text = pool[Math.floor(Math.random() * pool.length)]
   for (const [key, val] of Object.entries(vars)) {
-    text = text.replaceAll(`{${key}}`, val)
+    if (val != null) text = text.replaceAll(`{${key}}`, val)
   }
   return text
 }
