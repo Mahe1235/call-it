@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <filter id="grain" x="0%" y="0%" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.68" numOctaves="4" stitchTiles="stitch" result="noise"/>
+      <feColorMatrix type="saturate" values="0" in="noise" result="greyNoise"/>
+      <feBlend in="SourceGraphic" in2="greyNoise" mode="overlay" result="blended"/>
+      <feComposite in="blended" in2="SourceGraphic" operator="in"/>
+    </filter>
+    <!-- Subtle vignette gradient -->
+    <radialGradient id="vignette" cx="50%" cy="50%" r="70%">
+      <stop offset="0%"   stop-color="#0E0C08" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.55"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#0E0C08"/>
+
+  <!-- Grain texture overlay -->
+  <rect width="1200" height="630" fill="#1A1610" filter="url(#grain)" opacity="0.25"/>
+
+  <!-- Vignette -->
+  <rect width="1200" height="630" fill="url(#vignette)"/>
+
+  <!-- ─── Left colour strip: 10 IPL teams, top to bottom ─────────────────── -->
+  <rect x="0" y="0"   width="14" height="63" fill="#F9CD1B"/>
+  <rect x="0" y="63"  width="14" height="63" fill="#004BA0"/>
+  <rect x="0" y="126" width="14" height="63" fill="#CC0000"/>
+  <rect x="0" y="189" width="14" height="63" fill="#3B225F"/>
+  <rect x="0" y="252" width="14" height="63" fill="#FF822A"/>
+  <rect x="0" y="315" width="14" height="63" fill="#0057A8"/>
+  <rect x="0" y="378" width="14" height="63" fill="#ED1B24"/>
+  <rect x="0" y="441" width="14" height="63" fill="#E5137D"/>
+  <rect x="0" y="504" width="14" height="63" fill="#1C3A6B"/>
+  <rect x="0" y="567" width="14" height="63" fill="#A72B6D"/>
+
+  <!-- ─── Right colour strip: reversed ───────────────────────────────────── -->
+  <rect x="1186" y="0"   width="14" height="63" fill="#A72B6D"/>
+  <rect x="1186" y="63"  width="14" height="63" fill="#1C3A6B"/>
+  <rect x="1186" y="126" width="14" height="63" fill="#E5137D"/>
+  <rect x="1186" y="189" width="14" height="63" fill="#ED1B24"/>
+  <rect x="1186" y="252" width="14" height="63" fill="#0057A8"/>
+  <rect x="1186" y="315" width="14" height="63" fill="#FF822A"/>
+  <rect x="1186" y="378" width="14" height="63" fill="#3B225F"/>
+  <rect x="1186" y="441" width="14" height="63" fill="#CC0000"/>
+  <rect x="1186" y="504" width="14" height="63" fill="#004BA0"/>
+  <rect x="1186" y="567" width="14" height="63" fill="#F9CD1B"/>
+
+  <!-- ─── Strip fade: left and right inner edges fade to bg ──────────────── -->
+  <linearGradient id="fadeLeft" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0%"  stop-color="#0E0C08" stop-opacity="0"/>
+    <stop offset="100%" stop-color="#0E0C08" stop-opacity="0.72"/>
+  </linearGradient>
+  <linearGradient id="fadeRight" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0%"   stop-color="#0E0C08" stop-opacity="0.72"/>
+    <stop offset="100%" stop-color="#0E0C08" stop-opacity="0"/>
+  </linearGradient>
+  <rect x="14"   y="0" width="60" height="630" fill="url(#fadeLeft)"/>
+  <rect x="1126" y="0" width="60" height="630" fill="url(#fadeRight)"/>
+
+  <!-- ─── Main wordmark: CALL IT. ─────────────────────────────────────────── -->
+  <text
+    x="600" y="285"
+    font-family="'Arial Black','Helvetica Neue',Arial,sans-serif"
+    font-size="118"
+    font-weight="900"
+    fill="#F5F0E8"
+    text-anchor="middle"
+    letter-spacing="-5"
+  >CALL IT.</text>
+
+  <!-- ─── Gold rule ─────────────────────────────────────────────────────────── -->
+  <rect x="466" y="316" width="268" height="2" fill="#F9CD1B" opacity="0.85" rx="1"/>
+
+  <!-- ─── Subtitle ──────────────────────────────────────────────────────────── -->
+  <text
+    x="600" y="363"
+    font-family="'Courier New',Courier,monospace"
+    font-size="14"
+    font-weight="700"
+    fill="#8C8270"
+    text-anchor="middle"
+    letter-spacing="5"
+  >IPL 2026  ·  FRIEND GROUP PREDICTIONS</text>
+
+  <!-- ─── Secondary line ────────────────────────────────────────────────────── -->
+  <text
+    x="600" y="394"
+    font-family="'Courier New',Courier,monospace"
+    font-size="11"
+    fill="#4E4840"
+    text-anchor="middle"
+    letter-spacing="3"
+  >YOUR GROUP. YOUR PICKS. YOUR RECORD.</text>
+
+  <!-- ─── Bottom-right whisper ──────────────────────────────────────────────── -->
+  <text
+    x="1168" y="614"
+    font-family="'Courier New',Courier,monospace"
+    font-size="10"
+    fill="#302C26"
+    text-anchor="end"
+    letter-spacing="1"
+  >CALL IT IN.  →</text>
+</svg>
