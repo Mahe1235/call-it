@@ -191,67 +191,126 @@ export default function Profile() {
         {rulesOpen && (
           <div style={{ padding: '0 20px 20px', borderTop: '1px solid var(--border-subtle)' }}>
 
-            {/* Deadline */}
-            <Section label="Deadline">
-              <p className="font-body text-sm" style={{ color: 'var(--text-secondary)', margin: 0, lineHeight: 1.6 }}>
-                Every match has a card you fill before the first ball is bowled. Once the match goes live, your card locks automatically — no edits, no excuses.
+            {/* Fantasy XI */}
+            <Section label="Fantasy XI — your squad for the whole season">
+              <p className="font-body text-sm" style={{ color: 'var(--text-secondary)', margin: '0 0 10px', lineHeight: 1.5 }}>
+                Pick 11 players before Match 1. Your squad earns points after every game automatically — based on what they actually do on the pitch.
               </p>
-            </Section>
 
-            <Divider />
-
-            {/* Match card */}
-            <Section label="Match Card — 4 picks per match">
-              <RuleRow label="Winner Pick" pts="+10">
-                Simple: pick which team wins. Gets a contrarian multiplier — if you're the only one who called the upset, you earn double.
-              </RuleRow>
-              <RuleRow label="The Call" pts="+10">
-                A specific match stat question — e.g. "Total sixes: Over/Under 13" or "Which team scores more in the powerplay?". One question per match, same for everyone.
-              </RuleRow>
-              <RuleRow label="Villain Pick" pts="varies">
-                Pick one player from either squad to be your villain. You want them to <em>flop</em> — score under 10 runs and take zero wickets. The worse they do for their team, the better for you.
-                <div style={{ marginTop: '8px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  {[
-                    { outcome: 'Flopped', detail: '<10 runs & 0 wickets', pts: '+15', neg: false },
-                    { outcome: 'Neutral', detail: 'Anything in between', pts: '0', neg: false },
-                    { outcome: 'Impact',  detail: '30+ runs or 2+ wickets', pts: '−5', neg: true },
-                  ].map(r => (
-                    <div key={r.outcome} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <span className="font-body text-xs" style={{ color: 'var(--text-muted)' }}>
-                        <strong style={{ color: 'var(--text-secondary)' }}>{r.outcome}</strong> — {r.detail}
-                      </span>
-                      <span className="font-mono font-bold" style={{ fontSize: '12px', color: r.neg ? '#EF4444' : 'var(--team-primary)' }}>{r.pts}</span>
-                    </div>
-                  ))}
-                </div>
-              </RuleRow>
-              <RuleRow label="Chaos Ball" pts="+12">
-                A Yes/No wildcard question — something unpredictable like "Will the match go to the last over?" or "Will there be a super over?". Pays the most because it's the hardest to call.
-              </RuleRow>
-            </Section>
-
-            <Divider />
-
-            {/* Contrarian */}
-            <Section label="Contrarian Bonus">
-              <p className="font-body text-sm" style={{ color: 'var(--text-secondary)', margin: '0 0 8px', lineHeight: 1.5 }}>
-                Your Winner, The Call, and Chaos Ball points are multiplied based on how many people picked the same thing.
-              </p>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+              {/* Composition */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginBottom: '12px' }}>
                 {[
-                  { label: 'Only you picked it', mult: '2×' },
-                  { label: '2 of you picked it', mult: '1.5×' },
-                  { label: '3 or more picked it', mult: '1×' },
-                ].map(row => (
-                  <div key={row.label} style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <p className="font-body text-sm" style={{ color: 'var(--text-secondary)', margin: 0 }}>{row.label}</p>
-                    <span className="font-mono font-bold" style={{ fontSize: '13px', color: 'var(--team-primary)' }}>{row.mult}</span>
+                  { role: 'Wicket-Keepers', req: 'min 1' },
+                  { role: 'Batsmen', req: 'min 3' },
+                  { role: 'All-Rounders', req: 'min 1' },
+                  { role: 'Bowlers', req: 'min 3' },
+                  { role: 'Overseas players', req: 'max 4' },
+                ].map(r => (
+                  <div key={r.role} style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span className="font-body text-xs" style={{ color: 'var(--text-secondary)' }}>{r.role}</span>
+                    <span className="font-mono" style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{r.req}</span>
                   </div>
                 ))}
               </div>
-              <p className="font-body text-xs" style={{ color: 'var(--text-muted)', margin: '8px 0 0', lineHeight: 1.5 }}>
-                Safe consensus picks earn normal points. Brave solo calls earn double. Villain Pick has no multiplier.
-              </p>
+
+              {/* Captain / VC */}
+              <div style={{ display: 'flex', gap: '8px', marginBottom: '12px' }}>
+                {[{ label: 'Captain', mult: '2×', color: '#b45309' }, { label: 'Vice Captain', mult: '1.5×', color: '#6b7280' }].map(({ label, mult, color }) => (
+                  <div key={label} style={{ flex: 1, padding: '8px 10px', borderRadius: '10px', border: `1.5px solid ${color}22`, background: `${color}08`, textAlign: 'center' }}>
+                    <p className="font-display font-black" style={{ fontSize: '18px', color, margin: '0 0 1px', letterSpacing: '-0.5px' }}>{mult}</p>
+                    <p className="font-body text-xs" style={{ color: 'var(--text-muted)', margin: 0 }}>{label}</p>
+                  </div>
+                ))}
+              </div>
+
+              {/* Batting scoring */}
+              <p className="font-mono text-xs uppercase tracking-widest" style={{ color: 'var(--text-muted)', margin: '0 0 6px' }}>Batting</p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginBottom: '12px' }}>
+                {[
+                  { label: 'Per run', pts: '+1' },
+                  { label: 'Boundary (4)', pts: '+1' },
+                  { label: 'Six', pts: '+2' },
+                  { label: 'Duck (faced ≥1 ball)', pts: '−2' },
+                  { label: '25 runs', pts: '+4 bonus' },
+                  { label: '50 runs', pts: '+4 more' },
+                  { label: '100 runs', pts: '+8 more' },
+                ].map(r => (
+                  <div key={r.label} style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span className="font-body text-xs" style={{ color: 'var(--text-secondary)' }}>{r.label}</span>
+                    <span className="font-mono font-bold" style={{ fontSize: '11px', color: r.pts.startsWith('−') ? '#EF4444' : 'var(--team-primary)' }}>{r.pts}</span>
+                  </div>
+                ))}
+              </div>
+
+              <p className="font-mono text-xs uppercase tracking-widest" style={{ color: 'var(--text-muted)', margin: '0 0 4px' }}>Strike Rate bonus</p>
+              <p className="font-body" style={{ fontSize: '11px', color: 'var(--text-muted)', margin: '0 0 6px', lineHeight: 1.4 }}>Min 10 balls faced.</p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '3px', marginBottom: '12px' }}>
+                {[
+                  { label: 'SR ≥ 170', pts: '+6' },
+                  { label: 'SR ≥ 150', pts: '+4' },
+                  { label: 'SR ≥ 130', pts: '+2' },
+                  { label: 'SR < 70',  pts: '−2' },
+                  { label: 'SR < 60',  pts: '−4' },
+                  { label: 'SR < 50',  pts: '−6' },
+                ].map(r => (
+                  <div key={r.label} style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span className="font-body text-xs" style={{ color: 'var(--text-secondary)' }}>{r.label}</span>
+                    <span className="font-mono font-bold" style={{ fontSize: '11px', color: r.pts.startsWith('−') ? '#EF4444' : 'var(--team-primary)' }}>{r.pts}</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Bowling scoring */}
+              <p className="font-mono text-xs uppercase tracking-widest" style={{ color: 'var(--text-muted)', margin: '0 0 6px' }}>Bowling</p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginBottom: '12px' }}>
+                {[
+                  { label: 'Per wicket', pts: '+25' },
+                  { label: 'LBW or bowled bonus', pts: '+8' },
+                  { label: 'Maiden over', pts: '+12' },
+                  { label: '2-wicket haul', pts: '+4 bonus' },
+                  { label: '3-wicket haul', pts: '+8 bonus' },
+                  { label: '4-wicket haul', pts: '+12 bonus' },
+                  { label: '5-wicket haul', pts: '+20 bonus' },
+                ].map(r => (
+                  <div key={r.label} style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span className="font-body text-xs" style={{ color: 'var(--text-secondary)' }}>{r.label}</span>
+                    <span className="font-mono font-bold" style={{ fontSize: '11px', color: 'var(--team-primary)' }}>{r.pts}</span>
+                  </div>
+                ))}
+              </div>
+
+              <p className="font-mono text-xs uppercase tracking-widest" style={{ color: 'var(--text-muted)', margin: '0 0 4px' }}>Economy bonus</p>
+              <p className="font-body" style={{ fontSize: '11px', color: 'var(--text-muted)', margin: '0 0 6px', lineHeight: 1.4 }}>Min 2 overs bowled.</p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '3px', marginBottom: '12px' }}>
+                {[
+                  { label: 'Economy < 5', pts: '+8' },
+                  { label: 'Economy < 6', pts: '+6' },
+                  { label: 'Economy < 7', pts: '+2' },
+                  { label: 'Economy ≥ 9',  pts: '−2' },
+                  { label: 'Economy ≥ 10', pts: '−4' },
+                  { label: 'Economy ≥ 11', pts: '−6' },
+                ].map(r => (
+                  <div key={r.label} style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span className="font-body text-xs" style={{ color: 'var(--text-secondary)' }}>{r.label}</span>
+                    <span className="font-mono font-bold" style={{ fontSize: '11px', color: r.pts.startsWith('−') ? '#EF4444' : 'var(--team-primary)' }}>{r.pts}</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Fielding */}
+              <p className="font-mono text-xs uppercase tracking-widest" style={{ color: 'var(--text-muted)', margin: '0 0 6px' }}>Fielding</p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                {[
+                  { label: 'Catch', pts: '+8' },
+                  { label: 'Stumping', pts: '+12' },
+                  { label: 'Run-out', pts: '+8' },
+                ].map(r => (
+                  <div key={r.label} style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span className="font-body text-xs" style={{ color: 'var(--text-secondary)' }}>{r.label}</span>
+                    <span className="font-mono font-bold" style={{ fontSize: '11px', color: 'var(--team-primary)' }}>{r.pts}</span>
+                  </div>
+                ))}
+              </div>
             </Section>
 
             <Divider />
@@ -259,17 +318,17 @@ export default function Profile() {
             {/* Season picks */}
             <Section label="Season Picks — lock before Match 1">
               <p className="font-body text-sm" style={{ color: 'var(--text-secondary)', margin: '0 0 10px', lineHeight: 1.5 }}>
-                One set of predictions for the whole season, locked before the first match. You can't change them once play begins.
+                One set of tournament predictions, locked before the first ball. Scored at the end of the season. Bold, contrarian picks earn more.
               </p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 {[
-                  { label: 'Top 4 teams', pts: '+30 each', desc: 'Pick 4 teams to qualify for the playoffs. 30 pts per correct pick.' },
+                  { label: 'Top 4 teams', pts: '+30 each', desc: 'Pick 4 teams to make the playoffs.' },
                   { label: 'Champion', pts: '+200', desc: 'Pick the IPL 2026 winner.' },
                   { label: 'Runner-Up', pts: '+100', desc: 'Pick the finalist who loses.' },
-                  { label: 'Wooden Spoon', pts: '+50', desc: 'Pick the team that finishes last.' },
-                  { label: 'Orange Cap', pts: 'up to +80', desc: 'Pick up to 3 players for top run-scorer. Points based on their final rank.' },
-                  { label: 'Purple Cap', pts: 'up to +80', desc: 'Pick up to 3 players for top wicket-taker.' },
-                  { label: 'Most Sixes', pts: 'up to +60', desc: 'Pick up to 3 players for most sixes hit.' },
+                  { label: 'Wooden Spoon', pts: 'up to +100', desc: 'Pick the last-place team. Contrarian multiplier — solo pick earns 2×.' },
+                  { label: 'Orange Cap', pts: 'up to +80', desc: 'Pick 3 players for most runs. Partial credit + contrarian multiplier per pick.' },
+                  { label: 'Purple Cap', pts: 'up to +80', desc: 'Pick 3 players for most wickets.' },
+                  { label: 'Most Sixes', pts: 'up to +60', desc: 'Pick 3 players for most sixes hit.' },
                 ].map(row => (
                   <div key={row.label} style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '8px' }}>
                     <div style={{ flex: 1 }}>
@@ -280,12 +339,26 @@ export default function Profile() {
                   </div>
                 ))}
               </div>
+
+              <div style={{ marginTop: '10px', padding: '10px 12px', borderRadius: '10px', background: 'var(--surface-subtle)', border: '1px solid var(--border-subtle)' }}>
+                <p className="font-mono text-xs uppercase tracking-widest" style={{ color: 'var(--text-muted)', marginBottom: '6px' }}>Contrarian Multiplier</p>
+                {[
+                  { label: 'Only you picked it', mult: '2×' },
+                  { label: '2 people picked it', mult: '1.5×' },
+                  { label: '3+ picked it', mult: '1×' },
+                ].map(row => (
+                  <div key={row.label} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '3px' }}>
+                    <p className="font-body text-xs" style={{ color: 'var(--text-secondary)', margin: 0 }}>{row.label}</p>
+                    <span className="font-mono font-bold" style={{ fontSize: '12px', color: 'var(--team-primary)' }}>{row.mult}</span>
+                  </div>
+                ))}
+              </div>
             </Section>
 
             <Divider />
 
             <p className="font-body text-xs" style={{ color: 'var(--text-muted)', margin: '12px 0 0', lineHeight: 1.5 }}>
-              Max per match card: <strong style={{ color: 'var(--text-secondary)' }}>47 pts</strong> · Good season total: <strong style={{ color: 'var(--text-secondary)' }}>500–700 pts</strong>
+              Fantasy XI: picked once, earns all season · Season Picks: scored at tournament end · Good combined total: <strong style={{ color: 'var(--text-secondary)' }}>500–800 pts</strong>
             </p>
           </div>
         )}
