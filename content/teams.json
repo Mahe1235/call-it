@@ -20,7 +20,8 @@
         },
         {
           "name": "Jamie Overton",
-          "role": "allrounder"
+          "role": "allrounder",
+          "overseas": true
         },
         {
           "name": "Shreyas Gopal",
@@ -28,7 +29,8 @@
         },
         {
           "name": "Zakary Foulkes",
-          "role": "allrounder"
+          "role": "allrounder",
+          "overseas": true
         },
         {
           "name": "Gurjapneet Singh",
@@ -36,11 +38,13 @@
         },
         {
           "name": "Akeal Hosein",
-          "role": "bowler"
+          "role": "bowler",
+          "overseas": true
         },
         {
           "name": "Matthew Short",
-          "role": "batter"
+          "role": "batter",
+          "overseas": true
         },
         {
           "name": "MS Dhoni",
@@ -64,7 +68,8 @@
         },
         {
           "name": "Matt Henry",
-          "role": "bowler"
+          "role": "bowler",
+          "overseas": true
         },
         {
           "name": "Rahul Chahar",
@@ -76,11 +81,13 @@
         },
         {
           "name": "Spencer Johnson",
-          "role": "bowler"
+          "role": "bowler",
+          "overseas": true
         },
         {
           "name": "Dewald Brevis",
-          "role": "batter"
+          "role": "batter",
+          "overseas": true
         },
         {
           "name": "Ruturaj Gaikwad",
@@ -92,7 +99,8 @@
         },
         {
           "name": "Noor Ahmad",
-          "role": "bowler"
+          "role": "bowler",
+          "overseas": true
         },
         {
           "name": "Urvil Patel",
@@ -116,7 +124,8 @@
         },
         {
           "name": "Nathan Ellis",
-          "role": "bowler"
+          "role": "bowler",
+          "overseas": true
         }
       ]
     },
@@ -148,11 +157,13 @@
         },
         {
           "name": "Will Jacks",
-          "role": "allrounder"
+          "role": "allrounder",
+          "overseas": true
         },
         {
           "name": "AM Ghazanfar",
-          "role": "bowler"
+          "role": "bowler",
+          "overseas": true
         },
         {
           "name": "Mayank Markande",
@@ -160,7 +171,8 @@
         },
         {
           "name": "Trent Boult",
-          "role": "bowler"
+          "role": "bowler",
+          "overseas": true
         },
         {
           "name": "Tilak Varma",
@@ -172,11 +184,13 @@
         },
         {
           "name": "Ryan Rickelton",
-          "role": "wicketkeeper"
+          "role": "wicketkeeper",
+          "overseas": true
         },
         {
           "name": "Sherfane Rutherford",
-          "role": "allrounder"
+          "role": "allrounder",
+          "overseas": true
         },
         {
           "name": "Hardik Pandya",
@@ -188,7 +202,8 @@
         },
         {
           "name": "Quinton de Kock",
-          "role": "wicketkeeper"
+          "role": "wicketkeeper",
+          "overseas": true
         },
         {
           "name": "Danish Malewar",
@@ -196,7 +211,8 @@
         },
         {
           "name": "Corbin Bosch",
-          "role": "allrounder"
+          "role": "allrounder",
+          "overseas": true
         },
         {
           "name": "Atharva Ankolekar",
@@ -204,7 +220,8 @@
         },
         {
           "name": "Mitchell Santner",
-          "role": "allrounder"
+          "role": "allrounder",
+          "overseas": true
         },
         {
           "name": "Deepak Chahar",
@@ -272,11 +289,13 @@
         },
         {
           "name": "Romario Shepherd",
-          "role": "allrounder"
+          "role": "allrounder",
+          "overseas": true
         },
         {
           "name": "Jacob Bethell",
-          "role": "allrounder"
+          "role": "allrounder",
+          "overseas": true
         },
         {
           "name": "Rajat Patidar",
@@ -284,11 +303,13 @@
         },
         {
           "name": "Tim David",
-          "role": "batter"
+          "role": "batter",
+          "overseas": true
         },
         {
           "name": "Jordan Cox",
-          "role": "wicketkeeper"
+          "role": "wicketkeeper",
+          "overseas": true
         },
         {
           "name": "Mangesh Yadav",
@@ -300,7 +321,8 @@
         },
         {
           "name": "Josh Hazlewood",
-          "role": "bowler"
+          "role": "bowler",
+          "overseas": true
         },
         {
           "name": "Venkatesh Iyer",
@@ -316,7 +338,8 @@
         },
         {
           "name": "Jacob Duffy",
-          "role": "bowler"
+          "role": "bowler",
+          "overseas": true
         },
         {
           "name": "Rasikh Salam Dar",
@@ -336,7 +359,8 @@
         },
         {
           "name": "Philip Salt",
-          "role": "wicketkeeper"
+          "role": "wicketkeeper",
+          "overseas": true
         },
         {
           "name": "Kanishk Chouhan",
@@ -344,7 +368,8 @@
         },
         {
           "name": "Nuwan Thushara",
-          "role": "bowler"
+          "role": "bowler",
+          "overseas": true
         },
         {
           "name": "Suyash Sharma",
@@ -368,11 +393,13 @@
       "squad": [
         {
           "name": "Finn Allen",
-          "role": "batter"
+          "role": "batter",
+          "overseas": true
         },
         {
           "name": "Blessing Muzarabani",
-          "role": "bowler"
+          "role": "bowler",
+          "overseas": true
         },
         {
           "name": "Manish Pandey",
@@ -408,7 +435,8 @@
         },
         {
           "name": "Sunil Narine",
-          "role": "allrounder"
+          "role": "allrounder",
+          "overseas": true
         },
         {
           "name": "Rinku Singh",
@@ -420,7 +448,8 @@
         },
         {
           "name": "Cameron Green",
-          "role": "allrounder"
+          "role": "allrounder",
+          "overseas": true
         },
         {
           "name": "Ramandeep Singh",
@@ -432,7 +461,8 @@
         },
         {
           "name": "Rovman Powell",
-          "role": "batter"
+          "role": "batter",
+          "overseas": true
         },
         {
           "name": "Sarthak Ranjan",
@@ -448,11 +478,13 @@
         },
         {
           "name": "Matheesha Pathirana",
-          "role": "bowler"
+          "role": "bowler",
+          "overseas": true
         },
         {
           "name": "Rachin Ravindra",
-          "role": "allrounder"
+          "role": "allrounder",
+          "overseas": true
         },
         {
           "name": "Prashant Solanki",
@@ -464,7 +496,8 @@
         },
         {
           "name": "Tim Seifert",
-          "role": "wicketkeeper"
+          "role": "wicketkeeper",
+          "overseas": true
         },
         {
           "name": "Anukul Roy",
@@ -492,7 +525,8 @@
       "squad": [
         {
           "name": "Heinrich Klaasen",
-          "role": "wicketkeeper"
+          "role": "wicketkeeper",
+          "overseas": true
         },
         {
           "name": "Eshan Malinga",
@@ -524,11 +558,13 @@
         },
         {
           "name": "Jack Edwards",
-          "role": "batter"
+          "role": "batter",
+          "overseas": true
         },
         {
           "name": "Kamindu Mendis",
-          "role": "allrounder"
+          "role": "allrounder",
+          "overseas": true
         },
         {
           "name": "Krains Fuletra",
@@ -540,7 +576,8 @@
         },
         {
           "name": "David Payne",
-          "role": "bowler"
+          "role": "bowler",
+          "overseas": true
         },
         {
           "name": "Onkar Tukaram Tarmale",
@@ -560,11 +597,13 @@
         },
         {
           "name": "Pat Cummins",
-          "role": "bowler"
+          "role": "bowler",
+          "overseas": true
         },
         {
           "name": "Travis Head",
-          "role": "batter"
+          "role": "batter",
+          "overseas": true
         },
         {
           "name": "Harsh Dubey",
@@ -576,7 +615,8 @@
         },
         {
           "name": "Brydon Carse",
-          "role": "bowler"
+          "role": "bowler",
+          "overseas": true
         },
         {
           "name": "Jaydev Unadkat",
@@ -588,7 +628,8 @@
         },
         {
           "name": "Liam Livingstone",
-          "role": "allrounder"
+          "role": "allrounder",
+          "overseas": true
         },
         {
           "name": "Zeeshan Ansari",
@@ -616,7 +657,8 @@
         },
         {
           "name": "Pathum Nissanka",
-          "role": "batter"
+          "role": "batter",
+          "overseas": true
         },
         {
           "name": "Madhav Tiwari",
@@ -628,7 +670,8 @@
         },
         {
           "name": "Ben Duckett",
-          "role": "batter"
+          "role": "batter",
+          "overseas": true
         },
         {
           "name": "Auqib Nabi Dar",
@@ -640,11 +683,13 @@
         },
         {
           "name": "Kyle Jamieson",
-          "role": "bowler"
+          "role": "bowler",
+          "overseas": true
         },
         {
           "name": "Mitchell Starc",
-          "role": "bowler"
+          "role": "bowler",
+          "overseas": true
         },
         {
           "name": "Abishek Porel",
@@ -668,15 +713,18 @@
         },
         {
           "name": "Dushmantha Chameera",
-          "role": "bowler"
+          "role": "bowler",
+          "overseas": true
         },
         {
           "name": "Lungi Ngidi",
-          "role": "bowler"
+          "role": "bowler",
+          "overseas": true
         },
         {
           "name": "Tristan Stubbs",
-          "role": "batter"
+          "role": "batter",
+          "overseas": true
         },
         {
           "name": "Kuldeep Yadav",
@@ -708,7 +756,8 @@
         },
         {
           "name": "David Miller",
-          "role": "batter"
+          "role": "batter",
+          "overseas": true
         }
       ]
     },
@@ -728,7 +777,8 @@
       "squad": [
         {
           "name": "Cooper Connolly",
-          "role": "allrounder"
+          "role": "allrounder",
+          "overseas": true
         },
         {
           "name": "Arshdeep Singh",
@@ -744,7 +794,8 @@
         },
         {
           "name": "Marco Jansen",
-          "role": "allrounder"
+          "role": "allrounder",
+          "overseas": true
         },
         {
           "name": "Nehal Wadhera",
@@ -752,15 +803,18 @@
         },
         {
           "name": "Xavier Bartlett",
-          "role": "bowler"
+          "role": "bowler",
+          "overseas": true
         },
         {
           "name": "Lockie Ferguson",
-          "role": "bowler"
+          "role": "bowler",
+          "overseas": true
         },
         {
           "name": "Mitchell Owen",
-          "role": "allrounder"
+          "role": "allrounder",
+          "overseas": true
         },
         {
           "name": "Vijaykumar Vyshak",
@@ -768,7 +822,8 @@
         },
         {
           "name": "Ben Dwarshuis",
-          "role": "bowler"
+          "role": "bowler",
+          "overseas": true
         },
         {
           "name": "Priyansh Arya",
@@ -808,7 +863,8 @@
         },
         {
           "name": "Marcus Stoinis",
-          "role": "allrounder"
+          "role": "allrounder",
+          "overseas": true
         },
         {
           "name": "Shashank Singh",
@@ -816,7 +872,8 @@
         },
         {
           "name": "Azmatullah Omarzai",
-          "role": "allrounder"
+          "role": "allrounder",
+          "overseas": true
         },
         {
           "name": "Vishal Nishad",
@@ -852,7 +909,8 @@
         },
         {
           "name": "Nandre Burger",
-          "role": "bowler"
+          "role": "bowler",
+          "overseas": true
         },
         {
           "name": "Vaibhav Sooryavanshi",
@@ -860,7 +918,8 @@
         },
         {
           "name": "Shimron Hetmyer",
-          "role": "batter"
+          "role": "batter",
+          "overseas": true
         },
         {
           "name": "Ravi Bishnoi",
@@ -868,7 +927,8 @@
         },
         {
           "name": "Dasun Shanaka",
-          "role": "allrounder"
+          "role": "allrounder",
+          "overseas": true
         },
         {
           "name": "Tushar Deshpande",
@@ -884,7 +944,8 @@
         },
         {
           "name": "Jofra Archer",
-          "role": "bowler"
+          "role": "bowler",
+          "overseas": true
         },
         {
           "name": "Aman Rao Perala",
@@ -908,7 +969,8 @@
         },
         {
           "name": "Lhuan-dre Pretorius",
-          "role": "batter"
+          "role": "batter",
+          "overseas": true
         },
         {
           "name": "Kuldeep Sen",
@@ -924,19 +986,23 @@
         },
         {
           "name": "Donovan Ferreira",
-          "role": "batter"
+          "role": "batter",
+          "overseas": true
         },
         {
           "name": "Sam Curran",
-          "role": "allrounder"
+          "role": "allrounder",
+          "overseas": true
         },
         {
           "name": "Adam Milne",
-          "role": "bowler"
+          "role": "bowler",
+          "overseas": true
         },
         {
           "name": "Kwena Maphaka",
-          "role": "bowler"
+          "role": "bowler",
+          "overseas": true
         },
         {
           "name": "Yudhvir Singh Charak",
@@ -968,7 +1034,8 @@
         },
         {
           "name": "Kagiso Rabada",
-          "role": "bowler"
+          "role": "bowler",
+          "overseas": true
         },
         {
           "name": "Mohammed Siraj",
@@ -1000,11 +1067,13 @@
         },
         {
           "name": "Rashid Khan",
-          "role": "allrounder"
+          "role": "allrounder",
+          "overseas": true
         },
         {
           "name": "Glenn Phillips",
-          "role": "allrounder"
+          "role": "allrounder",
+          "overseas": true
         },
         {
           "name": "Ishant Sharma",
@@ -1024,7 +1093,8 @@
         },
         {
           "name": "Tom Banton",
-          "role": "wicketkeeper"
+          "role": "wicketkeeper",
+          "overseas": true
         },
         {
           "name": "Sai Sudharsan",
@@ -1040,11 +1110,13 @@
         },
         {
           "name": "Luke Wood",
-          "role": "bowler"
+          "role": "bowler",
+          "overseas": true
         },
         {
           "name": "Jason Holder",
-          "role": "allrounder"
+          "role": "allrounder",
+          "overseas": true
         },
         {
           "name": "Prasidh Krishna",
@@ -1052,7 +1124,8 @@
         },
         {
           "name": "Jos Buttler",
-          "role": "wicketkeeper"
+          "role": "wicketkeeper",
+          "overseas": true
         },
         {
           "name": "Nishant Sindhu",
@@ -1088,15 +1161,18 @@
         },
         {
           "name": "Josh Inglis",
-          "role": "wicketkeeper"
+          "role": "wicketkeeper",
+          "overseas": true
         },
         {
           "name": "Mitchell Marsh",
-          "role": "allrounder"
+          "role": "allrounder",
+          "overseas": true
         },
         {
           "name": "Aiden Markram",
-          "role": "batter"
+          "role": "batter",
+          "overseas": true
         },
         {
           "name": "Digvesh Singh Rathi",
@@ -1132,7 +1208,8 @@
         },
         {
           "name": "Anrich Nortje",
-          "role": "bowler"
+          "role": "bowler",
+          "overseas": true
         },
         {
           "name": "Arshin Kulkarni",
@@ -1140,7 +1217,8 @@
         },
         {
           "name": "Wanindu Hasaranga",
-          "role": "allrounder"
+          "role": "allrounder",
+          "overseas": true
         },
         {
           "name": "Naman Tiwari",
@@ -1168,11 +1246,13 @@
         },
         {
           "name": "Nicholas Pooran",
-          "role": "wicketkeeper"
+          "role": "wicketkeeper",
+          "overseas": true
         },
         {
           "name": "Matthew Breetzke",
-          "role": "batter"
+          "role": "batter",
+          "overseas": true
         },
         {
           "name": "Shahbaz Ahmed",

@@ -1,10 +1,15 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
 import { useSeasonStatus } from '../hooks/useSeasonStatus'
 import { useFantasyXI } from '../hooks/useFantasyXI'
 import { useSeasonPicks } from '../hooks/useSeasonPicks'
 import { LeaderboardSnapshot } from '../components/league/LeaderboardSnapshot'
+import { getTeam } from '../lib/content'
+
+// All 10 IPL teams split into two rows for the logo mosaic
+const LOGO_ROW1 = ['csk', 'mi', 'rcb', 'kkr', 'srh']
+const LOGO_ROW2 = ['dc', 'pbks', 'rr', 'gt', 'lsg']
 
 export default function Home() {
   const { profile, user } = useAuth()
@@ -96,6 +101,33 @@ function SeasonLiveView({ fantasyPicks, seasonPicks }) {
 
 /* ─── Tournament Countdown ────────────────────────────────────────────────── */
 
+function LogoRow({ teamIds }) {
+  return (
+    <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center', width: '100%' }}>
+      {teamIds.map(id => {
+        const team = getTeam(id)
+        if (!team?.logoUrl) return null
+        return (
+          <img
+            key={id}
+            src={team.logoUrl}
+            alt=""
+            aria-hidden="true"
+            style={{
+              width: '48px', height: '48px',
+              objectFit: 'contain',
+              opacity: 0.13,
+              filter: 'grayscale(15%)',
+              pointerEvents: 'none',
+              userSelect: 'none',
+            }}
+          />
+        )
+      })}
+    </div>
+  )
+}
+
 function TournamentCountdown({ targetDate }) {
   const [timeLeft, setTimeLeft] = useState(calcTimeLeft(targetDate))
 
@@ -113,59 +145,84 @@ function TournamentCountdown({ targetDate }) {
   return (
     <div style={{
       borderRadius: '24px',
-      padding: '28px 20px 24px',
       marginBottom: '20px',
       background: 'var(--card)',
       border: '1.5px solid var(--border-subtle)',
-      boxShadow: '0 4px 24px rgba(0,0,0,0.08)',
+      boxShadow: '0 4px 32px rgba(0,0,0,0.10)',
       textAlign: 'center',
       position: 'relative',
       overflow: 'hidden',
     }}>
-      {/* Decorative glow */}
+      {/* Central glow */}
       <div style={{
-        position: 'absolute', top: '-60px', left: '50%', transform: 'translateX(-50%)',
-        width: '280px', height: '160px',
+        position: 'absolute', top: '50%', left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: '320px', height: '180px',
         background: 'radial-gradient(ellipse, var(--team-primary) 0%, transparent 70%)',
-        opacity: 0.08, pointerEvents: 'none',
+        opacity: 0.14, pointerEvents: 'none',
       }} />
 
-      <p className="font-mono text-xs tracking-widest uppercase mb-4" style={{ color: 'var(--text-muted)', position: 'relative', zIndex: 1 }}>
-        {isImminent ? '🚨 Starting soon' : 'IPL 2026 starts in'}
-      </p>
-
-      <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', marginBottom: '18px', position: 'relative', zIndex: 1 }}>
-        <CountUnit value={days}    label="days" />
-        <Colon />
-        <CountUnit value={hours}   label="hrs"  />
-        <Colon />
-        <CountUnit value={minutes} label="min"  />
-        <Colon />
-        <CountUnit value={seconds} label="sec"  animate />
+      {/* Top logo row */}
+      <div style={{ position: 'relative', padding: '18px 16px 0' }}>
+        <LogoRow teamIds={LOGO_ROW1} />
+        {/* Fade-out gradient below top logos */}
+        <div style={{
+          position: 'absolute', bottom: 0, left: 0, right: 0, height: '28px',
+          background: 'linear-gradient(to bottom, transparent, var(--card))',
+          pointerEvents: 'none',
+        }} />
       </div>
 
-      <p className="font-body text-xs" style={{ color: 'var(--text-muted)', position: 'relative', zIndex: 1 }}>
-        Lock your Fantasy XI and Season picks before the first ball! 🏏
-      </p>
+      {/* Centre content */}
+      <div style={{ padding: '20px 20px 16px', position: 'relative', zIndex: 1 }}>
+        <p className="font-mono text-xs tracking-widest uppercase mb-4" style={{ color: 'var(--text-muted)' }}>
+          {isImminent ? '🚨 Starting soon' : 'IPL 2026 starts in'}
+        </p>
+
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginBottom: '18px' }}>
+          <CountUnit value={days}    label="days" />
+          <Colon />
+          <CountUnit value={hours}   label="hrs"  />
+          <Colon />
+          <CountUnit value={minutes} label="min"  />
+          <Colon />
+          <CountUnit value={seconds} label="sec"  animate />
+        </div>
+
+        <p className="font-body text-xs" style={{ color: 'var(--text-muted)' }}>
+          Lock your Fantasy XI and Season picks before the first ball! 🏏
+        </p>
+      </div>
+
+      {/* Bottom logo row */}
+      <div style={{ position: 'relative', padding: '0 16px 18px' }}>
+        {/* Fade-in gradient above bottom logos */}
+        <div style={{
+          position: 'absolute', top: 0, left: 0, right: 0, height: '28px',
+          background: 'linear-gradient(to top, transparent, var(--card))',
+          pointerEvents: 'none',
+        }} />
+        <LogoRow teamIds={LOGO_ROW2} />
+      </div>
     </div>
   )
 }
 
 function CountUnit({ value, label, animate }) {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: '52px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: '58px' }}>
       <div style={{
         background: 'var(--surface-subtle)',
         border: '1.5px solid var(--border-subtle)',
-        borderRadius: '14px',
+        borderRadius: '16px',
         padding: '10px 4px',
         width: '100%',
         transition: animate ? 'none' : undefined,
       }}>
         <span className="font-display font-black" style={{
-          fontSize: '32px',
+          fontSize: '44px',
           color: 'var(--text-primary)',
-          letterSpacing: '-1px',
+          letterSpacing: '-2px',
           lineHeight: 1,
           display: 'block',
           fontVariantNumeric: 'tabular-nums',
@@ -183,7 +240,7 @@ function CountUnit({ value, label, animate }) {
 function Colon() {
   return (
     <span className="font-display font-black" style={{
-      fontSize: '28px', color: 'var(--text-muted)', opacity: 0.5,
+      fontSize: '36px', color: 'var(--text-muted)', opacity: 0.4,
       alignSelf: 'flex-start', paddingTop: '10px', lineHeight: 1.2,
     }}>:</span>
   )

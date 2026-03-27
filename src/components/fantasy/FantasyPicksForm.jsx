@@ -10,6 +10,7 @@ const ROLES = {
 }
 const ROLE_ORDER = ['WK', 'BAT', 'AR', 'BWL']
 const TOTAL = 11
+const OVERSEAS_MAX = 4
 
 function normaliseRole(role = '') {
   const r = role.toUpperCase()
@@ -28,6 +29,7 @@ function getAllPlayers() {
         role:      normaliseRole(p.role),
         teamId:    team.id,
         teamShort: team.shortName,
+        overseas:  p.overseas === true,
       })
     }
   }
@@ -41,6 +43,15 @@ function roleCounts(selected, allPlayers) {
     if (p) counts[p.role] = (counts[p.role] ?? 0) + 1
   }
   return counts
+}
+
+function overseasCount(selected, allPlayers) {
+  let count = 0
+  for (const name of selected) {
+    const p = allPlayers.find(p => p.name === name)
+    if (p?.overseas) count++
+  }
+  return count
 }
 
 function isCompositionValid(counts) {
@@ -64,9 +75,11 @@ export function FantasyPicksForm({ initialPlayers = [], initialCaptain = null, i
   const [captain, setCaptain]             = useState(initialCaptain)
   const [viceCaptain, setViceCaptain]     = useState(initialViceCap)
   const [activeRole, setActiveRole]       = useState('WK')
+  const [natFilter, setNatFilter]         = useState('all') // 'all' | 'indian' | 'overseas'
   const [search, setSearch]               = useState('')
 
   const counts        = useMemo(() => roleCounts([...selected], allPlayers), [selected, allPlayers])
+  const osCount       = useMemo(() => overseasCount([...selected], allPlayers), [selected, allPlayers])
   const compositionOk = isCompositionValid(counts)
   const allPicked     = selected.size === TOTAL
   const canLock       = allPicked && compositionOk && captain && viceCaptain
@@ -82,6 +95,11 @@ export function FantasyPicksForm({ initialPlayers = [], initialCaptain = null, i
         if (next.size >= TOTAL) return prev
         const roleCount = counts[player.role] ?? 0
         if (roleCount >= ROLES[player.role].max) return prev
+        // Overseas cap guard
+        if (player.overseas) {
+          const currentOs = overseasCount([...next], allPlayers)
+          if (currentOs >= OVERSEAS_MAX) return prev
+        }
         next.add(player.name)
       }
       return next
@@ -101,16 +119,23 @@ export function FantasyPicksForm({ initialPlayers = [], initialCaptain = null, i
   }
 
   const visiblePlayers = useMemo(() => {
-    const byRole = allPlayers.filter(p => p.role === activeRole)
-    if (!search.trim()) return byRole
+    let list = allPlayers.filter(p => p.role === activeRole)
+    if (natFilter === 'indian')   list = list.filter(p => !p.overseas)
+    if (natFilter === 'overseas') list = list.filter(p => p.overseas)
+    if (!search.trim()) return list
     const q = search.toLowerCase()
-    return byRole.filter(p => p.name.toLowerCase().includes(q) || p.teamShort.toLowerCase().includes(q))
-  }, [allPlayers, activeRole, search])
+    return list.filter(p => p.name.toLowerCase().includes(q) || p.teamShort.toLowerCase().includes(q))
+  }, [allPlayers, activeRole, natFilter, search])
+
+  const osCapped = osCount >= OVERSEAS_MAX
+
+  // OS counter color
+  const osCounterColor = osCount >= OVERSEAS_MAX ? '#dc2626' : osCount >= 3 ? '#b45309' : 'var(--text-muted)'
 
   return (
     <div>
       {/* Role tabs + counts */}
-      <div style={{ display: 'flex', gap: '6px', marginBottom: '16px', overflowX: 'auto', paddingBottom: '2px' }}>
+      <div style={{ display: 'flex', gap: '6px', marginBottom: '10px', overflowX: 'auto', paddingBottom: '2px' }}>
         {ROLE_ORDER.map(role => {
           const r   = ROLES[role]
           const c   = counts[role]
@@ -138,6 +163,39 @@ export function FantasyPicksForm({ initialPlayers = [], initialCaptain = null, i
               <div style={{ fontSize: '10px', opacity: 0.8, marginTop: '1px' }}>
                 {c}/{r.max} <span style={{ opacity: 0.6 }}>(min {r.min})</span>
               </div>
+            </button>
+          )
+        })}
+      </div>
+
+      {/* Nationality filter chips */}
+      <div style={{ display: 'flex', gap: '6px', marginBottom: '12px' }}>
+        {[
+          { key: 'all',      label: 'All' },
+          { key: 'indian',   label: '🇮🇳 Indian' },
+          { key: 'overseas', label: `🌍 Overseas (${osCount}/${OVERSEAS_MAX})` },
+        ].map(({ key, label }) => {
+          const active = natFilter === key
+          const isOsChip = key === 'overseas'
+          const chipColor = isOsChip && osCapped ? '#dc2626' : 'var(--team-primary)'
+          return (
+            <button
+              key={key}
+              onClick={() => setNatFilter(key)}
+              style={{
+                flexShrink: 0,
+                padding: '6px 12px',
+                borderRadius: '99px',
+                border: `1.5px solid ${active ? chipColor : 'var(--border-default)'}`,
+                background: active ? chipColor : 'var(--card)',
+                color: active ? (isOsChip && osCapped ? '#fff' : 'var(--team-text-on-primary)') : isOsChip && osCapped ? '#dc2626' : 'var(--text-muted)',
+                fontFamily: 'Bricolage Grotesque, sans-serif',
+                fontWeight: 700,
+                fontSize: '12px',
+                cursor: 'pointer',
+              }}
+            >
+              {label}
             </button>
           )
         })}
@@ -178,14 +236,19 @@ export function FantasyPicksForm({ initialPlayers = [], initialCaptain = null, i
           </p>
         )}
         {visiblePlayers.map(player => {
-          const isSelected = selected.has(player.name)
-          const isCap      = captain === player.name
-          const isVC       = viceCaptain === player.name
-          const team       = getTeam(player.teamId)
-          const roleCount  = counts[player.role]
-          const roleFull   = roleCount >= ROLES[player.role].max && !isSelected
-          const listFull   = selected.size >= TOTAL && !isSelected
-          const disabled   = roleFull || listFull
+          const isSelected   = selected.has(player.name)
+          const isCap        = captain === player.name
+          const isVC         = viceCaptain === player.name
+          const team         = getTeam(player.teamId)
+          const roleCount    = counts[player.role]
+          const roleFull     = roleCount >= ROLES[player.role].max && !isSelected
+          const listFull     = selected.size >= TOTAL && !isSelected
+          const osCap        = player.overseas && !isSelected && osCapped
+          const disabled     = roleFull || listFull || osCap
+
+          // OS badge color: red if cap hit and not selected, grey otherwise
+          const osBadgeColor  = osCap ? '#dc2626' : 'var(--text-muted)'
+          const osBadgeBorder = osCap ? '#dc2626' : 'var(--border-default)'
 
           return (
             <div
@@ -197,7 +260,7 @@ export function FantasyPicksForm({ initialPlayers = [], initialCaptain = null, i
                 borderRadius: '12px',
                 border: `1.5px solid ${isSelected ? (isCap ? '#b45309' : isVC ? '#6b7280' : 'var(--team-primary)') : 'var(--border-subtle)'}`,
                 background: isSelected ? 'var(--team-tinted-bg)' : 'var(--card)',
-                opacity: disabled ? 0.4 : 1,
+                opacity: disabled ? 0.45 : 1,
                 gap: '10px',
               }}
             >
@@ -208,7 +271,7 @@ export function FantasyPicksForm({ initialPlayers = [], initialCaptain = null, i
                 flexShrink: 0,
               }} />
 
-              {/* Name + team — tappable area to select/deselect */}
+              {/* Name + team + OS badge — tappable area to select/deselect */}
               <button
                 onClick={() => togglePlayer(player)}
                 disabled={disabled}
@@ -220,9 +283,22 @@ export function FantasyPicksForm({ initialPlayers = [], initialCaptain = null, i
                 <p className="font-display font-bold text-sm" style={{ color: 'var(--text-primary)', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {player.name}
                 </p>
-                <p className="font-mono text-xs" style={{ color: 'var(--text-muted)', margin: 0 }}>
-                  {player.teamShort}
-                </p>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                  <p className="font-mono text-xs" style={{ color: 'var(--text-muted)', margin: 0 }}>
+                    {player.teamShort}
+                  </p>
+                  {player.overseas && (
+                    <span style={{
+                      fontSize: '9px', fontWeight: 700, letterSpacing: '0.06em',
+                      color: osBadgeColor,
+                      border: `1px solid ${osBadgeBorder}`,
+                      borderRadius: '4px', padding: '1px 4px',
+                      fontFamily: 'Bricolage Grotesque, sans-serif',
+                    }}>
+                      OS
+                    </span>
+                  )}
+                </div>
               </button>
 
               {/* C / VC badges — always visible on selected rows */}
@@ -264,22 +340,31 @@ export function FantasyPicksForm({ initialPlayers = [], initialCaptain = null, i
         })}
       </div>
 
-      {/* Selected count */}
+      {/* Footer bar: selected count + OS count */}
       <div style={{
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
         marginBottom: '12px', padding: '10px 14px',
         background: 'var(--surface-subtle)', borderRadius: '12px',
         border: '1px solid var(--border-subtle)',
       }}>
-        <div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <span className="font-mono text-xs" style={{ color: 'var(--text-muted)' }}>SELECTED</span>
+          {/* OS counter */}
+          <span className="font-mono text-xs" style={{
+            color: osCounterColor,
+            border: `1px solid ${osCounterColor}`,
+            borderRadius: '5px', padding: '1px 6px',
+            fontWeight: 700,
+          }}>
+            OS {osCount}/{OVERSEAS_MAX}
+          </span>
           {captain && (
-            <span className="font-mono text-xs" style={{ color: '#b45309', marginLeft: '10px' }}>
+            <span className="font-mono text-xs" style={{ color: '#b45309' }}>
               C: {captain.split(' ').pop()}
             </span>
           )}
           {viceCaptain && (
-            <span className="font-mono text-xs" style={{ color: '#4b5563', marginLeft: '8px' }}>
+            <span className="font-mono text-xs" style={{ color: '#4b5563' }}>
               VC: {viceCaptain.split(' ').pop()}
             </span>
           )}
@@ -292,7 +377,7 @@ export function FantasyPicksForm({ initialPlayers = [], initialCaptain = null, i
         </span>
       </div>
 
-      {/* Validation hint */}
+      {/* Validation hints */}
       {allPicked && !compositionOk && (
         <p className="font-body text-xs mb-3" style={{ color: '#dc2626', textAlign: 'center' }}>
           Composition invalid — check role minimums (min 1 WK, 3 BAT, 1 AR, 3 BWL).
