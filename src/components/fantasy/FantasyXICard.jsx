@@ -1,37 +1,60 @@
 import { useMemo } from 'react'
 import { teams as teamsData, getTeam } from '../../lib/content'
 
+const ROLE_ORDER = ['WK', 'BAT', 'AR', 'BWL']
+const ROLE_LABELS = { WK: 'Wicket-Keeper', BAT: 'Batsmen', AR: 'All-Rounders', BWL: 'Bowlers' }
+const ROLE_COLORS = { WK: '#7c3aed', BAT: '#0284c7', AR: '#059669', BWL: '#dc2626' }
+
+function normaliseRole(role = '') {
+  const r = role.toUpperCase()
+  if (r.includes('WICKET') || r === 'WK' || r === 'KEEPER') return 'WK'
+  if (r.includes('ALL')    || r === 'AR')                   return 'AR'
+  if (r.includes('BOWL')   || r === 'BWL' || r === 'BL')    return 'BWL'
+  return 'BAT'
+}
+
 function getAllPlayersMap() {
   const map = {}
   for (const team of teamsData.teams) {
     for (const p of (team.squad ?? [])) {
-      map[p.name] = { teamId: team.id, teamShort: team.shortName, role: p.role ?? '' }
+      map[p.name] = {
+        teamId:    team.id,
+        teamShort: team.shortName,
+        role:      normaliseRole(p.role ?? ''),
+      }
     }
   }
   return map
 }
 
 /**
- * Locked Fantasy XI display — shows 11 players with C/VC badges and pts if available.
+ * Fantasy XI read-only view — grouped by role, well-spaced cards.
  *
  * Props:
  *   picks   — { players, captain, vice_captain, locked }
- *   scores  — { breakdown: {name: pts}, total_pts } | null  (from fantasy_xi_scores sum)
- *   onEdit  — callback to re-open picker (only when not locked)
+ *   scores  — { breakdown: {name: pts}, total_pts } | null
+ *   onEdit  — callback to re-open picker (null post-season)
  */
 export function FantasyXICard({ picks, scores, onEdit }) {
   const playersMap = useMemo(getAllPlayersMap, [])
-  const breakdown = scores?.breakdown ?? {}
-  const totalPts  = scores?.total_pts ?? 0
+  const breakdown  = scores?.breakdown ?? {}
+  const totalPts   = scores?.total_pts ?? 0
 
-  const rows = picks.players.map(name => ({
+  // Build enriched player list
+  const players = picks.players.map(name => ({
     name,
-    isCaptain:    name === picks.captain,
+    isCaptain:     name === picks.captain,
     isViceCaptain: name === picks.vice_captain,
-    teamShort: playersMap[name]?.teamShort ?? '—',
-    teamId:    playersMap[name]?.teamId ?? null,
-    pts:       breakdown[name] ?? null,
+    role:          playersMap[name]?.role ?? 'BAT',
+    teamShort:     playersMap[name]?.teamShort ?? '—',
+    teamId:        playersMap[name]?.teamId ?? null,
+    pts:           breakdown[name] ?? null,
   }))
+
+  // Group by role, preserving pick order within each group
+  const byRole = {}
+  for (const role of ROLE_ORDER) byRole[role] = []
+  for (const p of players) byRole[p.role]?.push(p)
 
   return (
     <div>
@@ -39,85 +62,75 @@ export function FantasyXICard({ picks, scores, onEdit }) {
       {scores && (
         <div style={{
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          padding: '14px', borderRadius: '14px',
+          padding: '14px 16px', borderRadius: '14px',
           background: totalPts > 0 ? 'rgba(22,163,74,0.08)' : 'var(--surface-subtle)',
-          border: `1px solid ${totalPts > 0 ? 'rgba(22,163,74,0.20)' : 'var(--border-subtle)'}`,
-          marginBottom: '14px',
+          border: `1.5px solid ${totalPts > 0 ? 'rgba(22,163,74,0.20)' : 'var(--border-subtle)'}`,
+          marginBottom: '18px',
         }}>
           <span className="font-display font-bold text-sm" style={{ color: 'var(--text-primary)' }}>
             Fantasy XI total
           </span>
-          <span className="font-display font-black" style={{ fontSize: '22px', color: totalPts > 0 ? '#16a34a' : 'var(--text-muted)', letterSpacing: '-0.5px' }}>
-            {totalPts > 0 ? `+${totalPts}` : totalPts} pts
+          <span className="font-display font-black" style={{
+            fontSize: '24px', letterSpacing: '-0.5px',
+            color: totalPts > 0 ? '#16a34a' : 'var(--text-muted)',
+          }}>
+            {totalPts > 0 ? `+${totalPts}` : totalPts} <span style={{ fontSize: '14px', fontWeight: 400 }}>pts</span>
           </span>
         </div>
       )}
 
-      {/* Player rows */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '12px' }}>
-        {rows.map(row => {
-          const team = row.teamId ? getTeam(row.teamId) : null
-          return (
-            <div key={row.name} style={{
-              display: 'flex', alignItems: 'center', gap: '10px',
-              padding: '10px 14px', borderRadius: '12px',
-              background: 'var(--card)', border: '1.5px solid var(--border-subtle)',
-            }}>
-              {/* Team colour dot */}
-              <div style={{
-                width: '8px', height: '8px', borderRadius: '50%',
-                background: team?.colors?.primary ?? '#999',
-                flexShrink: 0,
-              }} />
+      {/* Role sections */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', marginBottom: '16px' }}>
+        {ROLE_ORDER.map(role => {
+          const group = byRole[role]
+          if (!group.length) return null
+          const roleColor = ROLE_COLORS[role]
 
-              {/* Name + team */}
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <p className="font-display font-bold text-sm" style={{ color: 'var(--text-primary)', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                  {row.name}
-                </p>
-                <p className="font-mono text-xs" style={{ color: 'var(--text-muted)', margin: 0 }}>
-                  {row.teamShort}
-                </p>
+          return (
+            <div key={role}>
+              {/* Role header */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                <span style={{
+                  fontFamily: 'Bricolage Grotesque, sans-serif',
+                  fontWeight: 800, fontSize: '10px', letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
+                  color: roleColor,
+                  padding: '2px 8px', borderRadius: '99px',
+                  border: `1.5px solid ${roleColor}`,
+                  opacity: 0.85,
+                }}>
+                  {role}
+                </span>
+                <span className="font-mono" style={{ fontSize: '10px', color: 'var(--text-muted)', letterSpacing: '0.04em' }}>
+                  {ROLE_LABELS[role]}
+                </span>
               </div>
 
-              {/* C / VC badge */}
-              {(row.isCaptain || row.isViceCaptain) && (
-                <div style={{
-                  padding: '2px 8px', borderRadius: '6px',
-                  background: row.isCaptain ? 'var(--team-primary)' : 'var(--surface-subtle)',
-                  border: row.isCaptain ? 'none' : '1px solid var(--border-default)',
-                  flexShrink: 0,
-                }}>
-                  <span className="font-mono font-bold" style={{
-                    fontSize: '11px',
-                    color: row.isCaptain ? 'var(--team-text-on-primary)' : 'var(--text-muted)',
-                    letterSpacing: '0.05em',
-                  }}>
-                    {row.isCaptain ? 'C' : 'VC'}
-                  </span>
-                </div>
-              )}
-
-              {/* Points */}
-              <span className="font-mono font-bold text-sm" style={{
-                color: row.pts > 0 ? '#16a34a' : row.pts < 0 ? '#dc2626' : 'var(--text-muted)',
-                flexShrink: 0,
-                minWidth: '36px',
-                textAlign: 'right',
-              }}>
-                {row.pts !== null ? (row.pts > 0 ? `+${row.pts}` : row.pts) : '—'}
-              </span>
+              {/* Player cards */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '7px' }}>
+                {group.map(player => (
+                  <PlayerCard
+                    key={player.name}
+                    player={player}
+                    roleColor={roleColor}
+                    showPts={scores !== null}
+                  />
+                ))}
+              </div>
             </div>
           )
         })}
       </div>
 
       {/* Multiplier note */}
-      <p className="font-body text-xs" style={{ color: 'var(--text-muted)', textAlign: 'center', marginBottom: '12px' }}>
-        Captain earns 2× · Vice Captain earns 1.5×
+      <p className="font-body text-xs" style={{
+        color: 'var(--text-muted)', textAlign: 'center',
+        marginBottom: onEdit ? '14px' : '4px',
+      }}>
+        Captain earns <strong>2×</strong> · Vice Captain earns <strong>1.5×</strong>
       </p>
 
-      {/* Edit button — visible pre-season regardless of locked state */}
+      {/* Edit button */}
       {onEdit && (
         <button
           onClick={onEdit}
@@ -127,13 +140,135 @@ export function FantasyXICard({ picks, scores, onEdit }) {
             background: 'var(--surface-subtle)',
             border: '1.5px solid var(--border-default)',
             borderRadius: '12px',
-            padding: '12px', fontSize: '14px',
+            padding: '13px', fontSize: '14px',
             color: 'var(--text-primary)', cursor: 'pointer',
             textAlign: 'center',
           }}
         >
           ✏️ Edit my XI
         </button>
+      )}
+    </div>
+  )
+}
+
+/* ─── Individual player card ──────────────────────────────────────────────── */
+
+function PlayerCard({ player, roleColor, showPts }) {
+  const team = player.teamId ? getTeam(player.teamId) : null
+  const { isCaptain, isViceCaptain } = player
+
+  // Captain gets amber tint; VC gets a neutral tint
+  const borderColor = isCaptain
+    ? '#b45309'
+    : isViceCaptain
+    ? '#6b7280'
+    : 'var(--border-subtle)'
+
+  const bgColor = isCaptain
+    ? 'rgba(180, 83, 9, 0.05)'
+    : isViceCaptain
+    ? 'rgba(107, 114, 128, 0.05)'
+    : 'var(--card)'
+
+  return (
+    <div style={{
+      display: 'flex', alignItems: 'center',
+      borderRadius: '14px',
+      border: `1.5px solid ${borderColor}`,
+      background: bgColor,
+      overflow: 'hidden',
+      gap: 0,
+    }}>
+      {/* Team colour bar */}
+      <div style={{
+        width: '5px',
+        alignSelf: 'stretch',
+        background: team?.colors?.primary ?? roleColor,
+        flexShrink: 0,
+      }} />
+
+      {/* Ghost logo — decorative */}
+      {team?.logoUrl && (
+        <div style={{
+          position: 'relative', flexShrink: 0,
+          width: '44px', height: '44px',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          overflow: 'hidden',
+        }}>
+          <img
+            src={team.logoUrl}
+            alt=""
+            aria-hidden="true"
+            style={{
+              width: '38px', height: '38px',
+              objectFit: 'contain',
+              opacity: 0.18,
+              pointerEvents: 'none',
+              userSelect: 'none',
+            }}
+          />
+        </div>
+      )}
+
+      {/* Name + team */}
+      <div style={{ flex: 1, minWidth: 0, padding: '11px 10px 11px 4px' }}>
+        <p className="font-display font-bold" style={{
+          fontSize: '14px', color: 'var(--text-primary)',
+          margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+          letterSpacing: '-0.2px',
+        }}>
+          {player.name}
+        </p>
+        <p className="font-mono" style={{ fontSize: '11px', color: 'var(--text-muted)', margin: '1px 0 0' }}>
+          {player.teamShort}
+        </p>
+      </div>
+
+      {/* C / VC badge */}
+      {(isCaptain || isViceCaptain) && (
+        <div style={{
+          flexShrink: 0, marginRight: '10px',
+          display: 'flex', flexDirection: 'column', alignItems: 'center',
+        }}>
+          <div style={{
+            padding: '3px 9px', borderRadius: '8px',
+            background: isCaptain ? '#b45309' : 'var(--surface-subtle)',
+            border: isCaptain ? 'none' : '1.5px solid #6b7280',
+          }}>
+            <span style={{
+              fontFamily: 'Bricolage Grotesque, sans-serif',
+              fontWeight: 800,
+              fontSize: isCaptain ? '13px' : '11px',
+              color: isCaptain ? '#fff' : '#6b7280',
+              letterSpacing: '0.02em',
+            }}>
+              {isCaptain ? 'C' : 'VC'}
+            </span>
+          </div>
+          <span className="font-mono" style={{
+            fontSize: '9px', color: 'var(--text-muted)',
+            marginTop: '2px', letterSpacing: '0.04em',
+          }}>
+            {isCaptain ? '2×' : '1.5×'}
+          </span>
+        </div>
+      )}
+
+      {/* Points */}
+      {showPts && (
+        <div style={{
+          flexShrink: 0, minWidth: '44px',
+          textAlign: 'right', paddingRight: '14px',
+        }}>
+          <span className="font-display font-black" style={{
+            fontSize: '16px',
+            letterSpacing: '-0.5px',
+            color: player.pts > 0 ? '#16a34a' : player.pts < 0 ? '#dc2626' : 'var(--text-muted)',
+          }}>
+            {player.pts !== null ? (player.pts > 0 ? `+${player.pts}` : player.pts) : '—'}
+          </span>
+        </div>
       )}
     </div>
   )
