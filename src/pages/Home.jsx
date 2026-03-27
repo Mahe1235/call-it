@@ -114,10 +114,10 @@ function LogoRow({ teamIds }) {
             alt=""
             aria-hidden="true"
             style={{
-              width: '48px', height: '48px',
+              width: '68px', height: '68px',
               objectFit: 'contain',
-              opacity: 0.13,
-              filter: 'grayscale(15%)',
+              opacity: 0.16,
+              filter: 'grayscale(10%)',
               pointerEvents: 'none',
               userSelect: 'none',
             }}
@@ -157,29 +157,29 @@ function TournamentCountdown({ targetDate }) {
       <div style={{
         position: 'absolute', top: '50%', left: '50%',
         transform: 'translate(-50%, -50%)',
-        width: '320px', height: '180px',
-        background: 'radial-gradient(ellipse, var(--team-primary) 0%, transparent 70%)',
-        opacity: 0.14, pointerEvents: 'none',
+        width: '380px', height: '220px',
+        background: 'radial-gradient(ellipse, var(--team-primary) 0%, transparent 68%)',
+        opacity: 0.18, pointerEvents: 'none',
       }} />
 
       {/* Top logo row */}
-      <div style={{ position: 'relative', padding: '18px 16px 0' }}>
+      <div style={{ position: 'relative', padding: '22px 12px 0' }}>
         <LogoRow teamIds={LOGO_ROW1} />
         {/* Fade-out gradient below top logos */}
         <div style={{
-          position: 'absolute', bottom: 0, left: 0, right: 0, height: '28px',
+          position: 'absolute', bottom: 0, left: 0, right: 0, height: '36px',
           background: 'linear-gradient(to bottom, transparent, var(--card))',
           pointerEvents: 'none',
         }} />
       </div>
 
       {/* Centre content */}
-      <div style={{ padding: '20px 20px 16px', position: 'relative', zIndex: 1 }}>
+      <div style={{ padding: '24px 20px 20px', position: 'relative', zIndex: 1 }}>
         <p className="font-mono text-xs tracking-widest uppercase mb-4" style={{ color: 'var(--text-muted)' }}>
           {isImminent ? '🚨 Starting soon' : 'IPL 2026 starts in'}
         </p>
 
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginBottom: '18px' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginBottom: '20px' }}>
           <CountUnit value={days}    label="days" />
           <Colon />
           <CountUnit value={hours}   label="hrs"  />
@@ -189,16 +189,16 @@ function TournamentCountdown({ targetDate }) {
           <CountUnit value={seconds} label="sec"  animate />
         </div>
 
-        <p className="font-body text-xs" style={{ color: 'var(--text-muted)' }}>
+        <p className="font-body text-sm" style={{ color: 'var(--text-muted)' }}>
           Lock your Fantasy XI and Season picks before the first ball! 🏏
         </p>
       </div>
 
       {/* Bottom logo row */}
-      <div style={{ position: 'relative', padding: '0 16px 18px' }}>
+      <div style={{ position: 'relative', padding: '0 12px 22px' }}>
         {/* Fade-in gradient above bottom logos */}
         <div style={{
-          position: 'absolute', top: 0, left: 0, right: 0, height: '28px',
+          position: 'absolute', top: 0, left: 0, right: 0, height: '36px',
           background: 'linear-gradient(to top, transparent, var(--card))',
           pointerEvents: 'none',
         }} />
