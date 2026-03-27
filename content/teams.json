@@ -52,11 +52,11 @@
         },
         {
           "name": "Prashant Veer",
-          "role": "bowler"
+          "role": "allrounder"
         },
         {
           "name": "Anshul Kamboj",
-          "role": "allrounder"
+          "role": "bowler"
         },
         {
           "name": "Ayush Mhatre",
@@ -207,7 +207,7 @@
         },
         {
           "name": "Danish Malewar",
-          "role": "allrounder"
+          "role": "batter"
         },
         {
           "name": "Corbin Bosch",
@@ -317,7 +317,7 @@
         },
         {
           "name": "Satvik Deswal",
-          "role": "allrounder"
+          "role": "bowler"
         },
         {
           "name": "Josh Hazlewood",
@@ -334,7 +334,7 @@
         },
         {
           "name": "Swapnil Singh",
-          "role": "allrounder"
+          "role": "bowler"
         },
         {
           "name": "Jacob Duffy",
@@ -474,7 +474,7 @@
         },
         {
           "name": "Daksh Kamra",
-          "role": "batter"
+          "role": "allrounder"
         },
         {
           "name": "Matheesha Pathirana",
@@ -675,7 +675,7 @@
         },
         {
           "name": "Auqib Nabi Dar",
-          "role": "allrounder"
+          "role": "bowler"
         },
         {
           "name": "Axar Patel",
@@ -740,11 +740,11 @@
         },
         {
           "name": "Tripurana Vijay",
-          "role": "allrounder"
+          "role": "bowler"
         },
         {
           "name": "Vipraj Nigam",
-          "role": "bowler"
+          "role": "allrounder"
         },
         {
           "name": "T Natarajan",
@@ -851,7 +851,7 @@
         },
         {
           "name": "Praveen Dubey",
-          "role": "allrounder"
+          "role": "bowler"
         },
         {
           "name": "Harpreet Brar",
@@ -877,7 +877,7 @@
         },
         {
           "name": "Vishal Nishad",
-          "role": "allrounder"
+          "role": "bowler"
         },
         {
           "name": "Shreyas Iyer",
@@ -1063,7 +1063,7 @@
         },
         {
           "name": "Arshad Khan",
-          "role": "allrounder"
+          "role": "bowler"
         },
         {
           "name": "Rashid Khan",
@@ -1089,7 +1089,7 @@
         },
         {
           "name": "Ravisrinivasan Sai Kishore",
-          "role": "allrounder"
+          "role": "bowler"
         },
         {
           "name": "Tom Banton",
@@ -1137,7 +1137,7 @@
         },
         {
           "name": "M Shahrukh Khan",
-          "role": "allrounder"
+          "role": "batter"
         }
       ]
     },
@@ -1238,7 +1238,7 @@
         },
         {
           "name": "Arjun Sachin Tendulkar",
-          "role": "allrounder"
+          "role": "bowler"
         },
         {
           "name": "Himmat Singh",
