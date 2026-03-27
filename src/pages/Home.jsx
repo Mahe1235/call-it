@@ -18,6 +18,10 @@ function hexToRgba(hex = '#000000', alpha = 0.07) {
   return `rgba(${r},${g},${b},${alpha})`
 }
 
+// Match-level predictions are disabled for this season.
+// Flip to true when per-match picks go live.
+const MATCH_PICKS_ENABLED = false
+
 export default function Home() {
   const { profile } = useAuth()
   const { matches, activeIndex, loading, error } = useMatchFeed()
@@ -38,7 +42,7 @@ export default function Home() {
         </h1>
       </div>
 
-      {/* Match info carousel — consistent height, no picks */}
+      {/* Match info carousel — schedule view */}
       {loading ? (
         <MatchSkeleton />
       ) : error ? (
@@ -53,8 +57,8 @@ export default function Home() {
         />
       )}
 
-      {/* Picks card — separate, below carousel, updates with active match */}
-      {!loading && !error && currentItem && (
+      {/* Picks card — hidden until match picks go live next season */}
+      {MATCH_PICKS_ENABLED && !loading && !error && currentItem && (
         <PicksCard
           key={currentItem.match.id}
           match={currentItem.match}

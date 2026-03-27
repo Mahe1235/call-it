@@ -1,14 +1,13 @@
 import { useState, useEffect } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { useAuth } from './hooks/useAuth'
-import { supabase } from './lib/supabase'
 import { TeamThemeProvider } from './components/layout/TeamThemeProvider'
 import { BottomNav } from './components/layout/BottomNav'
 import { AppBackground } from './components/layout/AppBackground'
 import { ThemeProvider } from './contexts/ThemeContext'
 import { useTheme } from './contexts/ThemeContext'
 import Home from './pages/Home'
-import League from './pages/League'
+import FantasyXI from './pages/FantasyXI'
 import Season from './pages/Season'
 import Profile from './pages/Profile'
 import Admin from './pages/Admin'
@@ -30,12 +29,13 @@ function AppShell() {
       <DarkModeToggle />
       <div className="pb-16">
         <Routes>
-          <Route path="/"        element={<Home />} />
-          <Route path="/league"  element={<League />} />
-          <Route path="/season"  element={<Season />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/admin"   element={<Admin />} />
-          <Route path="*"        element={<Navigate to="/" replace />} />
+          <Route path="/"           element={<Home />} />
+          <Route path="/fantasy-xi" element={<FantasyXI />} />
+          <Route path="/league"     element={<Navigate to="/fantasy-xi" replace />} />
+          <Route path="/season"     element={<Season />} />
+          <Route path="/profile"    element={<Profile />} />
+          <Route path="/admin"      element={<Admin />} />
+          <Route path="*"           element={<Navigate to="/" replace />} />
         </Routes>
       </div>
       <BottomNav />
@@ -108,9 +108,6 @@ function SignInScreen() {
   const { signInWithGoogle } = useAuth()
   const [idx, setIdx] = useState(0)
   const [visible, setVisible] = useState(true)
-  const [testLoading, setTestLoading] = useState(null) // email of account being logged into
-  const [testError, setTestError] = useState(null)
-
   useEffect(() => {
     const id = setInterval(() => {
       setVisible(false)
@@ -201,56 +198,6 @@ function SignInScreen() {
           Sign in with Google
         </button>
 
-        {/* TEMP: test logins visible until Google OAuth is confirmed — remove before launch */}
-        {true && (
-          <div style={{ marginTop: '12px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-            <p className="font-mono text-center" style={{ fontSize: '10px', color: 'var(--text-muted)', letterSpacing: '0.5px', textTransform: 'uppercase', marginBottom: '2px' }}>
-              Dev accounts
-            </p>
-            {[
-              { name: 'Rahul',  team: 'RCB', email: 'rahul@called-it.test'  },
-              { name: 'Priya',  team: 'MI',  email: 'priya@called-it.test'  },
-              { name: 'Sid',    team: 'KKR', email: 'sid@called-it.test'    },
-              { name: 'Aisha',  team: 'DC',  email: 'aisha@called-it.test'  },
-              { name: 'Arjun',  team: 'CSK', email: 'arjun@called-it.test'  },
-              { name: 'Vikram', team: 'GT',  email: 'vikram@called-it.test' },
-            ].map(u => (
-              <button
-                key={u.email}
-                disabled={testLoading !== null}
-                onClick={async () => {
-                  setTestLoading(u.email)
-                  setTestError(null)
-                  const { error } = await supabase.auth.signInWithPassword({ email: u.email, password: 'test1234' })
-                  if (error) {
-                    setTestError(`${u.name}: ${error.message}`)
-                    setTestLoading(null)
-                  }
-                  // on success useAuth() re-renders automatically — no manual nav needed
-                }}
-                className="w-full font-mono tap-feedback"
-                style={{
-                  background: testLoading === u.email ? 'var(--surface-subtle)' : 'transparent',
-                  border: '1.5px dashed var(--border-default)',
-                  borderRadius: '12px',
-                  padding: '10px',
-                  fontSize: '12px',
-                  color: testLoading === u.email ? 'var(--text-primary)' : 'var(--text-muted)',
-                  letterSpacing: '0.3px',
-                  cursor: testLoading !== null ? 'not-allowed' : 'pointer',
-                  opacity: testLoading !== null && testLoading !== u.email ? 0.4 : 1,
-                }}
-              >
-                {testLoading === u.email ? '⏳ Signing in…' : `⚡ ${u.name} (${u.team})`}
-              </button>
-            ))}
-            {testError && (
-              <p className="font-mono text-center" style={{ fontSize: '11px', color: '#cc0000', marginTop: '4px' }}>
-                ✗ {testError}
-              </p>
-            )}
-          </div>
-        )}
       </div>
     </div>
   )

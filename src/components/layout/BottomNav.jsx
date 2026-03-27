@@ -1,10 +1,10 @@
 import { NavLink } from 'react-router-dom'
 
 const TABS = [
-  { to: '/',        label: 'Home',   icon: HomeIcon },
-  { to: '/league',  label: 'League', icon: LeagueIcon },
-  { to: '/season',  label: 'Season', icon: SeasonIcon },
-  { to: '/profile', label: 'You',    icon: ProfileIcon },
+  { to: '/',           label: 'Home',       icon: HomeIcon    },
+  { to: '/fantasy-xi', label: 'Fantasy XI', icon: FantasyIcon },
+  { to: '/season',     label: 'Season',     icon: SeasonIcon  },
+  { to: '/profile',    label: 'You',        icon: ProfileIcon },
 ]
 
 export function BottomNav() {
@@ -55,12 +55,10 @@ function HomeIcon() {
   )
 }
 
-function LeagueIcon() {
+function FantasyIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-      <line x1="18" y1="20" x2="18" y2="10" />
-      <line x1="12" y1="20" x2="12" y2="4" />
-      <line x1="6" y1="20" x2="6" y2="14" />
+      <path d="M6 3l2 7H4l5 4-2 7 5-4 5 4-2-7 5-4h-4l2-7z" />
     </svg>
   )
 }

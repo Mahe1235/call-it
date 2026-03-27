@@ -122,10 +122,16 @@ export default function Profile() {
           <p className="font-mono text-xs uppercase tracking-widest" style={{ color: 'var(--text-muted)', marginBottom: '12px' }}>
             Season Stats
           </p>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px', textAlign: 'center' }}>
+          {/* Row 1: Rank + Matches */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', textAlign: 'center', marginBottom: '12px' }}>
             <StatCell label="Rank" value={`#${myRow.rank}`} />
-            <StatCell label="Total pts" value={myRow.total_pts ?? 0} />
             <StatCell label="Matches" value={myRow.matches_played ?? 0} />
+          </div>
+          {/* Row 2: Match pts / Season pts / Fantasy XI pts */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px', textAlign: 'center', paddingTop: '12px', borderTop: '1px solid var(--border-subtle)' }}>
+            <StatCell label="Match" value={myRow.match_pts ?? 0} />
+            <StatCell label="Season" value={myRow.season_pts ?? 0} />
+            <StatCell label="Fantasy XI" value={myRow.fantasy_xi_pts ?? 0} />
           </div>
           {(bestPts !== null || worstPts !== null) && (
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', textAlign: 'center', marginTop: '12px', paddingTop: '12px', borderTop: '1px solid var(--border-subtle)' }}>
