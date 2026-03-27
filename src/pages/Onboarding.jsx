@@ -55,7 +55,8 @@ export default function Onboarding() {
             onChange={(e) => setDisplayName(e.target.value)}
             placeholder="Your name"
             maxLength={24}
-            className="w-full bg-white border border-[var(--border)] rounded-btn px-4 py-3 font-body text-[var(--text-primary)] placeholder:text-[var(--text-placeholder)] focus:outline-none focus:ring-2 focus:ring-[var(--team-primary)]"
+            className="w-full border border-[var(--border)] rounded-btn px-4 py-3 font-body text-[var(--text-primary)] placeholder:text-[var(--text-placeholder)] focus:outline-none focus:ring-2 focus:ring-[var(--team-primary)]"
+            style={{ background: 'var(--card)', color: 'var(--text-primary)' }}
           />
         </div>
 
@@ -116,12 +117,12 @@ export default function Onboarding() {
                 style={
                   selectedTeam === t.id
                     ? { backgroundColor: t.colors.primary, color: t.colors.textOnPrimary, borderColor: t.colors.primary }
-                    : {}
+                    : { background: 'var(--card)' }
                 }
                 className={`rounded-btn px-3 py-3 text-sm font-body font-medium border transition-all tap-feedback ${
                   selectedTeam === t.id
                     ? 'border-2 -rotate-[0.5deg] scale-[1.02]'
-                    : 'bg-white border-[var(--border)] text-[var(--text-secondary)]'
+                    : 'border-[var(--border)] text-[var(--text-secondary)]'
                 }`}
               >
                 {t.shortName}
