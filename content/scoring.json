@@ -68,6 +68,49 @@
     "twoOfGroup": 1.5,
     "threeOrMore": 1.0
   },
+  "fantasyXI": {
+    "batting": {
+      "perRun": 1,
+      "perFour": 1,
+      "perSix": 2,
+      "milestone25": 4,
+      "milestone50": 8,
+      "milestone100": 16,
+      "duck": -2,
+      "sr": {
+        "minBalls": 10,
+        "above170": 6,
+        "above150": 4,
+        "above130": 2,
+        "below70": -2,
+        "below60": -4,
+        "below50": -6
+      }
+    },
+    "bowling": {
+      "perWicket": 25,
+      "lbwBowledBonus": 8,
+      "maidenOver": 12,
+      "wicketHaulBonus": { "two": 4, "three": 8, "four": 12, "five": 20 },
+      "economy": {
+        "minOvers": 2,
+        "below5": 8,
+        "below6": 6,
+        "below7": 2,
+        "above9": -2,
+        "above10": -4,
+        "above11": -6
+      }
+    },
+    "fielding": {
+      "catch": 8,
+      "stumping": 12,
+      "runOutDirect": 12,
+      "runOutIndirect": 6
+    },
+    "captain": 2.0,
+    "viceCaptain": 1.5
+  },
   "notes": {
     "maxMatchCard": 47,
     "expectedAverageMatch": "15-25",
