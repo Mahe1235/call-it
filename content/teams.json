@@ -15,6 +15,10 @@
       "apiTeamId": "",
       "squad": [
         {
+          "name": "Aman Khan",
+          "role": "allrounder"
+        },
+        {
           "name": "Jamie Overton",
           "role": "allrounder"
         },
@@ -69,6 +73,10 @@
         {
           "name": "Sarfaraz Khan",
           "role": "batter"
+        },
+        {
+          "name": "Spencer Johnson",
+          "role": "bowler"
         },
         {
           "name": "Dewald Brevis",
@@ -363,6 +371,10 @@
           "role": "batter"
         },
         {
+          "name": "Blessing Muzarabani",
+          "role": "bowler"
+        },
+        {
           "name": "Manish Pandey",
           "role": "batter"
         },
@@ -447,12 +459,20 @@
           "role": "bowler"
         },
         {
+          "name": "Navdeep Saini",
+          "role": "bowler"
+        },
+        {
           "name": "Tim Seifert",
           "role": "batter"
         },
         {
           "name": "Anukul Roy",
           "role": "allrounder"
+        },
+        {
+          "name": "Saurabh Dubey",
+          "role": "bowler"
         }
       ]
     },
@@ -517,6 +537,10 @@
         {
           "name": "Shivang Kumar",
           "role": "allrounder"
+        },
+        {
+          "name": "David Payne",
+          "role": "bowler"
         },
         {
           "name": "Onkar Tukaram Tarmale",
@@ -624,6 +648,10 @@
         },
         {
           "name": "Abishek Porel",
+          "role": "batter"
+        },
+        {
+          "name": "Prithvi Shaw",
           "role": "batter"
         },
         {
@@ -839,6 +867,10 @@
           "role": "bowler"
         },
         {
+          "name": "Dasun Shanaka",
+          "role": "allrounder"
+        },
+        {
           "name": "Tushar Deshpande",
           "role": "bowler"
         },
@@ -930,6 +962,10 @@
       "homeVenue": "narendra_modi",
       "apiTeamId": "",
       "squad": [
+        {
+          "name": "Kulwant Khejroliya",
+          "role": "bowler"
+        },
         {
           "name": "Kagiso Rabada",
           "role": "bowler"
@@ -1027,7 +1063,7 @@
           "role": "bowler"
         },
         {
-          "name": "Shahrukh Khan",
+          "name": "M Shahrukh Khan",
           "role": "allrounder"
         }
       ]
@@ -1115,7 +1151,7 @@
           "role": "bowler"
         },
         {
-          "name": "Mayank Yadav",
+          "name": "Mayank Prabhu Yadav",
           "role": "bowler"
         },
         {
@@ -1123,7 +1159,7 @@
           "role": "bowler"
         },
         {
-          "name": "Arjun Tendulkar",
+          "name": "Arjun Sachin Tendulkar",
           "role": "allrounder"
         },
         {
