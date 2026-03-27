@@ -117,12 +117,11 @@ function scoreBowling(p) {
 // ── Fielding ───────────────────────────────────────────────────────────────
 
 function scoreFielding(p) {
-  const F   = C.fielding
-  let pts   = 0
-  pts += (p.catches        ?? 0) * F.catch
-  pts += (p.stumpings      ?? 0) * F.stumping
-  pts += (p.run_out_direct ?? 0) * F.runOutDirect
-  pts += (p.run_out_indirect ?? 0) * F.runOutIndirect
+  const F = C.fielding
+  let pts = 0
+  pts += (p.catches   ?? 0) * F.catch
+  pts += (p.stumpings ?? 0) * F.stumping
+  pts += (p.run_out   ?? 0) * F.runOut
   return pts
 }
 

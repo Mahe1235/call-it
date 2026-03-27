@@ -105,8 +105,7 @@
     "fielding": {
       "catch": 8,
       "stumping": 12,
-      "runOutDirect": 12,
-      "runOutIndirect": 6
+      "runOut": 8
     },
     "captain": 2.0,
     "viceCaptain": 1.5

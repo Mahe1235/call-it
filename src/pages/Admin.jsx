@@ -5,6 +5,7 @@ import { supabase } from '../lib/supabase'
 import { getTeam } from '../lib/content'
 import { scoreMatchCard, scoreH2HMatch } from '../lib/scoring'
 import { computeAllFantasyXIScores } from '../lib/fantasyScoring'
+import { createCricketApi } from '../lib/cricketApi'
 
 // ─── Main page ───────────────────────────────────────────────────────────────
 
@@ -41,7 +42,7 @@ function ScoringPanel() {
   useEffect(() => {
     supabase
       .from('matches')
-      .select('id, match_number, date, team_a, team_b, status, winner')
+      .select('id, match_number, date, team_a, team_b, status, winner, api_match_id')
       .order('match_number', { ascending: true })
       .then(({ data }) => {
         setMatches(data ?? [])
@@ -133,6 +134,7 @@ function MatchScoringForm({ match, onPublished }) {
   const [publishing, setPublishing] = useState(false)
   const [published,  setPublished]  = useState(false)
   const [error,      setError]      = useState(null)
+  const [fetching,   setFetching]   = useState(false)
 
   useEffect(() => {
     async function load() {
@@ -156,6 +158,21 @@ function MatchScoringForm({ match, onPublished }) {
   const chaosQ     = questions.find(q => q.type === 'chaos_ball')
   const isCancelled = resultType === 'no_result'
   const alreadyDone = match.status === 'completed' || match.status === 'cancelled'
+
+  // ── Auto-fetch scorecard from CricAPI ─────────────────────────
+  const handleFetchScorecard = useCallback(async () => {
+    if (!match.api_match_id) return
+    setError(null); setFetching(true)
+    try {
+      const api     = createCricketApi(import.meta.env.VITE_CRICAPI_KEY)
+      const players = await api.fetchFantasyScorecard(match.api_match_id)
+      setScorecard(JSON.stringify(players, null, 2))
+    } catch (e) {
+      setError(`Scorecard fetch failed: ${e.message}`)
+    } finally {
+      setFetching(false)
+    }
+  }, [match.api_match_id])
 
   // ── Preview ───────────────────────────────────────────────────
   const handlePreview = useCallback(async () => {
@@ -331,11 +348,30 @@ function MatchScoringForm({ match, onPublished }) {
       {/* Scorecard JSON */}
       {!isCancelled && (
         <Card>
-          <SectionLabel>Scorecard JSON</SectionLabel>
-          <p className="font-body text-xs mt-1 mb-2" style={{ color: 'var(--text-muted)', lineHeight: 1.6 }}>
-            Array of player objects. Used for both Villain scoring and Fantasy XI.{'\n'}
-            Fields: <code style={{ background: 'var(--surface-subtle)', padding: '1px 4px', borderRadius: '4px' }}>
-              name, runs, balls_faced, fours, sixes, wickets, lbw_bowled, overs_bowled, runs_conceded, maiden_overs, catches, stumpings, run_out_direct, run_out_indirect, did_not_play
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
+            <SectionLabel style={{ margin: 0 }}>Scorecard</SectionLabel>
+            {match.api_match_id && (
+              <button
+                onClick={handleFetchScorecard}
+                disabled={fetching}
+                style={{
+                  display: 'flex', alignItems: 'center', gap: '5px',
+                  padding: '5px 12px', borderRadius: '8px',
+                  border: '1.5px solid var(--border-default)',
+                  background: 'var(--surface-subtle)',
+                  color: fetching ? 'var(--text-muted)' : 'var(--text-primary)',
+                  fontFamily: 'Bricolage Grotesque, sans-serif',
+                  fontWeight: 700, fontSize: '12px', cursor: fetching ? 'wait' : 'pointer',
+                }}
+              >
+                {fetching ? '⏳ Fetching…' : '🔄 Fetch from API'}
+              </button>
+            )}
+          </div>
+          <p className="font-body text-xs mb-2" style={{ color: 'var(--text-muted)', lineHeight: 1.6 }}>
+            Per-player data for Villain scoring + Fantasy XI. Auto-fetch pulls directly from CricAPI after the match ends.
+            Manual fields: <code style={{ background: 'var(--surface-subtle)', padding: '1px 4px', borderRadius: '4px' }}>
+              name, runs, balls_faced, fours, sixes, wickets, lbw_bowled, overs_bowled, runs_conceded, maiden_overs, catches, stumpings, run_out, did_not_play
             </code>
           </p>
           <textarea

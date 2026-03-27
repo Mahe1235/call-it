@@ -63,7 +63,7 @@ export function createCricketApi(apiKey) {
     /**
      * Fetch full scorecard for a completed match.
      * @param {string} matchId - CricAPI match ID
-     * @returns {Object} Normalised scorecard
+     * @returns {Object} Normalised scorecard (summary stats + raw)
      */
     async fetchMatchScorecard(matchId) {
       const data = await request('match_scorecard', { id: matchId })
@@ -93,11 +93,7 @@ export function createCricketApi(apiKey) {
           })
 
           if (dismissalType && dismissalType !== 'not out') {
-            dismissals.push({
-              batter: playerName,
-              type: dismissalType,
-              team: battingTeam,
-            })
+            dismissals.push({ batter: playerName, type: dismissalType, team: battingTeam })
           }
         }
 
@@ -113,28 +109,106 @@ export function createCricketApi(apiKey) {
         }
       }
 
-      const totalSixes = batting.reduce((sum, b) => sum + b.sixes, 0)
-      const totalFours = batting.reduce((sum, b) => sum + b.fours, 0)
+      const totalSixes   = batting.reduce((sum, b) => sum + b.sixes, 0)
+      const totalFours   = batting.reduce((sum, b) => sum + b.fours, 0)
       const totalWickets = dismissals.length
-      const extras = (raw.scorecard ?? []).reduce((sum, s) => sum + Number(s.extras ?? 0), 0)
-
-      // Innings totals for combined runs
+      const extras       = (raw.scorecard ?? []).reduce((sum, s) => sum + Number(s.extras ?? 0), 0)
       const inningsTotals = (raw.scorecard ?? []).map(s => Number(s.total ?? 0))
-      const totalRuns = inningsTotals.reduce((sum, t) => sum + t, 0)
+      const totalRuns    = inningsTotals.reduce((sum, t) => sum + t, 0)
 
       return {
         winner: raw.matchWinner ?? null,
-        batting,
-        bowling,
-        dismissals,
-        totalSixes,
-        totalFours,
-        totalWickets,
-        totalRuns,
-        extras,
-        inningsTotals,
-        raw, // preserve for admin manual reference
+        batting, bowling, dismissals,
+        totalSixes, totalFours, totalWickets, totalRuns, extras, inningsTotals,
+        raw,
       }
+    },
+
+    /**
+     * Fetch a match scorecard and return per-player merged data in
+     * Fantasy XI scoring format (runs, balls_faced, fours, sixes,
+     * wickets, lbw_bowled, overs_bowled, runs_conceded, maiden_overs,
+     * catches, stumpings, run_out).
+     *
+     * Name matching: squads were seeded from the same API so primary
+     * names match. `altnames` from each player object are also indexed
+     * so alternate spellings in scorecards resolve to the canonical name.
+     *
+     * @param {string} matchId - CricAPI match ID
+     * @returns {Array<Object>} One object per player that appeared in the match
+     */
+    async fetchFantasyScorecard(matchId) {
+      const data = await request('match_scorecard', { id: matchId })
+      const raw  = data.data ?? {}
+
+      // players keyed by lowercase name; altname keys point to the same object
+      const byKey = {}
+
+      function getOrCreate(nameObj) {
+        // nameObj: { name, altnames? }  OR  plain string
+        const canonical = (typeof nameObj === 'string' ? nameObj : nameObj?.name) ?? ''
+        if (!canonical) return null
+
+        const key = canonical.toLowerCase()
+        if (!byKey[key]) byKey[key] = { name: canonical }
+
+        // Index any altnames so they resolve to the same object
+        const alts = typeof nameObj === 'object' ? (nameObj.altnames ?? []) : []
+        for (const alt of alts) {
+          const altKey = alt.toLowerCase()
+          if (!byKey[altKey]) byKey[altKey] = byKey[key]
+        }
+
+        return byKey[key]
+      }
+
+      for (const inning of (raw.scorecard ?? [])) {
+        // ── Batting ──────────────────────────────────────────────
+        for (const b of (inning.batting ?? [])) {
+          const p = getOrCreate(b.batsman)
+          if (!p) continue
+          p.runs        = (p.runs        ?? 0) + Number(b.r      ?? 0)
+          p.balls_faced = (p.balls_faced ?? 0) + Number(b.b      ?? 0)
+          p.fours       = (p.fours       ?? 0) + Number(b['4s']  ?? 0)
+          p.sixes       = (p.sixes       ?? 0) + Number(b['6s']  ?? 0)
+        }
+
+        // ── Bowling ──────────────────────────────────────────────
+        for (const bw of (inning.bowling ?? [])) {
+          const p = getOrCreate(bw.bowler)
+          if (!p) continue
+          p.wickets       = (p.wickets       ?? 0) + Number(bw.w ?? 0)
+          p.overs_bowled  = (p.overs_bowled  ?? 0) + Number(bw.o ?? 0)
+          p.runs_conceded = (p.runs_conceded ?? 0) + Number(bw.r ?? 0)
+          p.maiden_overs  = (p.maiden_overs  ?? 0) + Number(bw.m ?? 0)
+        }
+
+        // ── Catching / fielding ───────────────────────────────────
+        // Each entry: { catcher, catch, cb, stumped, runout, lbw, bowled }
+        // `lbw` + `bowled` are the bowler's LBW/bowled wickets (not catches).
+        // `cb` = caught-and-bowled (bowler catches their own delivery).
+        for (const c of (inning.catching ?? [])) {
+          const p = getOrCreate(c.catcher)
+          if (!p) continue
+          p.catches    = (p.catches    ?? 0) + Number(c.catch   ?? 0)
+                                             + Number(c.cb      ?? 0) // caught & bowled
+          p.stumpings  = (p.stumpings  ?? 0) + Number(c.stumped ?? 0)
+          p.run_out    = (p.run_out    ?? 0) + Number(c.runout  ?? 0)
+          p.lbw_bowled = (p.lbw_bowled ?? 0) + Number(c.lbw    ?? 0)
+                                             + Number(c.bowled  ?? 0)
+        }
+      }
+
+      // Return only canonical entries (skip alias keys)
+      const seen = new Set()
+      const result = []
+      for (const [key, p] of Object.entries(byKey)) {
+        if (key === p.name.toLowerCase() && !seen.has(p.name.toLowerCase())) {
+          seen.add(p.name.toLowerCase())
+          result.push(p)
+        }
+      }
+      return result
     },
 
     /**
