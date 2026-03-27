@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useAuth } from '../hooks/useAuth'
 import { useFantasyXI, useFantasyXIGroup, saveFantasyXIPicks } from '../hooks/useFantasyXI'
+import { useSeasonStatus } from '../hooks/useSeasonStatus'
 import { FantasyPicksForm } from '../components/fantasy/FantasyPicksForm'
 import { FantasyXICard } from '../components/fantasy/FantasyXICard'
 import { FantasyLeaderboard } from '../components/fantasy/FantasyLeaderboard'
@@ -9,6 +10,7 @@ export default function FantasyXI() {
   const { user } = useAuth()
   const { picks, setPicks, loading, error } = useFantasyXI(user?.id)
   const { entries, loading: groupLoading } = useFantasyXIGroup()
+  const { seasonStarted } = useSeasonStatus()
   const [editing, setEditing]   = useState(false)
   const [saving, setSaving]     = useState(false)
   const [saveError, setSaveError] = useState(null)
@@ -122,7 +124,7 @@ export default function FantasyXI() {
             {groupLoading ? (
               <GroupSkeleton />
             ) : (
-              <FantasyLeaderboard entries={entries} />
+              <FantasyLeaderboard entries={entries} seasonStarted={seasonStarted} />
             )}
           </div>
         </>

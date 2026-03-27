@@ -60,41 +60,43 @@ function isCompositionValid(counts) {
 export function FantasyPicksForm({ initialPlayers = [], initialCaptain = null, initialViceCap = null, onSave, saving }) {
   const allPlayers = useMemo(getAllPlayers, [])
 
-  const [selected, setSelected] = useState(new Set(initialPlayers))
-  const [captain, setCaptain]       = useState(initialCaptain)
-  const [viceCaptain, setViceCaptain] = useState(initialViceCap)
-  const [activeRole, setActiveRole] = useState('WK')
-  const [search, setSearch] = useState('')
+  const [selected, setSelected]           = useState(new Set(initialPlayers))
+  const [captain, setCaptain]             = useState(initialCaptain)
+  const [viceCaptain, setViceCaptain]     = useState(initialViceCap)
+  const [activeRole, setActiveRole]       = useState('WK')
+  const [search, setSearch]               = useState('')
 
-  const counts = useMemo(() => roleCounts([...selected], allPlayers), [selected, allPlayers])
+  const counts        = useMemo(() => roleCounts([...selected], allPlayers), [selected, allPlayers])
   const compositionOk = isCompositionValid(counts)
-  const allPicked = selected.size === TOTAL
-  const canLock = allPicked && compositionOk && captain && viceCaptain
+  const allPicked     = selected.size === TOTAL
+  const canLock       = allPicked && compositionOk && captain && viceCaptain
 
   function togglePlayer(player) {
     setSelected(prev => {
       const next = new Set(prev)
       if (next.has(player.name)) {
         next.delete(player.name)
-        if (captain === player.name) setCaptain(null)
+        if (captain === player.name)     setCaptain(null)
         if (viceCaptain === player.name) setViceCaptain(null)
       } else {
-        if (next.size >= TOTAL) return prev  // already 11
+        if (next.size >= TOTAL) return prev
         const roleCount = counts[player.role] ?? 0
-        if (roleCount >= ROLES[player.role].max) return prev  // role full
+        if (roleCount >= ROLES[player.role].max) return prev
         next.add(player.name)
       }
       return next
     })
   }
 
-  function setCap(name) {
-    if (name === viceCaptain) setViceCaptain(null)
+  function handleCap(name) {
+    if (captain === name) { setCaptain(null); return }
+    if (viceCaptain === name) setViceCaptain(null)
     setCaptain(name)
   }
 
-  function setViceCap(name) {
-    if (name === captain) setCaptain(null)
+  function handleViceCap(name) {
+    if (viceCaptain === name) { setViceCaptain(null); return }
+    if (captain === name) setCaptain(null)
     setViceCaptain(name)
   }
 
@@ -110,9 +112,9 @@ export function FantasyPicksForm({ initialPlayers = [], initialCaptain = null, i
       {/* Role tabs + counts */}
       <div style={{ display: 'flex', gap: '6px', marginBottom: '16px', overflowX: 'auto', paddingBottom: '2px' }}>
         {ROLE_ORDER.map(role => {
-          const r = ROLES[role]
-          const c = counts[role]
-          const ok = c >= r.min && c <= r.max
+          const r   = ROLES[role]
+          const c   = counts[role]
+          const ok  = c >= r.min && c <= r.max
           const over = c > r.max
           return (
             <button
@@ -161,8 +163,15 @@ export function FantasyPicksForm({ initialPlayers = [], initialCaptain = null, i
         }}
       />
 
+      {/* C/VC hint — shown once any player is selected */}
+      {selected.size > 0 && (
+        <p className="font-mono text-xs" style={{ color: 'var(--text-muted)', marginBottom: '8px', textAlign: 'center', letterSpacing: '0.04em' }}>
+          Tap <strong>C</strong> / <strong>VC</strong> on any selected player to assign captain roles
+        </p>
+      )}
+
       {/* Player list */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', maxHeight: '340px', overflowY: 'auto', marginBottom: '16px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', maxHeight: '380px', overflowY: 'auto', marginBottom: '16px' }}>
         {visiblePlayers.length === 0 && (
           <p className="font-body text-sm" style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '24px 0' }}>
             No players found.
@@ -170,51 +179,87 @@ export function FantasyPicksForm({ initialPlayers = [], initialCaptain = null, i
         )}
         {visiblePlayers.map(player => {
           const isSelected = selected.has(player.name)
-          const team = getTeam(player.teamId)
-          const roleCount = counts[player.role]
-          const roleFull = roleCount >= ROLES[player.role].max && !isSelected
-          const listFull = selected.size >= TOTAL && !isSelected
-          const disabled = roleFull || listFull
+          const isCap      = captain === player.name
+          const isVC       = viceCaptain === player.name
+          const team       = getTeam(player.teamId)
+          const roleCount  = counts[player.role]
+          const roleFull   = roleCount >= ROLES[player.role].max && !isSelected
+          const listFull   = selected.size >= TOTAL && !isSelected
+          const disabled   = roleFull || listFull
 
           return (
-            <button
+            <div
               key={player.name}
-              onClick={() => togglePlayer(player)}
-              disabled={disabled}
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'space-between',
                 padding: '11px 14px',
                 borderRadius: '12px',
-                border: `1.5px solid ${isSelected ? 'var(--team-primary)' : 'var(--border-subtle)'}`,
+                border: `1.5px solid ${isSelected ? (isCap ? '#b45309' : isVC ? '#6b7280' : 'var(--team-primary)') : 'var(--border-subtle)'}`,
                 background: isSelected ? 'var(--team-tinted-bg)' : 'var(--card)',
-                cursor: disabled ? 'not-allowed' : 'pointer',
                 opacity: disabled ? 0.4 : 1,
-                textAlign: 'left',
                 gap: '10px',
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0, flex: 1 }}>
-                {/* Team colour dot */}
-                <div style={{
-                  width: '8px', height: '8px', borderRadius: '50%',
-                  background: team?.colors?.primary ?? '#999',
-                  flexShrink: 0,
-                }} />
-                <div style={{ minWidth: 0 }}>
-                  <p className="font-display font-bold text-sm" style={{ color: 'var(--text-primary)', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    {player.name}
-                  </p>
-                  <p className="font-mono text-xs" style={{ color: 'var(--text-muted)', margin: 0 }}>
-                    {player.teamShort}
-                  </p>
-                </div>
-              </div>
+              {/* Team dot */}
+              <div style={{
+                width: '8px', height: '8px', borderRadius: '50%',
+                background: team?.colors?.primary ?? '#999',
+                flexShrink: 0,
+              }} />
+
+              {/* Name + team — tappable area to select/deselect */}
+              <button
+                onClick={() => togglePlayer(player)}
+                disabled={disabled}
+                style={{
+                  flex: 1, minWidth: 0, textAlign: 'left', background: 'none',
+                  border: 'none', padding: 0, cursor: disabled ? 'not-allowed' : 'pointer',
+                }}
+              >
+                <p className="font-display font-bold text-sm" style={{ color: 'var(--text-primary)', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  {player.name}
+                </p>
+                <p className="font-mono text-xs" style={{ color: 'var(--text-muted)', margin: 0 }}>
+                  {player.teamShort}
+                </p>
+              </button>
+
+              {/* C / VC badges — always visible on selected rows */}
               {isSelected && (
-                <span style={{ fontSize: '16px', flexShrink: 0 }}>✓</span>
+                <div style={{ display: 'flex', gap: '5px', flexShrink: 0 }}>
+                  <button
+                    onClick={() => handleCap(player.name)}
+                    title="Captain — 2× points"
+                    style={{
+                      width: '28px', height: '26px', borderRadius: '7px',
+                      border: `1.5px solid ${isCap ? '#b45309' : 'var(--border-default)'}`,
+                      background: isCap ? '#b45309' : 'transparent',
+                      color: isCap ? '#fff' : 'var(--text-muted)',
+                      fontFamily: 'Bricolage Grotesque, sans-serif',
+                      fontWeight: 800, fontSize: '11px', cursor: 'pointer',
+                    }}
+                  >C</button>
+                  <button
+                    onClick={() => handleViceCap(player.name)}
+                    title="Vice Captain — 1.5× points"
+                    style={{
+                      width: '28px', height: '26px', borderRadius: '7px',
+                      border: `1.5px solid ${isVC ? '#4b5563' : 'var(--border-default)'}`,
+                      background: isVC ? '#4b5563' : 'transparent',
+                      color: isVC ? '#fff' : 'var(--text-muted)',
+                      fontFamily: 'Bricolage Grotesque, sans-serif',
+                      fontWeight: 800, fontSize: '10px', cursor: 'pointer',
+                    }}
+                  >VC</button>
+                </div>
               )}
-            </button>
+
+              {/* Checkmark */}
+              {isSelected && (
+                <span style={{ fontSize: '14px', flexShrink: 0, color: 'var(--text-muted)' }}>✓</span>
+              )}
+            </div>
           )
         })}
       </div>
@@ -222,11 +267,23 @@ export function FantasyPicksForm({ initialPlayers = [], initialCaptain = null, i
       {/* Selected count */}
       <div style={{
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-        marginBottom: '16px', padding: '10px 14px',
+        marginBottom: '12px', padding: '10px 14px',
         background: 'var(--surface-subtle)', borderRadius: '12px',
         border: '1px solid var(--border-subtle)',
       }}>
-        <span className="font-mono text-xs" style={{ color: 'var(--text-muted)' }}>SELECTED</span>
+        <div>
+          <span className="font-mono text-xs" style={{ color: 'var(--text-muted)' }}>SELECTED</span>
+          {captain && (
+            <span className="font-mono text-xs" style={{ color: '#b45309', marginLeft: '10px' }}>
+              C: {captain.split(' ').pop()}
+            </span>
+          )}
+          {viceCaptain && (
+            <span className="font-mono text-xs" style={{ color: '#4b5563', marginLeft: '8px' }}>
+              VC: {viceCaptain.split(' ').pop()}
+            </span>
+          )}
+        </div>
         <span className="font-display font-black" style={{
           fontSize: '20px', color: selected.size === TOTAL ? 'var(--team-primary)' : 'var(--text-primary)',
           letterSpacing: '-0.5px',
@@ -235,47 +292,20 @@ export function FantasyPicksForm({ initialPlayers = [], initialCaptain = null, i
         </span>
       </div>
 
-      {/* Captain / Vice-Captain pickers — visible once 11 selected */}
-      {allPicked && (
-        <div style={{ marginBottom: '16px' }}>
-          <p className="font-mono text-xs uppercase tracking-widest mb-2" style={{ color: 'var(--text-muted)' }}>
-            Captain (2×) &amp; Vice Captain (1.5×)
-          </p>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', maxHeight: '240px', overflowY: 'auto' }}>
-            {[...selected].map(name => (
-              <div key={name} style={{
-                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                padding: '10px 14px', borderRadius: '12px',
-                background: 'var(--card)', border: '1.5px solid var(--border-subtle)',
-                gap: '10px',
-              }}>
-                <p className="font-display font-bold text-sm" style={{ color: 'var(--text-primary)', margin: 0, flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                  {name}
-                </p>
-                <div style={{ display: 'flex', gap: '6px', flexShrink: 0 }}>
-                  <CaptainBadge
-                    label="C"
-                    active={captain === name}
-                    onClick={() => setCap(captain === name ? null : name)}
-                    title="Captain — 2× points"
-                  />
-                  <CaptainBadge
-                    label="VC"
-                    active={viceCaptain === name}
-                    onClick={() => setViceCap(viceCaptain === name ? null : name)}
-                    title="Vice Captain — 1.5× points"
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
       {/* Validation hint */}
       {allPicked && !compositionOk && (
         <p className="font-body text-xs mb-3" style={{ color: '#dc2626', textAlign: 'center' }}>
           Composition invalid — check role minimums (min 1 WK, 3 BAT, 1 AR, 3 BWL).
+        </p>
+      )}
+      {allPicked && compositionOk && !captain && (
+        <p className="font-body text-xs mb-3" style={{ color: '#b45309', textAlign: 'center' }}>
+          Tap <strong>C</strong> on a player above to set your captain.
+        </p>
+      )}
+      {allPicked && compositionOk && captain && !viceCaptain && (
+        <p className="font-body text-xs mb-3" style={{ color: '#4b5563', textAlign: 'center' }}>
+          Tap <strong>VC</strong> on a player above to set your vice captain.
         </p>
       )}
 
@@ -319,28 +349,5 @@ export function FantasyPicksForm({ initialPlayers = [], initialCaptain = null, i
         </button>
       </div>
     </div>
-  )
-}
-
-function CaptainBadge({ label, active, onClick, title }) {
-  return (
-    <button
-      onClick={onClick}
-      title={title}
-      className="tap-feedback"
-      style={{
-        width: '32px', height: '28px',
-        borderRadius: '8px',
-        border: `1.5px solid ${active ? 'var(--team-primary)' : 'var(--border-default)'}`,
-        background: active ? 'var(--team-primary)' : 'transparent',
-        color: active ? 'var(--team-text-on-primary)' : 'var(--text-muted)',
-        fontFamily: 'Bricolage Grotesque, sans-serif',
-        fontWeight: 800,
-        fontSize: '11px',
-        cursor: 'pointer',
-      }}
-    >
-      {label}
-    </button>
   )
 }

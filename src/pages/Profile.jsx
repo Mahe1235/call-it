@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
 import { useLeaderboard } from '../hooks/useLeaderboard'
+import { useSeasonStatus } from '../hooks/useSeasonStatus'
 import { supabase } from '../lib/supabase'
 import { getTeam } from '../lib/content'
 
@@ -12,6 +13,7 @@ export default function Profile() {
   const [rulesOpen, setRulesOpen] = useState(false)
 
   const { entries, loading: leaderboardLoading } = useLeaderboard()
+  const { seasonStarted } = useSeasonStatus()
   const myRow = session ? entries.find(e => e.user_id === session.user.id) : null
 
   const [bestPts, setBestPts] = useState(null)
@@ -122,21 +124,32 @@ export default function Profile() {
           <p className="font-mono text-xs uppercase tracking-widest" style={{ color: 'var(--text-muted)', marginBottom: '12px' }}>
             Season Stats
           </p>
-          {/* Row 1: Rank + Matches */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', textAlign: 'center', marginBottom: '12px' }}>
-            <StatCell label="Rank" value={`#${myRow.rank}`} />
-            <StatCell label="Matches" value={myRow.matches_played ?? 0} />
-          </div>
-          {/* Row 2: Match pts / Season pts / Fantasy XI pts */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px', textAlign: 'center', paddingTop: '12px', borderTop: '1px solid var(--border-subtle)' }}>
-            <StatCell label="Match" value={myRow.match_pts ?? 0} />
-            <StatCell label="Season" value={myRow.season_pts ?? 0} />
-            <StatCell label="Fantasy XI" value={myRow.fantasy_xi_pts ?? 0} />
-          </div>
-          {(bestPts !== null || worstPts !== null) && (
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', textAlign: 'center', marginTop: '12px', paddingTop: '12px', borderTop: '1px solid var(--border-subtle)' }}>
-              <StatCell label="Best match" value={bestPts >= 0 ? `+${bestPts}` : `${bestPts}`} positive={bestPts > 0} />
-              <StatCell label="Worst match" value={worstPts >= 0 ? `+${worstPts}` : `${worstPts}`} negative={worstPts < 0} />
+          {seasonStarted ? (
+            <>
+              {/* Row 1: Rank + Matches */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', textAlign: 'center', marginBottom: '12px' }}>
+                <StatCell label="Rank" value={`#${myRow.rank}`} />
+                <StatCell label="Matches" value={myRow.matches_played ?? 0} />
+              </div>
+              {/* Row 2: Match pts / Season pts / Fantasy XI pts */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px', textAlign: 'center', paddingTop: '12px', borderTop: '1px solid var(--border-subtle)' }}>
+                <StatCell label="Match" value={myRow.match_pts ?? 0} />
+                <StatCell label="Season" value={myRow.season_pts ?? 0} />
+                <StatCell label="Fantasy XI" value={myRow.fantasy_xi_pts ?? 0} />
+              </div>
+              {(bestPts !== null || worstPts !== null) && (
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', textAlign: 'center', marginTop: '12px', paddingTop: '12px', borderTop: '1px solid var(--border-subtle)' }}>
+                  <StatCell label="Best match" value={bestPts >= 0 ? `+${bestPts}` : `${bestPts}`} positive={bestPts > 0} />
+                  <StatCell label="Worst match" value={worstPts >= 0 ? `+${worstPts}` : `${worstPts}`} negative={worstPts < 0} />
+                </div>
+              )}
+            </>
+          ) : (
+            <div style={{ textAlign: 'center', padding: '8px 0' }}>
+              <p className="font-display font-black" style={{ fontSize: '28px', color: 'var(--text-muted)', margin: '0 0 4px', letterSpacing: '-1px' }}>— — —</p>
+              <p className="font-body text-xs" style={{ color: 'var(--text-muted)', margin: 0 }}>
+                Points and rankings activate after Match 1 🏏
+              </p>
             </div>
           )}
         </div>

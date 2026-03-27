@@ -1,34 +1,18 @@
-import { useState, useRef, useEffect } from 'react'
-import { useMatchFeed } from '../hooks/useMatch'
-import { useMyPrediction } from '../hooks/usePredictions'
+import { useState, useEffect, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
-import { MatchHeader } from '../components/match/MatchHeader'
-import { Countdown } from '../components/match/Countdown'
-import { MatchCard } from '../components/match/MatchCard'
-import { PostMatchReveal } from '../components/match/PostMatchReveal'
+import { useSeasonStatus } from '../hooks/useSeasonStatus'
+import { useFantasyXI } from '../hooks/useFantasyXI'
+import { useSeasonPicks } from '../hooks/useSeasonPicks'
 import { LeaderboardSnapshot } from '../components/league/LeaderboardSnapshot'
-import { getBanter, getTeam } from '../lib/content'
-
-function hexToRgba(hex = '#000000', alpha = 0.07) {
-  const clean = hex.replace('#', '')
-  const full = clean.length === 3 ? clean.split('').map(c => c + c).join('') : clean
-  const r = parseInt(full.slice(0, 2), 16)
-  const g = parseInt(full.slice(2, 4), 16)
-  const b = parseInt(full.slice(4, 6), 16)
-  return `rgba(${r},${g},${b},${alpha})`
-}
-
-// Match-level predictions are disabled for this season.
-// Flip to true when per-match picks go live.
-const MATCH_PICKS_ENABLED = false
 
 export default function Home() {
-  const { profile } = useAuth()
-  const { matches, activeIndex, loading, error } = useMatchFeed()
-  const [index, setIndex] = useState(null)
+  const { profile, user } = useAuth()
+  const { seasonStarted, firstMatchDate, loading: statusLoading } = useSeasonStatus()
+  const { picks: fantasyPicks, loading: fantasyLoading } = useFantasyXI(user?.id)
+  const { picks: seasonPicks, loading: seasonLoading } = useSeasonPicks()
 
-  const currentIndex = index !== null ? index : activeIndex
-  const currentItem = matches[currentIndex] ?? null
+  const loading = statusLoading || fantasyLoading || seasonLoading
 
   return (
     <div className="p-4 animate-slide-up">
@@ -42,340 +26,312 @@ export default function Home() {
         </h1>
       </div>
 
-      {/* Match info carousel — schedule view */}
       {loading ? (
-        <MatchSkeleton />
-      ) : error ? (
-        <ErrorCard message={error} />
-      ) : matches.length === 0 ? (
-        <EmptyState />
+        <HomeSkeleton />
+      ) : seasonStarted ? (
+        <SeasonLiveView fantasyPicks={fantasyPicks} seasonPicks={seasonPicks} />
       ) : (
-        <MatchCarousel
-          matches={matches}
-          currentIndex={currentIndex}
-          onChange={(i) => setIndex(i)}
+        <PreSeasonView
+          firstMatchDate={firstMatchDate}
+          fantasyPicks={fantasyPicks}
+          seasonPicks={seasonPicks}
         />
       )}
-
-      {/* Picks card — hidden until match picks go live next season */}
-      {MATCH_PICKS_ENABLED && !loading && !error && currentItem && (
-        <PicksCard
-          key={currentItem.match.id}
-          match={currentItem.match}
-          questions={currentItem.questions}
-        />
-      )}
-
-      {/* Leaderboard snapshot */}
-      <LeaderboardSnapshot />
     </div>
   )
 }
 
-/* ─── Peek carousel (match info only — no picks) ─────────────────────────── */
+/* ─── Pre-season view: countdown + shortcut cards ─────────────────────────── */
 
-function MatchCarousel({ matches, currentIndex, onChange }) {
-  const scrollRef = useRef(null)
-  const slideRefs = useRef([])
-  const isProgrammatic = useRef(false)
-  const scrollEndTimer = useRef(null)
-
-  // Programmatically scroll to active card when index changes via dots
-  useEffect(() => {
-    const container = scrollRef.current
-    const slide = slideRefs.current[currentIndex]
-    if (!container || !slide) return
-    isProgrammatic.current = true
-    const cw = container.offsetWidth
-    const sw = slide.offsetWidth
-    container.scrollTo({ left: slide.offsetLeft - (cw - sw) / 2, behavior: 'smooth' })
-    clearTimeout(scrollEndTimer.current)
-    scrollEndTimer.current = setTimeout(() => { isProgrammatic.current = false }, 600)
-  }, [currentIndex])
-
-  // Sync dots while user manually scrolls
-  function onScroll() {
-    if (isProgrammatic.current) return
-    clearTimeout(scrollEndTimer.current)
-    scrollEndTimer.current = setTimeout(() => {
-      const container = scrollRef.current
-      if (!container) return
-      const center = container.scrollLeft + container.offsetWidth / 2
-      let closest = 0, minDist = Infinity
-      slideRefs.current.forEach((el, i) => {
-        if (!el) return
-        const dist = Math.abs(el.offsetLeft + el.offsetWidth / 2 - center)
-        if (dist < minDist) { minDist = dist; closest = i }
-      })
-      if (closest !== currentIndex) onChange(closest)
-    }, 80)
-  }
-
+function PreSeasonView({ firstMatchDate, fantasyPicks, seasonPicks }) {
   return (
-    <div>
-      {/* Scroll container — bleeds into page padding for peek effect */}
-      <div
-        ref={scrollRef}
-        onScroll={onScroll}
-        style={{
-          margin: '0 -16px',
-          overflowX: 'auto',
-          overflowY: 'visible',
-          scrollSnapType: 'x mandatory',
-          scrollbarWidth: 'none',
-          msOverflowStyle: 'none',
-          display: 'flex',
-          alignItems: 'stretch',
-          gap: '10px',
-          paddingInline: '16px',
-        }}
-      >
-        {matches.map((item, i) => (
-          <div
-            key={item.match.id}
-            ref={el => slideRefs.current[i] = el}
-            style={{
-              scrollSnapAlign: 'center',
-              flexShrink: 0,
-              width: 'calc(100vw - 80px)',
-            }}
-          >
-            <MatchInfoCard
-              match={item.match}
-              isActive={i === currentIndex}
-              onClick={() => onChange(i)}
-            />
-          </div>
-        ))}
+    <>
+      <TournamentCountdown targetDate={firstMatchDate} />
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '20px' }}>
+        <FantasyXIShortcut picks={fantasyPicks} />
+        <SeasonPicksShortcut picks={seasonPicks} />
       </div>
-
-      {/* Dot indicators */}
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '6px', marginTop: '12px', marginBottom: '16px' }}>
-        {matches.map((item, i) => {
-          const isActive = i === currentIndex
-          const isCompleted = item.match.status === 'completed'
-          return (
-            <button
-              key={i}
-              onClick={() => onChange(i)}
-              aria-label={`Match ${i + 1}`}
-              style={{
-                width: isActive ? '22px' : '6px',
-                height: '6px',
-                borderRadius: '3px',
-                background: isActive ? 'var(--text-primary)' : isCompleted ? 'var(--border-default)' : 'var(--border-subtle)',
-                border: 'none',
-                padding: 0,
-                cursor: 'pointer',
-                transition: 'all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-                opacity: isActive ? 1 : 0.5,
-              }}
-            />
-          )
-        })}
-      </div>
-    </div>
+    </>
   )
 }
 
-/* ─── Match info card (carousel slide — no picks, always same height) ─────── */
+/* ─── Post-season view ────────────────────────────────────────────────────── */
 
-function MatchInfoCard({ match, isActive, onClick }) {
-  const teamA = getTeam(match.team_a)
-  const teamB = getTeam(match.team_b)
-  const tintA = hexToRgba(teamA?.colors?.primary, 0.25)
-  const tintB = hexToRgba(teamB?.colors?.primary, 0.25)
-  const isCompleted = match.status === 'completed'
-  const winnerTeam = isCompleted && match.winner ? getTeam(match.winner) : null
-
+function SeasonLiveView({ fantasyPicks, seasonPicks }) {
   return (
-    <div
-      onClick={!isActive ? onClick : undefined}
-      style={{
+    <>
+      {/* Live banner */}
+      <div style={{
         borderRadius: '20px',
-        padding: '18px',
-        position: 'relative',
-        overflow: 'hidden',
-        background: `linear-gradient(140deg, ${tintA} 0%, var(--card) 40%, var(--card) 60%, ${tintB} 100%)`,
-        border: `1.5px solid ${isActive ? 'var(--border-default)' : 'var(--border-subtle)'}`,
-        boxShadow: isActive ? '0 4px 20px rgba(0,0,0,0.10)' : '0 1px 8px rgba(0,0,0,0.04)',
-        opacity: isActive ? 1 : 0.65,
-        transition: 'opacity 0.25s, box-shadow 0.25s',
-        cursor: isActive ? 'default' : 'pointer',
-      }}
-    >
-      {/* Logo watermarks */}
-      {teamA?.logoUrl && (
-        <img src={teamA.logoUrl} alt="" aria-hidden="true" style={{
-          position: 'absolute', top: '-50px', left: '-50px',
-          width: '200px', height: '200px', opacity: isActive ? 0.28 : 0.12,
-          transform: 'rotate(-10deg)', pointerEvents: 'none', userSelect: 'none',
-          transition: 'opacity 0.25s',
-        }} />
-      )}
-      {teamB?.logoUrl && (
-        <img src={teamB.logoUrl} alt="" aria-hidden="true" style={{
-          position: 'absolute', bottom: '-50px', right: '-50px',
-          width: '200px', height: '200px', opacity: isActive ? 0.28 : 0.12,
-          transform: 'rotate(10deg)', pointerEvents: 'none', userSelect: 'none',
-          transition: 'opacity 0.25s',
-        }} />
-      )}
-
-      <div style={{ position: 'relative', zIndex: 1 }}>
-        {/* Status badge — only for completed */}
-        {isCompleted && (
-          <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '8px' }}>
-            <span style={{
-              fontSize: '11px', fontWeight: 800, fontFamily: 'var(--font-mono)',
-              letterSpacing: '0.08em', textTransform: 'uppercase',
-              padding: '4px 10px', borderRadius: '99px',
-              background: 'var(--text-primary)', color: 'var(--card)',
-            }}>Done</span>
-          </div>
-        )}
-
-        <MatchHeader match={match} />
-
-        {/* Countdown for upcoming/live */}
-        {!isCompleted && (
-          <div style={{ marginTop: '14px', textAlign: 'center' }}>
-            <p className="font-mono text-xs tracking-widest uppercase mb-2" style={{ color: 'var(--text-secondary)' }}>
-              {match.status === 'live' ? 'In progress' : 'Card closes in'}
-            </p>
-            <Countdown targetDate={match.date} status={match.status} />
-          </div>
-        )}
+        padding: '22px 20px',
+        marginBottom: '16px',
+        background: 'var(--card)',
+        border: '1.5px solid var(--border-subtle)',
+        textAlign: 'center',
+        boxShadow: '0 2px 16px rgba(0,0,0,0.06)',
+      }}>
+        <div style={{ fontSize: '40px', marginBottom: '10px' }}>🏏</div>
+        <p className="font-mono text-xs tracking-widest uppercase mb-1" style={{ color: 'var(--text-muted)' }}>
+          IPL 2026
+        </p>
+        <h2 className="font-display font-black" style={{ fontSize: '22px', color: 'var(--text-primary)', letterSpacing: '-0.5px', margin: 0 }}>
+          Season is live!
+        </h2>
+        <p className="font-body text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
+          Picks are locked. Let the cricket do the talking.
+        </p>
       </div>
-    </div>
+
+      {/* View-only shortcuts */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '20px' }}>
+        <FantasyXIShortcut picks={fantasyPicks} seasonStarted />
+        <SeasonPicksShortcut picks={seasonPicks} seasonStarted />
+      </div>
+
+      {/* Leaderboard snapshot — only visible after season starts */}
+      <LeaderboardSnapshot />
+    </>
   )
 }
 
-/* ─── Picks card (below carousel, swaps when active match changes) ────────── */
+/* ─── Tournament Countdown ────────────────────────────────────────────────── */
 
-function PicksCard({ match, questions }) {
-  const { prediction, setPrediction, loading } = useMyPrediction(match.id)
-  const isCompleted = match.status === 'completed'
+function TournamentCountdown({ targetDate }) {
+  const [timeLeft, setTimeLeft] = useState(calcTimeLeft(targetDate))
 
-  if (isCompleted) return <PostMatchReveal match={match} questions={questions} />
+  useEffect(() => {
+    if (!targetDate) return
+    const id = setInterval(() => setTimeLeft(calcTimeLeft(targetDate)), 1000)
+    return () => clearInterval(id)
+  }, [targetDate])
+
+  if (!targetDate) return null
+
+  const { days, hours, minutes, seconds } = timeLeft
+  const isImminent = days === 0 && hours < 2
 
   return (
     <div style={{
-      borderRadius: '20px',
-      padding: '20px',
+      borderRadius: '24px',
+      padding: '28px 20px 24px',
+      marginBottom: '20px',
       background: 'var(--card)',
       border: '1.5px solid var(--border-subtle)',
-      boxShadow: '0 2px 16px rgba(0,0,0,0.06)',
-      marginBottom: '16px',
+      boxShadow: '0 4px 24px rgba(0,0,0,0.08)',
+      textAlign: 'center',
+      position: 'relative',
+      overflow: 'hidden',
     }}>
-      <p className="font-mono text-xs tracking-widest uppercase mb-4" style={{ color: 'var(--text-muted)' }}>
-        Your picks
+      {/* Decorative glow */}
+      <div style={{
+        position: 'absolute', top: '-60px', left: '50%', transform: 'translateX(-50%)',
+        width: '280px', height: '160px',
+        background: 'radial-gradient(ellipse, var(--team-primary) 0%, transparent 70%)',
+        opacity: 0.08, pointerEvents: 'none',
+      }} />
+
+      <p className="font-mono text-xs tracking-widest uppercase mb-4" style={{ color: 'var(--text-muted)', position: 'relative', zIndex: 1 }}>
+        {isImminent ? '🚨 Starting soon' : 'IPL 2026 starts in'}
       </p>
 
-      {loading ? (
-        <PredictionSkeleton />
-      ) : (
-        <MatchCard
-          match={match}
-          questions={questions}
-          prediction={prediction}
-          onLocked={setPrediction}
-        />
-      )}
-    </div>
-  )
-}
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', marginBottom: '18px', position: 'relative', zIndex: 1 }}>
+        <CountUnit value={days}    label="days" />
+        <Colon />
+        <CountUnit value={hours}   label="hrs"  />
+        <Colon />
+        <CountUnit value={minutes} label="min"  />
+        <Colon />
+        <CountUnit value={seconds} label="sec"  animate />
+      </div>
 
-/* ─── Empty state ─────────────────────────────────────────────────────────── */
-
-function EmptyState() {
-  const text = getBanter('emptyStates.noMatchesToday')
-  return (
-    <div style={{
-      borderRadius: '20px', padding: '32px 20px',
-      background: 'var(--card)', border: '1.5px solid var(--border-subtle)', textAlign: 'center',
-    }}>
-      <div style={{ fontSize: '40px', marginBottom: '12px' }}>🏏</div>
-      <p className="font-display font-bold text-base mb-1" style={{ color: 'var(--text-primary)' }}>
-        No matches right now
+      <p className="font-body text-xs" style={{ color: 'var(--text-muted)', position: 'relative', zIndex: 1 }}>
+        Lock your Fantasy XI and Season picks before the first ball! 🏏
       </p>
-      <p className="font-body text-sm" style={{ color: 'var(--text-muted)' }}>{text}</p>
     </div>
   )
 }
 
-/* ─── Prediction skeleton ─────────────────────────────────────────────────── */
-
-function PredictionSkeleton() {
+function CountUnit({ value, label, animate }) {
   return (
-    <div>
-      <Shimmer style={{ height: '10px', width: '100px', marginBottom: '10px' }} />
-      <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
-        <Shimmer style={{ height: '44px', flex: 1, borderRadius: '12px' }} />
-        <Shimmer style={{ height: '44px', flex: 1, borderRadius: '12px' }} />
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: '52px' }}>
+      <div style={{
+        background: 'var(--surface-subtle)',
+        border: '1.5px solid var(--border-subtle)',
+        borderRadius: '14px',
+        padding: '10px 4px',
+        width: '100%',
+        transition: animate ? 'none' : undefined,
+      }}>
+        <span className="font-display font-black" style={{
+          fontSize: '32px',
+          color: 'var(--text-primary)',
+          letterSpacing: '-1px',
+          lineHeight: 1,
+          display: 'block',
+          fontVariantNumeric: 'tabular-nums',
+        }}>
+          {String(value).padStart(2, '0')}
+        </span>
       </div>
-      <Shimmer style={{ height: '10px', width: '80px', marginBottom: '10px' }} />
-      <Shimmer style={{ height: '16px', width: '200px', marginBottom: '12px' }} />
-      <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
-        <Shimmer style={{ height: '44px', flex: 1, borderRadius: '12px' }} />
-        <Shimmer style={{ height: '44px', flex: 1, borderRadius: '12px' }} />
-      </div>
-      <Shimmer style={{ height: '48px', borderRadius: '14px', marginTop: '4px' }} />
+      <span className="font-mono" style={{ fontSize: '9px', color: 'var(--text-muted)', marginTop: '5px', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+        {label}
+      </span>
     </div>
   )
 }
 
-/* ─── Loading skeleton ────────────────────────────────────────────────────── */
-
-function MatchSkeleton() {
+function Colon() {
   return (
-    <div style={{
-      borderRadius: '20px', padding: '20px',
-      background: 'var(--card)', border: '1.5px solid var(--border-subtle)',
-      boxShadow: '0 2px 16px rgba(0,0,0,0.06)',
-    }}>
-      <Shimmer style={{ height: '12px', width: '120px', marginBottom: '16px' }} />
-      <div className="flex items-center justify-between gap-3 mb-4">
-        <div>
-          <Shimmer style={{ height: '30px', width: '60px', borderRadius: '99px', marginBottom: '8px' }} />
-          <Shimmer style={{ height: '10px', width: '90px' }} />
+    <span className="font-display font-black" style={{
+      fontSize: '28px', color: 'var(--text-muted)', opacity: 0.5,
+      alignSelf: 'flex-start', paddingTop: '10px', lineHeight: 1.2,
+    }}>:</span>
+  )
+}
+
+function calcTimeLeft(target) {
+  if (!target) return { days: 0, hours: 0, minutes: 0, seconds: 0 }
+  const diff = Math.max(0, target.getTime() - Date.now())
+  return {
+    days:    Math.floor(diff / (1000 * 60 * 60 * 24)),
+    hours:   Math.floor((diff / (1000 * 60 * 60)) % 24),
+    minutes: Math.floor((diff / (1000 * 60)) % 60),
+    seconds: Math.floor((diff / 1000) % 60),
+  }
+}
+
+/* ─── Fantasy XI shortcut card ────────────────────────────────────────────── */
+
+function FantasyXIShortcut({ picks, seasonStarted }) {
+  const navigate = useNavigate()
+  const hasLocked = picks?.locked === true
+  const hasDraft  = picks && !picks.locked && (picks.players?.length ?? 0) > 0
+  const hasNone   = !picks || (picks.players?.length ?? 0) === 0
+
+  const status = hasLocked ? 'locked' : hasDraft ? 'draft' : 'none'
+  const statusLabel = { locked: 'Locked ✓', draft: 'Draft saved', none: 'Not started' }[status]
+  const statusColor = { locked: 'var(--team-primary)', draft: '#b45309', none: 'var(--text-muted)' }[status]
+
+  const ctaLabel = seasonStarted
+    ? 'View my XI →'
+    : hasLocked ? 'View my XI →' : hasDraft ? 'Edit draft →' : 'Pick your XI →'
+
+  const captainName = picks?.captain ?? null
+
+  return (
+    <button
+      onClick={() => navigate('/fantasy-xi')}
+      style={{
+        width: '100%', textAlign: 'left', background: 'none',
+        border: 'none', padding: 0, cursor: 'pointer',
+      }}
+    >
+      <div style={{
+        borderRadius: '18px', padding: '16px 18px',
+        background: 'var(--card)', border: '1.5px solid var(--border-subtle)',
+        boxShadow: '0 2px 12px rgba(0,0,0,0.05)',
+        display: 'flex', alignItems: 'center', gap: '14px',
+      }}>
+        <div style={{
+          width: '42px', height: '42px', borderRadius: '12px', flexShrink: 0,
+          background: 'var(--surface-subtle)', border: '1.5px solid var(--border-subtle)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px',
+        }}>⭐</div>
+
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '2px' }}>
+            <p className="font-display font-bold text-sm" style={{ color: 'var(--text-primary)', margin: 0 }}>
+              Fantasy XI
+            </p>
+            <span className="font-mono" style={{
+              fontSize: '9px', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase',
+              color: statusColor, padding: '2px 7px', borderRadius: '99px',
+              border: `1px solid ${statusColor}`, opacity: 0.9,
+            }}>{statusLabel}</span>
+          </div>
+          <p className="font-body text-xs" style={{ color: 'var(--text-muted)', margin: 0 }}>
+            {hasLocked && captainName ? `Captain: ${captainName}` :
+             hasDraft ? `${picks.players.length} of 11 selected` :
+             'Pick 11 players + captain for the season'}
+          </p>
         </div>
-        <Shimmer style={{ height: '16px', width: '20px' }} />
-        <div className="flex flex-col items-end">
-          <Shimmer style={{ height: '30px', width: '60px', borderRadius: '99px', marginBottom: '8px' }} />
-          <Shimmer style={{ height: '10px', width: '90px' }} />
-        </div>
+
+        <span className="font-display font-bold" style={{ color: 'var(--text-muted)', fontSize: '13px', flexShrink: 0 }}>
+          {ctaLabel}
+        </span>
       </div>
-      <Shimmer style={{ height: '1px', marginBottom: '20px' }} />
-      <Shimmer style={{ height: '40px', width: '180px', margin: '0 auto' }} />
-    </div>
+    </button>
   )
 }
 
-function Shimmer({ style }) {
+/* ─── Season Picks shortcut card ──────────────────────────────────────────── */
+
+function SeasonPicksShortcut({ picks, seasonStarted }) {
+  const navigate = useNavigate()
+  const hasSubmitted = picks !== null
+
+  const statusLabel = hasSubmitted ? 'Submitted ✓' : 'Not started'
+  const statusColor = hasSubmitted ? 'var(--team-primary)' : 'var(--text-muted)'
+
+  const ctaLabel = seasonStarted
+    ? 'View picks →'
+    : hasSubmitted ? 'Edit picks →' : 'Make picks →'
+
+  const championName = picks?.champion ?? null
+
   return (
-    <div style={{
-      background: 'linear-gradient(90deg, var(--shimmer-from) 25%, var(--shimmer-mid) 50%, var(--shimmer-from) 75%)',
-      backgroundSize: '200% 100%',
-      animation: 'shimmer 1.4s ease-in-out infinite',
-      borderRadius: '8px',
-      ...style,
-    }} />
+    <button
+      onClick={() => navigate('/season')}
+      style={{
+        width: '100%', textAlign: 'left', background: 'none',
+        border: 'none', padding: 0, cursor: 'pointer',
+      }}
+    >
+      <div style={{
+        borderRadius: '18px', padding: '16px 18px',
+        background: 'var(--card)', border: '1.5px solid var(--border-subtle)',
+        boxShadow: '0 2px 12px rgba(0,0,0,0.05)',
+        display: 'flex', alignItems: 'center', gap: '14px',
+      }}>
+        <div style={{
+          width: '42px', height: '42px', borderRadius: '12px', flexShrink: 0,
+          background: 'var(--surface-subtle)', border: '1.5px solid var(--border-subtle)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px',
+        }}>🏆</div>
+
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '2px' }}>
+            <p className="font-display font-bold text-sm" style={{ color: 'var(--text-primary)', margin: 0 }}>
+              Season Picks
+            </p>
+            <span className="font-mono" style={{
+              fontSize: '9px', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase',
+              color: statusColor, padding: '2px 7px', borderRadius: '99px',
+              border: `1px solid ${statusColor}`, opacity: 0.9,
+            }}>{statusLabel}</span>
+          </div>
+          <p className="font-body text-xs" style={{ color: 'var(--text-muted)', margin: 0 }}>
+            {hasSubmitted && championName ? `Champion pick: ${championName.toUpperCase()}` :
+             'Predict champion, top 4, award winners'}
+          </p>
+        </div>
+
+        <span className="font-display font-bold" style={{ color: 'var(--text-muted)', fontSize: '13px', flexShrink: 0 }}>
+          {ctaLabel}
+        </span>
+      </div>
+    </button>
   )
 }
 
-/* ─── Error card ──────────────────────────────────────────────────────────── */
+/* ─── Skeletons ────────────────────────────────────────────────────────────── */
 
-function ErrorCard({ message }) {
+function HomeSkeleton() {
   return (
-    <div style={{
-      borderRadius: '20px', padding: '24px 20px',
-      background: '#fff5f5', border: '1.5px solid rgba(200,0,0,0.12)', textAlign: 'center',
-    }}>
-      <p className="font-body text-sm" style={{ color: '#cc0000' }}>
-        Couldn't load match data. Check your connection.
-      </p>
-      <p className="font-mono text-xs mt-1" style={{ color: 'var(--text-muted)' }}>{message}</p>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+      <div className="shimmer" style={{ height: '180px', borderRadius: '24px' }} />
+      <div className="shimmer" style={{ height: '72px', borderRadius: '18px' }} />
+      <div className="shimmer" style={{ height: '72px', borderRadius: '18px' }} />
     </div>
   )
 }

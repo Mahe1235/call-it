@@ -37,7 +37,28 @@
       "WebFetch(domain:scores.iplt20.com)",
       "WebFetch(domain:bcciplayerimages.s3.ap-south-1.amazonaws.com)",
       "WebFetch(domain:www.espncricinfo.com)",
-      "Bash(npx vite:*)"
+      "Bash(npx vite:*)",
+      "Bash(grep -rn \"''#fff''\" --include=\"*.jsx\" .)",
+      "mcp__d3e08861-38c5-4440-9f10-d3240dbd805f__list_deployments",
+      "mcp__d3e08861-38c5-4440-9f10-d3240dbd805f__get_project",
+      "mcp__d3e08861-38c5-4440-9f10-d3240dbd805f__get_deployment_build_logs",
+      "Bash(xargs grep:*)",
+      "mcp__a340e9f3-fba1-4900-9306-03ea0db16cf7__get_logs",
+      "WebFetch(domain:www.iplt20.com)",
+      "WebFetch(domain:documents.iplt20.com)",
+      "Bash(node -e \":*)",
+      "Bash(node scripts/seedTestData.js)",
+      "mcp__Desktop_Commander__start_search",
+      "mcp__Desktop_Commander__read_multiple_files",
+      "Bash(head -30 src/hooks/*.js)",
+      "Bash(cat supabase/migrations/*.sql)",
+      "Bash(npx playwright:*)",
+      "Bash(npx vitest:*)",
+      "Bash(npm test:*)",
+      "mcp__Desktop_Commander__get_more_search_results",
+      "Bash(git -C \"C:/Users/91897/OneDrive/Documents/GitHub/call-it\" log --oneline)",
+      "Bash(grep -r \"TeamLogo\\\\|TeamAvatar\" C:Users91897OneDriveDocumentsGitHubcall-itsrc --include=*.jsx --include=*.js)",
+      "Bash(node scripts/generateOgPng.js)"
     ]
   }
 }

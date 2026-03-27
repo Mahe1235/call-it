@@ -7,9 +7,10 @@ const MEDALS = { 1: '🥇', 2: '🥈', 3: '🥉' }
  * Fantasy XI leaderboard — ranked by accumulated fantasy_xi_pts.
  *
  * Props:
- *   entries — from useFantasyXIGroup() — [{ user_id, display_name, team, fantasy_xi_pts, locked }]
+ *   entries       — from useFantasyXIGroup()
+ *   seasonStarted — bool: hide pts before season begins
  */
-export function FantasyLeaderboard({ entries }) {
+export function FantasyLeaderboard({ entries, seasonStarted }) {
   const { user } = useAuth()
 
   if (!entries.length) {
@@ -30,7 +31,6 @@ export function FantasyLeaderboard({ entries }) {
     )
   }
 
-  // Rank by fantasy_xi_pts
   const ranked = [...entries]
     .sort((a, b) => b.fantasy_xi_pts - a.fantasy_xi_pts)
     .map((e, i) => ({ ...e, rank: i + 1 }))
@@ -100,18 +100,33 @@ export function FantasyLeaderboard({ entries }) {
               </span>
             )}
 
-            {/* Fantasy pts */}
-            <div style={{ textAlign: 'right', flexShrink: 0, paddingRight: '40px' }}>
-              <p className="font-display font-black" style={{ fontSize: '18px', color: 'var(--text-primary)', margin: 0, letterSpacing: '-0.5px' }}>
-                {entry.fantasy_xi_pts}
-              </p>
-              <p className="font-mono" style={{ fontSize: '9px', color: 'var(--text-muted)', margin: 0, letterSpacing: '0.5px' }}>
-                PTS
-              </p>
-            </div>
+            {/* Points — hidden pre-season */}
+            {seasonStarted ? (
+              <div style={{ textAlign: 'right', flexShrink: 0, paddingRight: '40px' }}>
+                <p className="font-display font-black" style={{ fontSize: '18px', color: 'var(--text-primary)', margin: 0, letterSpacing: '-0.5px' }}>
+                  {entry.fantasy_xi_pts}
+                </p>
+                <p className="font-mono" style={{ fontSize: '9px', color: 'var(--text-muted)', margin: 0, letterSpacing: '0.5px' }}>
+                  PTS
+                </p>
+              </div>
+            ) : (
+              <div style={{ flexShrink: 0, paddingRight: '40px' }}>
+                <p className="font-mono" style={{ fontSize: '9px', color: 'var(--text-muted)', margin: 0, letterSpacing: '0.5px', textAlign: 'right' }}>
+                  pts live<br/>after M1
+                </p>
+              </div>
+            )}
           </div>
         )
       })}
+
+      {/* Pre-season note */}
+      {!seasonStarted && (
+        <p className="font-body text-xs text-center" style={{ color: 'var(--text-muted)', marginTop: '8px' }}>
+          Points activate after the first match is bowled 🏏
+        </p>
+      )}
     </div>
   )
 }

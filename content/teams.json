@@ -44,7 +44,7 @@
         },
         {
           "name": "MS Dhoni",
-          "role": "batter"
+          "role": "wicketkeeper"
         },
         {
           "name": "Prashant Veer",
@@ -96,7 +96,7 @@
         },
         {
           "name": "Urvil Patel",
-          "role": "batter"
+          "role": "wicketkeeper"
         },
         {
           "name": "Ramakrishna Ghosh",
@@ -104,7 +104,7 @@
         },
         {
           "name": "Sanju Samson",
-          "role": "batter"
+          "role": "wicketkeeper"
         },
         {
           "name": "Khaleel Ahmed",
@@ -172,7 +172,7 @@
         },
         {
           "name": "Ryan Rickelton",
-          "role": "batter"
+          "role": "wicketkeeper"
         },
         {
           "name": "Sherfane Rutherford",
@@ -188,7 +188,7 @@
         },
         {
           "name": "Quinton de Kock",
-          "role": "batter"
+          "role": "wicketkeeper"
         },
         {
           "name": "Danish Malewar",
@@ -212,7 +212,7 @@
         },
         {
           "name": "Robin Minz",
-          "role": "batter"
+          "role": "wicketkeeper"
         },
         {
           "name": "Naman Dhir",
@@ -288,7 +288,7 @@
         },
         {
           "name": "Jordan Cox",
-          "role": "batter"
+          "role": "wicketkeeper"
         },
         {
           "name": "Mangesh Yadav",
@@ -328,7 +328,7 @@
         },
         {
           "name": "Jitesh Sharma",
-          "role": "batter"
+          "role": "wicketkeeper"
         },
         {
           "name": "Krunal Pandya",
@@ -336,7 +336,7 @@
         },
         {
           "name": "Philip Salt",
-          "role": "batter"
+          "role": "wicketkeeper"
         },
         {
           "name": "Kanishk Chouhan",
@@ -392,7 +392,7 @@
         },
         {
           "name": "Tejasvi Dahiya",
-          "role": "batter"
+          "role": "wicketkeeper"
         },
         {
           "name": "Ajinkya Rahane",
@@ -464,7 +464,7 @@
         },
         {
           "name": "Tim Seifert",
-          "role": "batter"
+          "role": "wicketkeeper"
         },
         {
           "name": "Anukul Roy",
@@ -492,7 +492,7 @@
       "squad": [
         {
           "name": "Heinrich Klaasen",
-          "role": "batter"
+          "role": "wicketkeeper"
         },
         {
           "name": "Eshan Malinga",
@@ -584,7 +584,7 @@
         },
         {
           "name": "Ishan Kishan",
-          "role": "batter"
+          "role": "wicketkeeper"
         },
         {
           "name": "Liam Livingstone",
@@ -648,7 +648,7 @@
         },
         {
           "name": "Abishek Porel",
-          "role": "batter"
+          "role": "wicketkeeper"
         },
         {
           "name": "Prithvi Shaw",
@@ -684,7 +684,7 @@
         },
         {
           "name": "KL Rahul",
-          "role": "batter"
+          "role": "wicketkeeper"
         },
         {
           "name": "Mukesh Kumar",
@@ -736,7 +736,7 @@
         },
         {
           "name": "Vishnu Vinod",
-          "role": "batter"
+          "role": "wicketkeeper"
         },
         {
           "name": "Yuzvendra Chahal",
@@ -788,7 +788,7 @@
         },
         {
           "name": "Prabhsimran Singh",
-          "role": "batter"
+          "role": "wicketkeeper"
         },
         {
           "name": "Pyla Avinash",
@@ -904,7 +904,7 @@
         },
         {
           "name": "Dhruv Jurel",
-          "role": "batter"
+          "role": "wicketkeeper"
         },
         {
           "name": "Lhuan-dre Pretorius",
@@ -1016,7 +1016,7 @@
         },
         {
           "name": "Anuj Rawat",
-          "role": "batter"
+          "role": "wicketkeeper"
         },
         {
           "name": "Ravisrinivasan Sai Kishore",
@@ -1024,7 +1024,7 @@
         },
         {
           "name": "Tom Banton",
-          "role": "batter"
+          "role": "wicketkeeper"
         },
         {
           "name": "Sai Sudharsan",
@@ -1036,7 +1036,7 @@
         },
         {
           "name": "Kumar Kushagra",
-          "role": "batter"
+          "role": "wicketkeeper"
         },
         {
           "name": "Luke Wood",
@@ -1052,7 +1052,7 @@
         },
         {
           "name": "Jos Buttler",
-          "role": "batter"
+          "role": "wicketkeeper"
         },
         {
           "name": "Nishant Sindhu",
@@ -1088,7 +1088,7 @@
         },
         {
           "name": "Josh Inglis",
-          "role": "batter"
+          "role": "wicketkeeper"
         },
         {
           "name": "Mitchell Marsh",
@@ -1168,7 +1168,7 @@
         },
         {
           "name": "Nicholas Pooran",
-          "role": "batter"
+          "role": "wicketkeeper"
         },
         {
           "name": "Matthew Breetzke",
@@ -1180,7 +1180,7 @@
         },
         {
           "name": "Rishabh Pant",
-          "role": "batter"
+          "role": "wicketkeeper"
         }
       ]
     }
