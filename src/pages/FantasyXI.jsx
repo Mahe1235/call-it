@@ -25,7 +25,7 @@ export default function FantasyXI() {
       setSaveError(err.message)
     } else {
       setPicks(data)
-      if (lock) setEditing(false)
+      setEditing(false) // always exit edit mode after any save — show card view
     }
   }
 
@@ -67,7 +67,7 @@ export default function FantasyXI() {
               <p className="font-mono text-xs tracking-widest uppercase" style={{ color: 'var(--text-muted)', margin: 0 }}>
                 My XI
               </p>
-              {isLocked && (
+              {isLocked ? (
                 <span style={{
                   padding: '3px 10px', borderRadius: '99px',
                   background: 'var(--team-primary)', color: 'var(--team-text-on-primary)',
@@ -76,7 +76,17 @@ export default function FantasyXI() {
                 }}>
                   Locked ✓
                 </span>
-              )}
+              ) : hasPicks ? (
+                <span style={{
+                  padding: '3px 10px', borderRadius: '99px',
+                  border: '1.5px dashed var(--border-default)',
+                  color: 'var(--text-muted)',
+                  fontFamily: 'Bricolage Grotesque, sans-serif',
+                  fontWeight: 700, fontSize: '11px', letterSpacing: '0.04em',
+                }}>
+                  Draft — not locked
+                </span>
+              ) : null}
             </div>
 
             {showForm ? (
@@ -94,7 +104,7 @@ export default function FantasyXI() {
               <FantasyXICard
                 picks={picks}
                 scores={null}
-                onEdit={isLocked ? null : () => setEditing(true)}
+                onEdit={seasonStarted ? null : () => setEditing(true)}
               />
             )}
 
@@ -134,18 +144,17 @@ export default function FantasyXI() {
 }
 
 function PickerIntro({ isEditing }) {
-  if (isEditing) return null
   return (
     <div style={{
-      padding: '14px 16px', borderRadius: '14px',
+      padding: '12px 16px', borderRadius: '14px',
       background: 'var(--surface-subtle)', border: '1px solid var(--border-subtle)',
-      marginBottom: '20px',
+      marginBottom: '16px',
     }}>
-      <p className="font-display font-bold text-sm mb-1" style={{ color: 'var(--text-primary)', margin: '0 0 4px' }}>
-        Pick your 11 for IPL 2026
+      <p className="font-display font-bold text-sm" style={{ color: 'var(--text-primary)', margin: '0 0 2px' }}>
+        {isEditing ? 'Editing your XI' : 'Pick your 11 for IPL 2026'}
       </p>
       <p className="font-body text-xs" style={{ color: 'var(--text-muted)', margin: 0, lineHeight: 1.5 }}>
-        Min: 1 WK · 3 BAT · 1 AR · 3 BWL. Assign a Captain (2×) and Vice Captain (1.5×). Lock before Match 1.
+        Min: 1 WK · 3 BAT · 1 AR · 3 BWL. Set a Captain (2×) and Vice Captain (1.5×). You can edit until Match 1.
       </p>
     </div>
   )

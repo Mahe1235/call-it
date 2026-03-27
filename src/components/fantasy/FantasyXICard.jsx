@@ -117,24 +117,22 @@ export function FantasyXICard({ picks, scores, onEdit }) {
         Captain earns 2× · Vice Captain earns 1.5×
       </p>
 
-      {/* Edit link — only if not locked */}
-      {!picks.locked && onEdit && (
+      {/* Edit button — visible pre-season regardless of locked state */}
+      {onEdit && (
         <button
           onClick={onEdit}
-          className="font-mono tap-feedback"
+          className="font-display font-bold tap-feedback"
           style={{
             display: 'block', width: '100%',
-            background: 'none', border: 'none',
-            padding: '6px', fontSize: '11px', fontWeight: 700,
-            letterSpacing: '0.5px', textTransform: 'uppercase',
-            color: 'var(--text-muted)', cursor: 'pointer',
-            textDecoration: 'underline',
-            textDecorationColor: 'var(--border-default)',
-            textUnderlineOffset: '3px',
+            background: 'var(--surface-subtle)',
+            border: '1.5px solid var(--border-default)',
+            borderRadius: '12px',
+            padding: '12px', fontSize: '14px',
+            color: 'var(--text-primary)', cursor: 'pointer',
             textAlign: 'center',
           }}
         >
-          ✏️ Edit XI
+          ✏️ Edit my XI
         </button>
       )}
     </div>
