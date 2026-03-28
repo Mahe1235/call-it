@@ -624,10 +624,10 @@ function PlayerSearchStep({ picks, onChange, allPlayers }) {
               borderRadius: '13px',
               border: `1.5px solid ${isActive ? 'var(--team-primary)' : 'var(--border-subtle)'}`,
               background: isActive ? 'var(--team-tinted-bg)' : 'var(--card)',
-              cursor: filled ? 'default' : 'pointer',
+              cursor: isActive ? 'default' : 'pointer',
               transition: 'all 0.15s',
             }}
-              onClick={() => !filled && openSlot(i)}
+              onClick={() => !isActive && openSlot(i)}
             >
               {/* Slot number */}
               <span className="font-mono" style={{
@@ -641,7 +641,44 @@ function PlayerSearchStep({ picks, onChange, allPlayers }) {
                 {i + 1}
               </span>
 
-              {filled ? (
+              {isActive ? (
+                /* Search input — shown when slot is active (empty or editing) */
+                <>
+                  <input
+                    ref={inputRef}
+                    value={query}
+                    onChange={e => setQuery(e.target.value)}
+                    placeholder={filled ? `Replacing ${playerName}…` : 'Search player…'}
+                    style={{
+                      flex: 1,
+                      border: 'none',
+                      outline: 'none',
+                      background: 'transparent',
+                      fontSize: '14px',
+                      fontFamily: 'inherit',
+                      color: 'var(--text-primary)',
+                    }}
+                  />
+                  {filled && (
+                    <button
+                      onClick={(e) => { e.stopPropagation(); closeSlot() }}
+                      style={{
+                        flexShrink: 0,
+                        padding: '2px 8px',
+                        borderRadius: '6px',
+                        border: 'none',
+                        background: 'var(--surface-subtle)',
+                        color: 'var(--text-muted)',
+                        fontSize: '11px',
+                        cursor: 'pointer',
+                        fontFamily: 'inherit',
+                      }}
+                    >
+                      Keep
+                    </button>
+                  )}
+                </>
+              ) : filled ? (
                 <>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <p className="font-display font-bold text-sm" style={{ color: 'var(--text-primary)', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
@@ -678,23 +715,6 @@ function PlayerSearchStep({ picks, onChange, allPlayers }) {
                     ×
                   </button>
                 </>
-              ) : isActive ? (
-                /* Search input */
-                <input
-                  ref={inputRef}
-                  value={query}
-                  onChange={e => setQuery(e.target.value)}
-                  placeholder="Search player…"
-                  style={{
-                    flex: 1,
-                    border: 'none',
-                    outline: 'none',
-                    background: 'transparent',
-                    fontSize: '14px',
-                    fontFamily: 'inherit',
-                    color: 'var(--text-primary)',
-                  }}
-                />
               ) : (
                 <p className="font-body text-sm" style={{ color: 'var(--text-muted)', margin: 0, fontStyle: 'italic' }}>
                   Tap to search…
