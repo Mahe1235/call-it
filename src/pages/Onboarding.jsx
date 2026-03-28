@@ -5,7 +5,7 @@ import { teams } from '../lib/content'
 import { JERSEY_AVATARS } from '../lib/avatars'
 
 export default function Onboarding() {
-  const { user } = useAuth()
+  const { user, refreshProfile } = useAuth()
   const [selectedTeam, setSelectedTeam] = useState(null)
   const [displayName, setDisplayName] = useState('')
   const [selectedSeed, setSelectedSeed] = useState(null)
@@ -18,7 +18,7 @@ export default function Onboarding() {
     setSaving(true)
     setError(null)
     const jersey = JERSEY_AVATARS.find(j => j.id === selectedSeed)
-    const { error } = await supabase.from('users').insert({
+    const { error } = await supabase.from('users').upsert({
       id: user.id,
       display_name: displayName.trim(),
       team: selectedTeam,
@@ -27,8 +27,13 @@ export default function Onboarding() {
     if (error) {
       setError(error.message)
       setSaving(false)
+    } else {
+      if (refreshProfile) {
+        await refreshProfile()
+      } else {
+        window.location.reload()
+      }
     }
-    // On success, useAuth listener will pick up the new profile and re-render App
   }
 
   const canSubmit = selectedTeam && displayName.trim() && selectedSeed

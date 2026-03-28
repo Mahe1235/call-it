@@ -63,6 +63,7 @@ export function useAuth() {
     user: session?.user ?? null,
     profile,
     loading,
+    refreshProfile: () => session?.user?.id && fetchProfile(session.user.id),
     signInWithGoogle,
     signOut,
   }
