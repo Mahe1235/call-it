@@ -79,7 +79,8 @@ export function useSeasonPicks() {
  *           orange_cap_picks, purple_cap_picks, most_sixes_picks }
  */
 export async function saveSeasonPicks(userId, picks) {
-  const { data, error } = await supabase
+  // 1. Write
+  const { error: writeError } = await supabase
     .from('season_predictions')
     .upsert(
       {
@@ -89,7 +90,14 @@ export async function saveSeasonPicks(userId, picks) {
       },
       { onConflict: 'user_id' }
     )
-    .select()
+
+  if (writeError) return { data: null, error: writeError }
+
+  // 2. Read back the saved row
+  const { data, error } = await supabase
+    .from('season_predictions')
+    .select('*')
+    .eq('user_id', userId)
     .single()
 
   return { data, error }
