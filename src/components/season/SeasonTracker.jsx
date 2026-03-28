@@ -679,7 +679,7 @@ function PlayerSlotCard({ slotNum, playerName, allPlayers, canEdit, editing, onE
               {filtered.map((p, idx) => (
                 <button
                   key={p.name}
-                  onClick={() => { onPick(p.name); onClose() }}
+                  onClick={() => onPick(p.name)}
                   style={{
                     width: '100%',
                     display: 'flex',
