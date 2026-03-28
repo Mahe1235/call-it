@@ -271,69 +271,99 @@ export function SeasonTracker({ picks, setPicks, scores, seasonStarted }) {
       </SectionCard>
 
       {/* ── ORANGE CAP ── */}
-      <SectionCard label="Orange Cap" pts="80 / 40 / 20 pts" earnedPts={scores?.orange_cap_pts} canEdit={canEdit} editing={activeEdit === 'orangeCap'} onEdit={() => { setActiveEdit('orangeCap'); setActiveSlot(0) }} onClose={closeEdit}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          {[0, 1, 2].map(i => (
-            <PlayerSlotCard
-              key={i}
-              slotNum={i + 1}
-              playerName={orangeCap[i]}
-              allPlayers={allPlayers}
-              canEdit={canEdit}
-              editing={activeEdit === 'orangeCap' && activeSlot === i}
-              onEdit={() => { setActiveEdit('orangeCap'); setActiveSlot(i) }}
-              onClose={closeEdit}
-              onPick={name => savePlayerSlot('orange_cap_picks', i, name)}
-              onClear={() => clearPlayerSlot('orange_cap_picks', i)}
-              usedNames={orangeCap.filter((_, j) => j !== i).filter(Boolean)}
-              saving={saving}
-            />
-          ))}
-        </div>
+      <SectionCard label="Orange Cap" pts="80 / 40 / 20 pts" earnedPts={scores?.orange_cap_pts} canEdit={canEdit} editing={activeEdit === 'orangeCap'} onEdit={() => setActiveEdit('orangeCap')} onClose={closeEdit}>
+        {activeEdit === 'orangeCap' ? (
+          <PlayerSectionEditor
+            initial={orangeCap}
+            allPlayers={allPlayers}
+            saving={saving}
+            onSave={async (draft) => { await commit({ orange_cap_picks: draft }) }}
+            onCancel={closeEdit}
+          />
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            {[0, 1, 2].map(i => (
+              <PlayerSlotCard
+                key={i}
+                slotNum={i + 1}
+                playerName={orangeCap[i]}
+                allPlayers={allPlayers}
+                canEdit={canEdit}
+                editing={false}
+                onEdit={() => setActiveEdit('orangeCap')}
+                onClose={closeEdit}
+                onPick={() => {}}
+                onClear={() => {}}
+                usedNames={[]}
+                saving={false}
+              />
+            ))}
+          </div>
+        )}
       </SectionCard>
 
       {/* ── PURPLE CAP ── */}
-      <SectionCard label="Purple Cap" pts="80 / 40 / 20 pts" earnedPts={scores?.purple_cap_pts} canEdit={canEdit} editing={activeEdit === 'purpleCap'} onEdit={() => { setActiveEdit('purpleCap'); setActiveSlot(0) }} onClose={closeEdit}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          {[0, 1, 2].map(i => (
-            <PlayerSlotCard
-              key={i}
-              slotNum={i + 1}
-              playerName={purpleCap[i]}
-              allPlayers={allPlayers}
-              canEdit={canEdit}
-              editing={activeEdit === 'purpleCap' && activeSlot === i}
-              onEdit={() => { setActiveEdit('purpleCap'); setActiveSlot(i) }}
-              onClose={closeEdit}
-              onPick={name => savePlayerSlot('purple_cap_picks', i, name)}
-              onClear={() => clearPlayerSlot('purple_cap_picks', i)}
-              usedNames={purpleCap.filter((_, j) => j !== i).filter(Boolean)}
-              saving={saving}
-            />
-          ))}
-        </div>
+      <SectionCard label="Purple Cap" pts="80 / 40 / 20 pts" earnedPts={scores?.purple_cap_pts} canEdit={canEdit} editing={activeEdit === 'purpleCap'} onEdit={() => setActiveEdit('purpleCap')} onClose={closeEdit}>
+        {activeEdit === 'purpleCap' ? (
+          <PlayerSectionEditor
+            initial={purpleCap}
+            allPlayers={allPlayers}
+            saving={saving}
+            onSave={async (draft) => { await commit({ purple_cap_picks: draft }) }}
+            onCancel={closeEdit}
+          />
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            {[0, 1, 2].map(i => (
+              <PlayerSlotCard
+                key={i}
+                slotNum={i + 1}
+                playerName={purpleCap[i]}
+                allPlayers={allPlayers}
+                canEdit={canEdit}
+                editing={false}
+                onEdit={() => setActiveEdit('purpleCap')}
+                onClose={closeEdit}
+                onPick={() => {}}
+                onClear={() => {}}
+                usedNames={[]}
+                saving={false}
+              />
+            ))}
+          </div>
+        )}
       </SectionCard>
 
       {/* ── MOST SIXES ── */}
-      <SectionCard label="Most Sixes" pts="60 / 30 / 15 pts" earnedPts={scores?.most_sixes_pts} canEdit={canEdit} editing={activeEdit === 'mostSixes'} onEdit={() => { setActiveEdit('mostSixes'); setActiveSlot(0) }} onClose={closeEdit}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          {[0, 1, 2].map(i => (
-            <PlayerSlotCard
-              key={i}
-              slotNum={i + 1}
-              playerName={mostSixes[i]}
-              allPlayers={allPlayers}
-              canEdit={canEdit}
-              editing={activeEdit === 'mostSixes' && activeSlot === i}
-              onEdit={() => { setActiveEdit('mostSixes'); setActiveSlot(i) }}
-              onClose={closeEdit}
-              onPick={name => savePlayerSlot('most_sixes_picks', i, name)}
-              onClear={() => clearPlayerSlot('most_sixes_picks', i)}
-              usedNames={mostSixes.filter((_, j) => j !== i).filter(Boolean)}
-              saving={saving}
-            />
-          ))}
-        </div>
+      <SectionCard label="Most Sixes" pts="60 / 30 / 15 pts" earnedPts={scores?.most_sixes_pts} canEdit={canEdit} editing={activeEdit === 'mostSixes'} onEdit={() => setActiveEdit('mostSixes')} onClose={closeEdit}>
+        {activeEdit === 'mostSixes' ? (
+          <PlayerSectionEditor
+            initial={mostSixes}
+            allPlayers={allPlayers}
+            saving={saving}
+            onSave={async (draft) => { await commit({ most_sixes_picks: draft }) }}
+            onCancel={closeEdit}
+          />
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            {[0, 1, 2].map(i => (
+              <PlayerSlotCard
+                key={i}
+                slotNum={i + 1}
+                playerName={mostSixes[i]}
+                allPlayers={allPlayers}
+                canEdit={canEdit}
+                editing={false}
+                onEdit={() => setActiveEdit('mostSixes')}
+                onClose={closeEdit}
+                onPick={() => {}}
+                onClear={() => {}}
+                usedNames={[]}
+                saving={false}
+              />
+            ))}
+          </div>
+        )}
       </SectionCard>
 
     </div>
@@ -623,6 +653,180 @@ function InlineTeamPicker({ filterIds, disabledIds, current, onPick, onClear, on
       {saving && (
         <p className="font-body text-xs" style={{ color: 'var(--text-muted)', marginTop: '10px' }}>Saving…</p>
       )}
+    </div>
+  )
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Player section editor — batch edit all 3 picks then save
+   ══════════════════════════════════════════════════════════════════════════ */
+
+function PlayerSectionEditor({ initial, allPlayers, saving, onSave, onCancel }) {
+  const [draft, setDraft] = useState([...(initial ?? [null, null, null])])
+  const [activeSlot, setActiveSlot] = useState(null) // 0|1|2|null
+  const [query, setQuery] = useState('')
+  const inputRef = useRef(null)
+
+  useEffect(() => {
+    if (activeSlot !== null) setTimeout(() => inputRef.current?.focus(), 60)
+  }, [activeSlot])
+
+  function openSlot(i) { setActiveSlot(i); setQuery('') }
+  function closeSlot() { setActiveSlot(null); setQuery('') }
+
+  function pickPlayer(name) {
+    const next = [...draft]
+    next[activeSlot] = name
+    setDraft(next)
+    closeSlot()
+  }
+
+  function clearSlot(i) {
+    const next = [...draft]
+    next[i] = null
+    setDraft(next)
+    if (activeSlot === i) closeSlot()
+  }
+
+  const usedByOthers = draft.filter((p, i) => i !== activeSlot && p != null)
+  const filtered = query.trim().length < 1
+    ? []
+    : allPlayers
+        .filter(p => !usedByOthers.includes(p.name) && p.name.toLowerCase().includes(query.toLowerCase()))
+        .slice(0, 18)
+
+  const allFilled = draft.every(Boolean)
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+      {[0, 1, 2].map(i => {
+        const isActive = activeSlot === i
+        const playerName = draft[i]
+        const filled = playerName != null
+        const playerInfo = filled ? allPlayers.find(p => p.name === playerName) : null
+        const team = playerInfo ? getTeam(playerInfo.teamId) : null
+
+        return (
+          <div key={i}>
+            <div
+              onClick={() => !isActive && openSlot(i)}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+                padding: '12px 14px',
+                borderRadius: '13px',
+                border: `1.5px solid ${isActive ? 'var(--team-primary)' : 'var(--border-subtle)'}`,
+                background: isActive ? 'var(--team-tinted-bg)' : filled && team ? hexToRgba(team.colors.primary, 0.08) : 'var(--surface-subtle)',
+                cursor: isActive ? 'default' : 'pointer',
+                transition: 'all 0.15s',
+              }}
+            >
+              <span className="font-mono" style={{ fontSize: '11px', fontWeight: 700, color: isActive ? 'var(--team-primary)' : 'var(--text-muted)', width: '16px', textAlign: 'center', flexShrink: 0 }}>
+                {i + 1}
+              </span>
+
+              {isActive ? (
+                <>
+                  <input
+                    ref={inputRef}
+                    value={query}
+                    onChange={e => setQuery(e.target.value)}
+                    placeholder={filled ? `Replacing ${playerName}…` : 'Search player…'}
+                    style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', fontSize: '14px', fontFamily: 'inherit', color: 'var(--text-primary)' }}
+                  />
+                  <button onClick={(e) => { e.stopPropagation(); closeSlot() }} style={{ border: 'none', background: 'var(--surface-subtle)', borderRadius: '6px', padding: '4px 8px', color: 'var(--text-muted)', fontSize: '12px', cursor: 'pointer', fontFamily: 'inherit', flexShrink: 0 }}>
+                    {filled ? 'Keep' : 'Close'}
+                  </button>
+                </>
+              ) : filled ? (
+                <>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <p className="font-display font-bold text-sm" style={{ color: 'var(--text-primary)', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {playerName}
+                    </p>
+                    {playerInfo && (
+                      <span className="font-mono" style={{ fontSize: '9px', color: 'var(--text-muted)', fontWeight: 600, letterSpacing: '0.5px' }}>
+                        {playerInfo.teamShort} · {playerInfo.role}
+                      </span>
+                    )}
+                  </div>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); clearSlot(i) }}
+                    style={{ flexShrink: 0, width: '22px', height: '22px', borderRadius: '50%', border: 'none', background: 'var(--surface-subtle)', color: 'var(--text-muted)', fontSize: '12px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', lineHeight: 1 }}
+                  >
+                    ×
+                  </button>
+                </>
+              ) : (
+                <p className="font-body text-sm" style={{ color: 'var(--text-muted)', margin: 0, fontStyle: 'italic' }}>
+                  Tap to search…
+                </p>
+              )}
+            </div>
+
+            {/* Search results dropdown */}
+            {isActive && query.trim().length > 0 && (
+              <div style={{ marginTop: '4px', borderRadius: '13px', border: '1.5px solid var(--border-subtle)', background: 'var(--card)', overflow: 'hidden', boxShadow: '0 4px 20px rgba(0,0,0,0.09)' }}>
+                {filtered.length === 0 ? (
+                  <div style={{ padding: '12px 16px' }}>
+                    <p className="font-body text-sm" style={{ color: 'var(--text-muted)', margin: 0 }}>No player found</p>
+                  </div>
+                ) : (
+                  <div style={{ maxHeight: '220px', overflowY: 'auto' }}>
+                    {filtered.map((p, idx) => (
+                      <button
+                        key={p.name}
+                        onClick={() => pickPlayer(p.name)}
+                        style={{
+                          width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                          padding: '11px 16px', border: 'none',
+                          borderBottom: idx < filtered.length - 1 ? '1px solid var(--border-subtle)' : 'none',
+                          background: 'transparent', cursor: 'pointer', textAlign: 'left',
+                        }}
+                        onMouseEnter={e => e.currentTarget.style.background = 'rgba(0,0,0,0.03)'}
+                        onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                      >
+                        <div>
+                          <p className="font-body text-sm" style={{ color: 'var(--text-primary)', margin: 0, fontWeight: 500 }}>{p.name}</p>
+                          <p className="font-mono" style={{ fontSize: '9px', color: 'var(--text-muted)', margin: '1px 0 0', letterSpacing: '0.5px' }}>
+                            {p.teamShort} · {p.role}
+                          </p>
+                        </div>
+                        <span style={{ fontSize: '14px', color: 'var(--text-muted)' }}>+</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        )
+      })}
+
+      {/* Save / Cancel */}
+      <div style={{ display: 'flex', gap: '8px', marginTop: '4px' }}>
+        <button
+          onClick={onCancel}
+          style={{ flex: '0 0 auto', padding: '12px 16px', borderRadius: '12px', border: '1.5px solid var(--border-default)', background: 'var(--surface-subtle)', color: 'var(--text-muted)', fontSize: '14px', fontFamily: 'inherit', cursor: 'pointer' }}
+        >
+          Cancel
+        </button>
+        <button
+          disabled={!allFilled || saving}
+          onClick={() => onSave(draft)}
+          style={{
+            flex: 1, padding: '12px', borderRadius: '12px', border: 'none',
+            background: allFilled ? 'var(--team-primary)' : 'rgba(0,0,0,0.07)',
+            color: allFilled ? 'var(--team-text-on-primary, #111)' : 'var(--text-muted)',
+            fontSize: '14px', fontWeight: 700, fontFamily: 'inherit',
+            cursor: allFilled ? 'pointer' : 'not-allowed',
+            opacity: saving ? 0.7 : 1, transition: 'all 0.15s',
+          }}
+        >
+          {saving ? 'Saving…' : allFilled ? 'Save picks' : `${3 - draft.filter(Boolean).length} more to go`}
+        </button>
+      </div>
     </div>
   )
 }
