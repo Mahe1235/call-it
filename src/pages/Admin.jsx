@@ -92,7 +92,7 @@ function ScoringPanel() {
                 </span>
                 <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                   <span className="font-mono" style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
-                    {new Date(m.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
+                    {new Date(m.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', timeZone: 'Asia/Kolkata' })}
                   </span>
                   {dot && <span style={{ fontSize: '11px' }}>{dot}</span>}
                 </span>
@@ -266,7 +266,7 @@ function MatchScoringForm({ match, onPublished }) {
       <Card>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
           <p className="font-mono text-xs tracking-wide uppercase" style={{ color: 'var(--text-muted)', margin: 0 }}>
-            M{match.match_number} · {new Date(match.date).toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' })}
+            M{match.match_number} · {new Date(match.date).toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'Asia/Kolkata' })}
           </p>
           {(alreadyDone || published) && (
             <StatusBadge

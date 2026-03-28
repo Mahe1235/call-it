@@ -121,6 +121,20 @@ const CHAOS_QUESTIONS = [
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
+/**
+ * CricAPI's `dateTimeGMT` field is misnamed — it actually returns
+ * local Indian Standard Time (UTC+05:30), not GMT.
+ * This helper appends the IST offset so `new Date()` interprets
+ * the timestamp correctly and produces the right UTC value.
+ */
+function fixCricApiDate(dateStr) {
+  if (!dateStr) return dateStr
+  // Already has a timezone offset or Z suffix — leave it alone
+  if (/[Zz]$/.test(dateStr) || /[+-]\d{2}:\d{2}$/.test(dateStr)) return dateStr
+  // Append IST offset so JS parses it as IST, not local/system time
+  return dateStr + '+05:30'
+}
+
 function mapTeamName(name) {
   if (!name) return null
   // Exact match first
@@ -257,7 +271,7 @@ async function main() {
 
     matchRows.push({
       match_number: matchNumber,
-      date: new Date(m.date).toISOString(),
+      date: new Date(fixCricApiDate(m.date)).toISOString(),
       venue: venueId ?? 'unknown',
       team_a: teamA,
       team_b: teamB,

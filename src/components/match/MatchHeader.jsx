@@ -12,9 +12,11 @@ export function MatchHeader({ match }) {
   const matchDate = new Date(match.date)
   const dateStr = matchDate.toLocaleDateString('en-IN', {
     weekday: 'short', day: 'numeric', month: 'short',
+    timeZone: 'Asia/Kolkata',
   })
   const timeStr = matchDate.toLocaleTimeString('en-IN', {
     hour: 'numeric', minute: '2-digit', hour12: true,
+    timeZone: 'Asia/Kolkata',
   })
 
   return (
