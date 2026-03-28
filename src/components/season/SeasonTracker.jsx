@@ -41,8 +41,11 @@ export function SeasonTracker({ picks, setPicks, scores, seasonStarted }) {
   const canEdit = !seasonStarted
 
   /* ── save helper ── */
+  const savingRef = useRef(false)
+
   async function commit(patch) {
-    if (!user || saving) return
+    if (!user || savingRef.current) return
+    savingRef.current = true
     setSaving(true)
     const base = {
       top_4_teams:      picks.top_4_teams      ?? [],
@@ -54,13 +57,14 @@ export function SeasonTracker({ picks, setPicks, scores, seasonStarted }) {
       most_sixes_picks: picks.most_sixes_picks  ?? [null, null, null],
     }
     const { data, error } = await saveSeasonPicks(user.id, { ...base, ...patch })
+    savingRef.current = false
     setSaving(false)
     if (!error && data) {
       setPicks(data)
-      setActiveEdit(null)
-      setActiveSlot(null)
-      setTop4Draft([])
     }
+    setActiveEdit(null)
+    setActiveSlot(null)
+    setTop4Draft([])
   }
 
   /* ── top4 helpers ── */
